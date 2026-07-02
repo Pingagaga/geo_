@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AERO 商管課程綱要平台</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Lora:ital,wght@0,500;0,600;1,400&family=Noto+Serif+TC:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="AERO.css">
+</head>
+<body>
+
+<div id="toast"></div>
+
+<nav id="navbar">
+  <div id="sc-stripe"></div>
+  <div class="nav-in">
+    <div class="logo" onclick="goPage('landing')">
+      <div class="logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 3L2 8l10 5 10-5-10-5z"/><path d="M2 8v7"/><path d="M6 10.5v4.5a6 6 0 0 0 12 0v-4.5"/></svg>
+      </div>
+      <span class="logo-text">AERO</span>
+    </div>
+    <div class="nav-sep"></div>
+
+    <div class="nav-trail" id="nav-trail">
+      <div class="nt active" id="nt0"><span class="nt-num">1</span><span class="nt-lbl">閱讀說明</span></div>
+      <span class="nt-sep"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+      <div class="nt" id="nt1"><span class="nt-num">2</span><span class="nt-lbl">瀏覽課程</span></div>
+      <span class="nt-sep"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+      <div class="nt" id="nt2"><span class="nt-num">3</span><span class="nt-lbl">填寫問卷</span></div>
+      <span class="nt-sep"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></span>
+      <div class="nt" id="nt3"><span class="nt-num">4</span><span class="nt-lbl">填寫問卷</span></div>
+    </div>
+
+    <div class="nav-r">
+      <button class="nav-icon-btn" onclick="goPage('landing')"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="tip">回首頁</span></button>
+      <button class="nav-icon-btn" onclick="copyLog()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg><span class="tip">複製研究紀錄</span></button>
+      <button class="nav-icon-btn" onclick="resetAll()"><svg class="ic" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg><span class="tip">重置紀錄</span></button>
+      <button class="btn-ctrl" id="ctrl-btn" onclick="toggleCtrl()"><svg class="ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/></svg> 課程控制台</button>
+    </div>
+  </div>
+</nav>
+
+<div id="ctrl-panel">
+  <div class="ctrl-in">
+    <div>
+      <p style="font-size:.59rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--ink3);margin-bottom:.85rem">快速切換版本（研究者用）</p>
+      <div class="mx">
+        <div></div><div class="mx-col">高結構化學科</div><div class="mx-col">低結構化學科</div>
+        <div class="mx-row">中央路徑<br>（理性）</div>
+        <button class="sc-btn" id="sb-a" onclick="quickSc('a')" style="--sc:#D6A173"><span class="sc-tag">A</span><span><span class="sc-title">版本 1</span><span class="sc-sub">Python 商務數據分析認證班</span></span></button>
+        <button class="sc-btn" id="sb-b" onclick="quickSc('b')" style="--sc:#2A8A78"><span class="sc-tag">B</span><span><span class="sc-title">版本 2</span><span class="sc-sub">商務談判與高階策略溝通</span></span></button>
+        <div class="mx-row">邊緣路徑<br>（感性）</div>
+        <button class="sc-btn" id="sb-c" onclick="quickSc('c')" style="--sc:#B86A30"><span class="sc-tag">C</span><span><span class="sc-title">版本 3</span><span class="sc-sub">30天轉職黑馬 Python 速成營</span></span></button>
+        <button class="sc-btn" id="sb-d" onclick="quickSc('d')" style="--sc:#7054A6"><span class="sc-tag">D</span><span><span class="sc-title">版本 4</span><span class="sc-sub">主管最愛紅人術 職場魅力課</span></span></button>
+      </div>
+    </div>
+    <div class="ctrl-tools">
+      <p class="ctrl-tools-label">研究工具</p>
+      <button class="tool-btn" onclick="goPage('landing');toggleCtrl()"><span class="tb-icon">⌂</span> 回首頁重新選擇</button>
+      <button class="tool-btn" onclick="openBackendPage()"><span class="tb-icon">▦</span> 開啟研究後台</button>
+      <button class="tool-btn" onclick="copyLog()"><span class="tb-icon">⎘</span> 複製研究紀錄</button>
+      <button class="tool-btn danger" onclick="resetAll()"><span class="tb-icon">⌫</span> 清除所有紀錄</button>
+      <button class="tool-btn" onclick="toggleCtrl()"><span class="tb-icon">✕</span> 關閉控制台</button>
+      <div class="ctrl-status">
+        <div class="st-r"><span class="st-k">AI 來源</span><span class="st-v" id="st-ai">—</span></div>
+        <div class="st-r"><span class="st-k">版本</span><span class="st-v" id="st-cur">—</span></div>
+        <div class="st-r"><span class="st-k">路徑</span><span class="st-v" id="st-path">—</span></div>
+        <div class="st-r"><span class="st-k">切換次數</span><span class="st-v" id="st-sw">0</span></div>
+        <div class="st-r"><span class="st-k">報名點擊</span><span class="st-v" id="st-cta">0</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page show" id="page-landing">
+  <div class="land-hero">
+    <div class="land-hero-in fade">
+      <div class="land-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" role="img" aria-label="研究與學習圖示">
+          <path d="M12 4a8 8 0 1 0 8 8"/>
+          <path d="M12 4v4"/>
+          <path d="M4 12h4"/>
+          <path d="M18.5 18.5L22 22"/>
+          <circle cx="16.5" cy="16.5" r="2.5"/>
+        </svg>
+      </div>
+      
+      <h1 class="land-title" id="land-title-main"><span class="land-line">AI 敘事式商管課程體驗</span><span class="land-line">歡迎參與本次<em>研究</em></span></h1>
+      <div class="hero-btns" style="flex-direction:column;align-items:stretch;gap:0.85rem;width:100%;max-width:760px;margin:0 auto;">
+        <button class="btn-proceed" type="button" onclick="startParticipantCourse()">開始設定預算並查看課綱</button>
+        <div id="researcher-hero-card" class="hero-info-card" style="display: none; border-left: 4px solid var(--purple); margin-top: 1.5rem; padding: 1.25rem; background: var(--card); border-radius: var(--r); text-align: left; width: 100%;">
+          <p style="color: var(--purple); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem;">研究者主控台模式</p>
+          <p style="font-size: 0.8rem; color: var(--ink2); margin-bottom: 0.75rem; line-height: 1.4;">目前系統已進入後台數據監控狀態。你可以直接進入後台，檢視受測者在 Modulo-5 分流下的真實 Session Log 軌跡與時間軸數據。</p>
+          <button class="btn-solid" style="background: var(--purple); border-color: var(--purple); font-size: 0.8rem; padding: 0.5rem 1rem;" type="button" onclick="goPage('backend')">進入研究者後台</button>
+        </div>
+      </div>
+     
+    </div>
+  </div>
+
+  <div class="step-nav" id="step-nav">
+    <div class="si active" id="si0"><div class="si-circle">1</div><div class="si-lbl">填寫基本資料</div><div class="si-sub" id="si0-sub">尚未填寫</div></div>
+    <div class="si" id="si1"><div class="si-circle">2</div><div class="si-lbl">瀏覽課程</div><div class="si-sub" id="si1-sub">完成步驟 1 後解鎖</div></div>
+    <div class="si" id="si2"><div class="si-circle">3</div><div class="si-lbl">填寫問卷</div><div class="si-sub">學員瀏覽課程內容</div></div>
+    <div class="si" id="si3"><div class="si-circle">4</div><div class="si-lbl">填寫課後回饋</div><div class="si-sub">完成學習流程</div></div>
+  </div>
+
+  <div class="step-area" id="participant-intro" style="display:none">
+    <div class="step-hd">
+      <div class="step-num"><span class="sn">1</span>閱讀說明</div>
+      <h2 class="step-title">歡迎進入本課程綱要導覽</h2>
+      <p class="step-desc">請先閱讀以下說明，再開始瀏覽課程內容。完成瀏覽後，系統將引導您填寫課後回饋。</p>
+    </div>
+    <div class="p-intro-card">
+      <p>本頁面提供一組商管課程綱要與學習資訊，請依一般閱讀習慣進行瀏覽。</p>
+      <p>瀏覽完成後請依指示填寫回饋問卷。您的資料將以匿名方式處理，僅用於課程與學術分析；若未完成流程即離開頁面，系統不會保留未完成紀錄。</p>
+    </div>
+    <div class="proceed-row">
+      <button class="btn-proceed" onclick="startParticipantCourse()">開始設定預算並查看課綱</button>
+    </div>
+  </div>
+
+  <div class="step-area" id="step1-area" style="display:none" hidden>
+    <div class="step-hd">
+      <div class="step-num"><span class="sn">1</span>內容編排 — AI 敘事來源</div>
+      <h2 class="step-title">請選擇本次課綱說明的內容來源風格</h2>
+      <p class="step-desc">三種 AI 來源各有不同的資訊組織方式，將影響課程頁面的摘要呈現。</p>
+    </div>
+    <div class="ai-grid">
+      <div class="ai-card" id="ai-perp" onclick="pickAI('perp')" style="--ai-c:var(--perp-c)"><div class="ai-check">✓</div><div class="ai-icon-box"></div><div><div class="ai-name">Perplexity</div><div class="ai-desc">即時搜尋彙整與趨勢脈絡導向。</div></div><div class="ai-tags"><span class="ai-tag">脈絡導向</span><span class="ai-tag">即時更新</span><span class="ai-tag">重點濃縮</span></div></div>
+      <div class="ai-card" id="ai-chat" onclick="pickAI('chat')" style="--ai-c:var(--chat-c)"><div class="ai-check">✓</div><div class="ai-icon-box"></div><div><div class="ai-name">ChatGPT API</div><div class="ai-desc">RAG 檢索與邏輯分析導向。</div></div><div class="ai-tags"><span class="ai-tag">條理分析</span><span class="ai-tag">RAG 檢索</span><span class="ai-tag">論證結構</span></div></div>
+      <div class="ai-card" id="ai-goog" onclick="pickAI('goog')" style="--ai-c:var(--goog-c)"><div class="ai-check">✓</div><div class="ai-icon-box"></div><div><div class="ai-name">Google AI Overviews</div><div class="ai-desc">決策框架導向的結構化整理。</div></div><div class="ai-tags"><span class="ai-tag">框架整理</span><span class="ai-tag">多源整合</span><span class="ai-tag">系統呈現</span></div></div>
+    </div>
+    <div class="proceed-row">
+      <div class="summary-pills"><div class="spill" id="ai-spill" style="display:none"><div class="sd" id="ai-sd"></div><span id="ai-spill-txt"></span></div><p class="hint-txt" id="s1-hint">請先選擇一種內容來源風格</p></div>
+      <button class="btn-proceed" id="btn-s2" onclick="showStep2()" disabled>下一步：選擇課綱版本</button>
+    </div>
+  </div>
+
+  <div class="step-area" id="step2-area" style="display:none">
+    <div class="step-hd">
+      <div class="step-num"><span class="sn">2</span>內容編排 — 課綱版本</div>
+      <h2 class="step-title">請選擇本次課綱版本</h2>
+      <p class="step-desc">依內容編排方式與學習目標提供不同版本。</p>
+    </div>
+    <div class="ai-reminder" id="ai-reminder"><div class="ar-dot" id="ar-dot"></div><span id="ar-txt"></span><button onclick="backToStep1()">返回說明頁</button></div>
+    <div class="budget-card" id="budget-card">
+      <div class="budget-head">
+        <p class="budget-kicker">學費範圍設定</p>
+        <p class="budget-desc" id="hahow-avg-txt"></p>
+      </div>
+      <div class="budget-range-row"><label for="budget-slider">預算</label><span id="budget-value">NT$ 0</span></div>
+      <input type="range" id="budget-slider">
+      <div class="budget-meta"><span id="budget-range-txt">允許價差 ±NT$ 1,500</span><span id="budget-match-count">0 個版本符合</span></div>
+    </div>
+    <div class="sc-axis-row"><div class="sc-ax">高結構化學科</div><div class="sc-ax">低結構化學科</div></div>
+    <div class="sc-grid" id="sc-grid"></div>
+    <div class="hahow-reco" id="hahow-reco">
+      <div class="hahow-reco-head"><h3>可選課程</h3><span id="hahow-in-budget-count">0 堂</span></div>
+      <div class="hahow-reco-list" id="hahow-reco-list"></div>
+    </div>
+    <div class="proceed-row">
+      <button class="btn-back-s" onclick="backToStep1()">返回步驟 1</button>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap"><div class="spill" id="sc-spill" style="display:none"><div class="sd" id="sc-sd"></div><span id="sc-spill-txt"></span></div><p class="hint-txt" id="s2-hint">請先選擇一個課綱版本</p><button class="btn-proceed" id="btn-course" onclick="startCourse()" disabled>進入課綱頁面</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-course">
+  <section class="course-sec course-sec-hero">
+    <div id="ch-l" class="fade course-hero-card">
+      <div class="c-ey" id="c-ey"></div>
+      <h1 id="course-title" class="serif course-title-top"></h1>
+      <p id="course-desc"></p>
+      <div class="stats-row" id="c-stats"></div>
+      <div class="cert-row" id="cert-row"></div>
+      <div class="hero-btns course-hero-btns">
+        <button class="btn-enroll" onclick="ctaClick()">查看完整課程資訊</button>
+        <button class="btn-ghost" onclick="toggleCtrl()">切換課綱版本</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="course-sec course-sec-list">
+    <div class="hahow-reco course-blind-reco" id="course-blind-reco">
+      <div class="hahow-reco-head"><h3>精選 Hahow 課程</h3><span id="course-blind-count">0 堂</span></div>
+      <div class="hahow-reco-list" id="course-blind-list"></div>
+    </div>
+  </section>
+
+  <section class="course-sec course-sec-ai">
+    <div class="course-insights-panel">
+      <div class="course-insights-head">
+        <p class="sec-tag"></p>
+        <h2 class="sec-title serif"></h2>
+
+      </div>
+
+      <div id="block-aero-ai-summary" class="course-insight-row">
+        <div class="ai-block perp-block">
+          <div class="ai-block-head">
+            <p class="ai-block-label ai-block-label-perp"></p>
+            <div class="source-grid">
+              <span class="source-card" id="aero-ai-summary-badge">R1 · 初始化中</span>
+            </div>
+          </div>
+          <div id="ch-r" class="fade">
+            <div class="geo-box" id="geo-box"><div class="geo-pill" id="geo-tag"></div><p id="aero-ai-summary-content"></p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="course-blind-actions">
+        <button class="btn-enroll" onclick="ctaClick()">查看完整資訊</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="course-sec course-sec-final">
+    <div class="cb-in cb-in-single">
+      <div>
+        <p class="sec-tag" id="body-tag"></p>
+        <h2 class="sec-title serif" id="body-title"></h2>
+        <div id="body-ct" class="fade"></div>
+      </div>
+      <div class="final-cta-wrap">
+        <div class="cta-card">
+          <p class="p-lbl">課程費用</p>
+          <p class="p-num" id="cta-price"></p>
+          <p class="p-sub" id="cta-psub"></p>
+          <div id="cta-urg"></div>
+          <button class="btn-ec btn-ec-final" onclick="ctaClick()">查看完整課程資訊</button>
+          <div class="c-div"></div>
+          <div id="cta-feats"></div>
+          <div id="cta-testis"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div id="join-modal" class="join-modal" aria-hidden="true">
+  <div class="join-modal-backdrop"></div>
+  <div class="join-modal-dialog profile-template-dialog survey-template-dialog" role="dialog" aria-modal="true" aria-labelledby="join-modal-title">
+    <form class="join-modal-body profile-template-body survey-template-body" id="join-modal-form">
+      <h2 id="join-modal-title" class="profile-template-title">課程綱要回饋問卷</h2>
+
+      <div class="profile-template-list survey-template-list">
+        <div class="profile-template-item survey-template-item">
+          <div class="profile-template-name survey-template-name">
+            Q1
+            <p class="survey-template-question">本頁提供之課程資訊是否具備足夠深度與邏輯性？</p>
+            <p class="survey-template-hint">1 分極不符合，7 分極符合</p>
+          </div>
+          <div class="profile-template-info survey-template-info">
+            <div class="survey-checklist" id="likert-q1">
+              <label><input type="radio" name="q1" value="1"><span>1 分</span></label>
+              <label><input type="radio" name="q1" value="2"><span>2 分</span></label>
+              <label><input type="radio" name="q1" value="3"><span>3 分</span></label>
+              <label><input type="radio" name="q1" value="4"><span>4 分</span></label>
+              <label><input type="radio" name="q1" value="5"><span>5 分</span></label>
+              <label><input type="radio" name="q1" value="6"><span>6 分</span></label>
+              <label><input type="radio" name="q1" value="7"><span>7 分</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-template-item survey-template-item">
+          <div class="profile-template-name survey-template-name">
+            Q2
+            <p class="survey-template-question">本頁之版面編排、評價呈現與視覺設計是否具吸引力？</p>
+            <p class="survey-template-hint">1 分極不符合，7 分極符合</p>
+          </div>
+          <div class="profile-template-info survey-template-info">
+            <div class="survey-checklist" id="likert-q2">
+              <label><input type="radio" name="q2" value="1"><span>1 分</span></label>
+              <label><input type="radio" name="q2" value="2"><span>2 分</span></label>
+              <label><input type="radio" name="q2" value="3"><span>3 分</span></label>
+              <label><input type="radio" name="q2" value="4"><span>4 分</span></label>
+              <label><input type="radio" name="q2" value="5"><span>5 分</span></label>
+              <label><input type="radio" name="q2" value="6"><span>6 分</span></label>
+              <label><input type="radio" name="q2" value="7"><span>7 分</span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-template-item survey-template-item">
+          <div class="profile-template-name survey-template-name">
+            Q3
+            <p class="survey-template-question">在得知此段課綱摘要完全由 AI 生成的前提下，您是否願意實際付費購買這堂課程？</p>
+            <p class="survey-template-hint">1 分極不願意，7 分極願意</p>
+          </div>
+          <div class="profile-template-info survey-template-info">
+            <div class="survey-checklist" id="likert-q3">
+              <label><input type="radio" name="q3" value="1"><span>1 分</span></label>
+              <label><input type="radio" name="q3" value="2"><span>2 分</span></label>
+              <label><input type="radio" name="q3" value="3"><span>3 分</span></label>
+              <label><input type="radio" name="q3" value="4"><span>4 分</span></label>
+              <label><input type="radio" name="q3" value="5"><span>5 分</span></label>
+              <label><input type="radio" name="q3" value="6"><span>6 分</span></label>
+              <label><input type="radio" name="q3" value="7"><span>7 分</span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="join-actions profile-template-actions">
+        <button class="btn-line" type="button" onclick="closeJoinModal()">暫不填寫</button>
+        <button class="btn-ec btn-ec-final" type="submit">送出回饋</button>
+      </div>
+    </form>
+
+    <div class="join-modal-body" id="join-modal-done" style="display:none">
+      <h2 class="join-title">流程完成，感謝您的填答。</h2>
+      <p class="join-q-sub">回饋資料已整理完成，可立即匯出 CSV 或複製 JSON。</p>
+      <div class="join-actions">
+        <button class="btn-line" type="button" onclick="exportResultCsv()">一鍵匯出 CSV</button>
+        <button class="btn-survey" type="button" onclick="copyResultJson()">複製 JSON</button>
+        <button class="btn-line" type="button" onclick="closeJoinModal()">關閉視窗</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-thankyou">
+  <div style="min-height:calc(100vh - var(--nav));display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3.5rem 2rem">
+    <div class="ty-wrap fade">
+      <div class="ty-icon">✓</div>
+      <p style="font-size:.6rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--blue);margin-bottom:.55rem">課程流程完成確認</p>
+      <h1 class="ty-h serif">感謝您完成<br>本次課程瀏覽流程</h1>
+      <p class="ty-p">所有資料將以匿名方式處理，僅供課程與學術分析使用。</p>
+      <div class="ty-info" id="ty-info">
+        <div class="ty-row" id="ty-row-ai"><span class="k">內容來源風格</span><span class="v" id="ty-ai"></span></div>
+        <div class="ty-row" id="ty-row-path"><span class="k">學習路徑</span><span class="v" id="ty-path"></span></div>
+        <div class="ty-row" id="ty-row-struct"><span class="k">課程結構</span><span class="v" id="ty-struct"></span></div>
+      </div>
+      <div class="ty-steps"><div class="ty-step"><p>填寫課後回饋<br>（約 10 分鐘）</p></div><div class="ty-step"><p>完成流程<br>結果確認</p></div></div>
+      <div class="ty-acts"><button class="btn-survey" onclick="openSurvey()">前往填寫回饋</button><button class="btn-line" onclick="goPage('course')">返回課程頁</button><button class="btn-line" onclick="goPage('landing')">回首頁</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="page-backend">
+  <div class="backend-wrap fade">
+    <div class="backend-head">
+      <div>
+        <p class="backend-kicker">研究後台</p>
+        <h2 class="backend-title">餘數實驗參與紀錄</h2>
+        <p class="backend-sub">顯示受測者分配到的條件組合、AI 體驗順序、目前進度與問卷結果。</p>
+      </div>
+      <div class="backend-actions">
+        <button class="btn-line" type="button" onclick="exportBackendRecordsCsv()">匯出全部 CSV</button>
+        <button class="btn-line" type="button" onclick="copyBackendRecordsJson()">複製全部 JSON</button>
+        <button class="btn-line" type="button" onclick="clearBackendRecords()">清除後台資料</button>
+        <button class="btn-survey" type="button" onclick="goPage('landing')">返回首頁</button>
+      </div>
+    </div>
+
+    <div class="backend-card">
+      <p class="backend-card-title">前端頁面入口</p>
+      <p class="backend-sub">可由後台直接切換至受測者操作頁面，進行流程檢查與展示。</p>
+      <div class="backend-actions">
+        <button class="btn-survey" type="button" onclick="goPage('landing')">前往前端首頁</button>
+        <button class="btn-line" type="button" onclick="goPage('course')">前往課程頁面</button>
+      </div>
+    </div>
+
+    <div class="backend-grid">
+      <div class="backend-card">
+        <p class="backend-card-title">條件分配概覽</p>
+        <div id="backend-summary" class="backend-summary"></div>
+      </div>
+      <div class="backend-card">
+        <p class="backend-card-title">Modulo-5 輪替對照</p>
+        <div id="backend-condition-map" class="backend-condition-map"></div>
+      </div>
+    </div>
+
+    <div class="backend-card">
+      <p class="backend-card-title">課程資料驗證警示</p>
+      <div id="backend-data-validation-summary" class="backend-summary"></div>
+      <div id="backend-data-validation-list" class="backend-condition-map"></div>
+    </div>
+
+    <div class="backend-card backend-card-table">
+      <p class="backend-card-title">受測者清單</p>
+      <div class="backend-table-wrap">
+        <table class="backend-table">
+          <thead>
+            <tr>
+              <th>使用者</th>
+              <th>餘數組別</th>
+              <th>條件編號</th>
+              <th>組合摘要</th>
+              <th>AI 調控敘事風格鑑別度（待驗證）</th>
+              <th>目前參與進度</th>
+              <th>選擇課程</th>
+              <th>選擇版本</th>
+              <th>預算</th>
+              <th>預算分群</th>
+              <th>版本序列</th>
+              <th>Q1 序列</th>
+              <th>AI 停留序列</th>
+              <th>課程序列</th>
+              <th>Q1</th>
+              <th>Q2</th>
+              <th>Q3</th>
+              <th>時間</th>
+            </tr>
+          </thead>
+          <tbody id="backend-table-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="backend-card">
+      <p class="backend-card-title">Session Log 明細</p>
+      <p class="backend-sub">依受測者逐筆顯示背景資料、預算滑軌歷程、課程點擊與 AI 區塊停留時間。</p>
+      <div id="backend-session-log-list" class="backend-condition-map"></div>
+    </div>
+  </div>
+</div>
+
+<footer id="footer"><div class="ft-in"><p>AERO 商管課程體驗平台 </p><p id="ft-sc"></p></div></footer>
+
+<script src="AERO.js"></script>
+</body>
+</html>
