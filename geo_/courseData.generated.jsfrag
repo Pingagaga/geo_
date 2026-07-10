@@ -1,0 +1,934 @@
+const courseData = [
+  {
+    "course_url": "https://hahow.in/courses/5e7a1ead9c4b140023a8536f",
+    "course_id": "5e7a1ead9c4b140023a8536f",
+    "course_name": "職場人必學的商業分析術 - 專案策略思考",
+    "original_price": 2880,
+    "num_purchased": 1153,
+    "average_rating": 4.88,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/60a1cf0ea479bf08e4f5991b",
+    "course_id": "60a1cf0ea479bf08e4f5991b",
+    "course_name": "職場英文大補帖｜必勝簡報方程式",
+    "original_price": 1590,
+    "num_purchased": 433,
+    "average_rating": 4.96,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/64b6037994d60b20881db1e3",
+    "course_id": "64b6037994d60b20881db1e3",
+    "course_name": "最後一次學好商用英文 ，從關鍵字開始 Talk",
+    "original_price": 6400,
+    "num_purchased": 29,
+    "average_rating": 5.0,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/67ca81a08cbd72d2cdad37d5",
+    "course_id": "67ca81a08cbd72d2cdad37d5",
+    "course_name": "國際外商六大核心工作術｜職場必備 Mindset 建立",
+    "original_price": 27800,
+    "num_purchased": 573,
+    "average_rating": 4.86,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5da7ddea98176600213caf36",
+    "course_id": "5da7ddea98176600213caf36",
+    "course_name": "職場英文大補帖｜從社交心法到溝通金句",
+    "original_price": 1190,
+    "num_purchased": 626,
+    "average_rating": 4.86,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/64111821b85a08d4b027bb71",
+    "course_id": "64111821b85a08d4b027bb71",
+    "course_name": "聰明主管的正向領導學",
+    "original_price": 4200,
+    "num_purchased": 149,
+    "average_rating": 4.88,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/6040818e043b47f89a5c8f41",
+    "course_id": "6040818e043b47f89a5c8f41",
+    "course_name": "職場英文大補帖｜銀行行員必備的英文口說",
+    "original_price": 990,
+    "num_purchased": 375,
+    "average_rating": 4.98,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/64111c7f02231e24af7f8d16",
+    "course_id": "64111c7f02231e24af7f8d16",
+    "course_name": "矽谷專家給新手的第一堂數據管理課",
+    "original_price": 4800,
+    "num_purchased": 64,
+    "average_rating": 4.75,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5c8e0a0a8d1cc80020951f1a",
+    "course_id": "5c8e0a0a8d1cc80020951f1a",
+    "course_name": "產品經理職場學：PM 必修的職涯指南！",
+    "original_price": 2400,
+    "num_purchased": 2059,
+    "average_rating": 4.66,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5fd24f017687e53b086c7fe7",
+    "course_id": "5fd24f017687e53b086c7fe7",
+    "course_name": "SQL的五十道練習：初學者友善的資料庫入門",
+    "original_price": 3980,
+    "num_purchased": 3102,
+    "average_rating": 4.97,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/627e5a1b9841c80007c409ca",
+    "course_id": "627e5a1b9841c80007c409ca",
+    "course_name": "R 語言的 50+ 練習：統計分析的前哨站",
+    "original_price": 4980,
+    "num_purchased": 398,
+    "average_rating": 5.0,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5f61ac35b3fbe95900c45cb0",
+    "course_id": "5f61ac35b3fbe95900c45cb0",
+    "course_name": "職場英文大補帖｜上班族的跨國會議必修課",
+    "original_price": 1490,
+    "num_purchased": 569,
+    "average_rating": 4.8,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5dd935075e4baa002072a10a",
+    "course_id": "5dd935075e4baa002072a10a",
+    "course_name": "一次搞懂專案管理 - 從入門到業界實務",
+    "original_price": 2800,
+    "num_purchased": 2901,
+    "average_rating": 4.9,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/610814069871100007ab7b4f",
+    "course_id": "610814069871100007ab7b4f",
+    "course_name": "Python 的 50+ 練習：資料科學學習手冊",
+    "original_price": 4980,
+    "num_purchased": 1169,
+    "average_rating": 4.94,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/645734e4ce9d5fb4442d91cd",
+    "course_id": "645734e4ce9d5fb4442d91cd",
+    "course_name": "進階 SQL 的五十道練習：資料庫功力再提升",
+    "original_price": 3980,
+    "num_purchased": 732,
+    "average_rating": 5.0,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/667242066282be4de9eabf8f",
+    "course_id": "667242066282be4de9eabf8f",
+    "course_name": "資料分析的七個練習專案：累積個人作品集",
+    "original_price": 4980,
+    "num_purchased": 383,
+    "average_rating": 5.0,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/62d3a17ba1051e0007122a75",
+    "course_id": "62d3a17ba1051e0007122a75",
+    "course_name": "100 個電商數據營運指標全攻略",
+    "original_price": 2800,
+    "num_purchased": 417,
+    "average_rating": 5.0,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/6411219e49490ccf86dd29c1",
+    "course_id": "6411219e49490ccf86dd29c1",
+    "course_name": "CEO 的 24 堂經營智慧課",
+    "original_price": 4800,
+    "num_purchased": 82,
+    "average_rating": 5.0,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5dbb756d763da3002075eb62",
+    "course_id": "5dbb756d763da3002075eb62",
+    "course_name": "如何成為資料分析師：從問題解決到行動方案",
+    "original_price": 1980,
+    "num_purchased": 1608,
+    "average_rating": 4.87,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5ea94dd38c12ad922d9131f6",
+    "course_id": "5ea94dd38c12ad922d9131f6",
+    "course_name": "GA4 新手完全攻略！用數據分析下商業決策｜2024 全面升級版",
+    "original_price": 3980,
+    "num_purchased": 814,
+    "average_rating": 4.3,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5fe78a2be810e1a5ff89b17f",
+    "course_id": "5fe78a2be810e1a5ff89b17f",
+    "course_name": "軟體需求溝通─從外商公司學跨部門協作開發",
+    "original_price": 2890,
+    "num_purchased": 970,
+    "average_rating": 4.88,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/59f97b57a77a2d001eea8504",
+    "course_id": "59f97b57a77a2d001eea8504",
+    "course_name": "【電商正夯】找工作找實習必備 4 大技能",
+    "original_price": 2500,
+    "num_purchased": 1065,
+    "average_rating": 4.53,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/63f444d0095a63fe95688c29",
+    "course_id": "63f444d0095a63fe95688c29",
+    "course_name": "簡報再升級！職場人必學的商業圖表簡報術",
+    "original_price": 3280,
+    "num_purchased": 692,
+    "average_rating": 5.0,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5d428e522fb50200206226e9",
+    "course_id": "5d428e522fb50200206226e9",
+    "course_name": "AI 行銷學：用 Python 機器學習創造商業新價值",
+    "original_price": 3888,
+    "num_purchased": 362,
+    "average_rating": 4.33,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/68f0b5736dc0222aaa220f5a",
+    "course_id": "68f0b5736dc0222aaa220f5a",
+    "course_name": "金融數據學 Python：從選股建立程式邏輯",
+    "original_price": 5980,
+    "num_purchased": 177,
+    "average_rating": 0.0,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5b8e5fb4de22ba001ee7a572",
+    "course_id": "5b8e5fb4de22ba001ee7a572",
+    "course_name": "職場英文大補帖｜上班族的 Email 寫作課",
+    "original_price": 1999,
+    "num_purchased": 1635,
+    "average_rating": 4.88,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/663086ee0d300d8c0ba92c78",
+    "course_id": "663086ee0d300d8c0ba92c78",
+    "course_name": "",
+    "original_price": null,
+    "num_purchased": 0,
+    "average_rating": 0.0,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/64111d505ff2493ca2156c97",
+    "course_id": "64111d505ff2493ca2156c97",
+    "course_name": "解密成功品牌",
+    "original_price": 4200,
+    "num_purchased": 83,
+    "average_rating": 5.0,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/663092c40d300d8c0bada2ff",
+    "course_id": "663092c40d300d8c0bada2ff",
+    "course_name": "",
+    "original_price": null,
+    "num_purchased": 0,
+    "average_rating": 0.0,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/67ca80cf7ce0ad3cd6f7ac29",
+    "course_id": "67ca80cf7ce0ad3cd6f7ac29",
+    "course_name": "頂尖工作面試破解系統｜六步驟拿到夢幻 Offer",
+    "original_price": 16800,
+    "num_purchased": 464,
+    "average_rating": 5.0,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/66308c960d1fdd8ee441ba98",
+    "course_id": "66308c960d1fdd8ee441ba98",
+    "course_name": "商管技能提升組合｜數據管理＋圖解表達力",
+    "original_price": 7140,
+    "num_purchased": 0,
+    "average_rating": 0.0,
+    "total_hours": 9,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/63ad0f9aef17a1470401d9d2",
+    "course_id": "63ad0f9aef17a1470401d9d2",
+    "course_name": "商業分析經驗談：Monica 與你分享商業分析工作實戰",
+    "original_price": 0,
+    "num_purchased": 273,
+    "average_rating": 0.0,
+    "total_hours": 6,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/6238782d573d4b00060cf744",
+    "course_id": "6238782d573d4b00060cf744",
+    "course_name": "Python 購物籃分析：多商品推薦與利潤策略",
+    "original_price": 2388,
+    "num_purchased": 93,
+    "average_rating": 4.5,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/6630911b178be14da4fb50d5",
+    "course_id": "6630911b178be14da4fb50d5",
+    "course_name": "商管技能提升組合｜解密成功品牌＋專案管理",
+    "original_price": 5440,
+    "num_purchased": 0,
+    "average_rating": 0.0,
+    "total_hours": 6,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/66308d90da1b287f42cb6ea3",
+    "course_id": "66308d90da1b287f42cb6ea3",
+    "course_name": "商管技能提升組合｜數據管理＋解密成功品牌",
+    "original_price": 7650,
+    "num_purchased": 0,
+    "average_rating": 0.0,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/64422a1625efb5657481feb5",
+    "course_id": "64422a1625efb5657481feb5",
+    "course_name": "職場英文大補帖｜科技英文寫作快易通",
+    "original_price": 1999,
+    "num_purchased": 174,
+    "average_rating": 5.0,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5f89465d10a9ed6f2ee60e8c",
+    "course_id": "5f89465d10a9ed6f2ee60e8c",
+    "course_name": "不寫程式的數據分析： Excel 商業分析實戰",
+    "original_price": 2888,
+    "num_purchased": 746,
+    "average_rating": 4.85,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/663064500d1fdd8ee434cbe2",
+    "course_id": "663064500d1fdd8ee434cbe2",
+    "course_name": "商管技能提升組合｜領導學＋談判學",
+    "original_price": 7650,
+    "num_purchased": 0,
+    "average_rating": 0.0,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/60fe7a7e006b74000621ce1f",
+    "course_id": "60fe7a7e006b74000621ce1f",
+    "course_name": "雙語教學超前部署！互動式英語授課技巧",
+    "original_price": 2680,
+    "num_purchased": 449,
+    "average_rating": 5.0,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/663084c80d300d8c0ba86f22",
+    "course_id": "663084c80d300d8c0ba86f22",
+    "course_name": "商管技能提升組合｜談判課＋人聲運用",
+    "original_price": 7460,
+    "num_purchased": 16,
+    "average_rating": 0.0,
+    "total_hours": 7,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/66309375178be14da4fc4129",
+    "course_id": "66309375178be14da4fc4129",
+    "course_name": "商管技能提升組合｜經營智慧＋AI 應用",
+    "original_price": 6870,
+    "num_purchased": 10,
+    "average_rating": 0.0,
+    "total_hours": 9,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/66333fb3e249bf651e0c724b",
+    "course_id": "66333fb3e249bf651e0c724b",
+    "course_name": "商管技能提升組合｜經營智慧＋從心溝通",
+    "original_price": 5695,
+    "num_purchased": 0,
+    "average_rating": 0.0,
+    "total_hours": 6,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/66308be7e3b891182a7f88b3",
+    "course_id": "66308be7e3b891182a7f88b3",
+    "course_name": "商管技能提升組合｜談判課＋CEO 經營智慧",
+    "original_price": 8160,
+    "num_purchased": 0,
+    "average_rating": 0.0,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/624e0e7c22f6fc0007bbc5ec",
+    "course_id": "624e0e7c22f6fc0007bbc5ec",
+    "course_name": "創新轉型如何解密？服務設計實戰全攻略",
+    "original_price": 3500,
+    "num_purchased": 297,
+    "average_rating": 5.0,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/672c6c4ddb2b59427bdf4364",
+    "course_id": "672c6c4ddb2b59427bdf4364",
+    "course_name": "王梓沅的超級商英力：職場的萬用 X 棘手 X 關鍵溝通任務",
+    "original_price": 4800,
+    "num_purchased": 1759,
+    "average_rating": 5.0,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/64111b95b85a0820d028a916",
+    "course_id": "64111b95b85a0820d028a916",
+    "course_name": "劉必榮最受歡迎的談判課",
+    "original_price": 4800,
+    "num_purchased": 166,
+    "average_rating": 4.72,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/66308f61e3b891182a80f560",
+    "course_id": "66308f61e3b891182a80f560",
+    "course_name": "商管技能提升組合｜解密成功品牌＋行銷文案",
+    "original_price": 4660,
+    "num_purchased": 0,
+    "average_rating": 0.0,
+    "total_hours": 8,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/6630843f0d1fdd8ee43efb04",
+    "course_id": "6630843f0d1fdd8ee43efb04",
+    "course_name": "商管技能提升組合｜領導學＋GAS 談判",
+    "original_price": 5500,
+    "num_purchased": 0,
+    "average_rating": 0.0,
+    "total_hours": 6,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/66306556e3b891182a72afe7",
+    "course_id": "66306556e3b891182a72afe7",
+    "course_name": "商管技能提升組合｜領導學＋邏輯表達",
+    "original_price": 6700,
+    "num_purchased": 14,
+    "average_rating": 0.0,
+    "total_hours": 9,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/613c4d77323c7f000694dd08",
+    "course_id": "613c4d77323c7f000694dd08",
+    "course_name": "包租公/婆實戰攻略：隔套收租創造被動收入",
+    "original_price": 3480,
+    "num_purchased": 296,
+    "average_rating": 4.8,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/66309221da1b287f42cd17db",
+    "course_id": "66309221da1b287f42cd17db",
+    "course_name": "商管技能提升組合｜經營智慧＋邏輯表達",
+    "original_price": 7200,
+    "num_purchased": 0,
+    "average_rating": 0.0,
+    "total_hours": 9,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/6630830ee249bf651e4f9556",
+    "course_id": "6630830ee249bf651e4f9556",
+    "course_name": "商管技能提升組合｜領導學＋架構性思考",
+    "original_price": 5235,
+    "num_purchased": 0,
+    "average_rating": 0.0,
+    "total_hours": 6,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/66308e210d1fdd8ee44265fc",
+    "course_id": "66308e210d1fdd8ee44265fc",
+    "course_name": "商管技能提升組合｜解密成功品牌＋談判課",
+    "original_price": 7650,
+    "num_purchased": 0,
+    "average_rating": 0.0,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/66308ed1da1b287f42cbdc71",
+    "course_id": "66308ed1da1b287f42cbdc71",
+    "course_name": "商管技能提升組合｜解密成功品牌＋領導學",
+    "original_price": 7140,
+    "num_purchased": 0,
+    "average_rating": 0.0,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/69f988654127db67a5500d5c",
+    "course_id": "69f988654127db67a5500d5c",
+    "course_name": "AI 商用英文寫作實戰溝通術：Prompt 策略 x 履歷撰寫 x 職場信件",
+    "original_price": 4280,
+    "num_purchased": 54,
+    "average_rating": 0.0,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/651555d40d84e88549bfc459",
+    "course_id": "651555d40d84e88549bfc459",
+    "course_name": "職場英文大補帖｜跨文化溝通指南",
+    "original_price": 2180,
+    "num_purchased": 127,
+    "average_rating": 4.96,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/627e11d159b56500068e4ec7",
+    "course_id": "627e11d159b56500068e4ec7",
+    "course_name": "30 堂萬用會議英文情境課｜一次搞懂職場英文",
+    "original_price": 4200,
+    "num_purchased": 169,
+    "average_rating": 4.92,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5cde102291a3ab0020624820",
+    "course_id": "5cde102291a3ab0020624820",
+    "course_name": "成為專業筆譯必備：商務日文翻譯力",
+    "original_price": 3000,
+    "num_purchased": 782,
+    "average_rating": 4.99,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/live-events/6a1e510b54477ebdbd5d51ca",
+    "course_id": "6a1e510b54477ebdbd5d51ca",
+    "course_name": "",
+    "original_price": null,
+    "num_purchased": 0,
+    "average_rating": 0.0,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/69d86b9e1c510282c619afea",
+    "course_id": "69d86b9e1c510282c619afea",
+    "course_name": "選擇權以小搏大：散戶必學的戰略組單與結算布局全攻略",
+    "original_price": 5680,
+    "num_purchased": 65,
+    "average_rating": 0.0,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/6a19360513acfec33cf163fb",
+    "course_id": "6a19360513acfec33cf163fb",
+    "course_name": "",
+    "original_price": null,
+    "num_purchased": 0,
+    "average_rating": 0.0,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/607ceae6fa76bb60e8a556c8",
+    "course_id": "607ceae6fa76bb60e8a556c8",
+    "course_name": "MultiCharts：期貨新手懶人投資術",
+    "original_price": 1500,
+    "num_purchased": 242,
+    "average_rating": 5.0,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5c176b8411b27900205c5709",
+    "course_id": "5c176b8411b27900205c5709",
+    "course_name": "Looker Studio 視覺化數據分析",
+    "original_price": 4200,
+    "num_purchased": 647,
+    "average_rating": 4.62,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5f58478c880fc4310780cd8f",
+    "course_id": "5f58478c880fc4310780cd8f",
+    "course_name": "Python 行銷資料科學 ：基礎語法入門最前線",
+    "original_price": 1480,
+    "num_purchased": 400,
+    "average_rating": 4.8,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/59849fbcacc1370700075d44",
+    "course_id": "59849fbcacc1370700075d44",
+    "course_name": "網路行銷全方位入門實戰（下集）",
+    "original_price": 1480,
+    "num_purchased": 1134,
+    "average_rating": 4.65,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/61e7f78a6d9e6f00067549ab",
+    "course_id": "61e7f78a6d9e6f00067549ab",
+    "course_name": "直播銷貨很容易！第一次導購直播就上手",
+    "original_price": 1590,
+    "num_purchased": 193,
+    "average_rating": 5.0,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/60c2e123dcc8c38df47514c1",
+    "course_id": "60c2e123dcc8c38df47514c1",
+    "course_name": "雙語教育必學的核心素養－用英文學知識",
+    "original_price": 2000,
+    "num_purchased": 181,
+    "average_rating": 0.0,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/63bfb0af251c322c26e8aec0",
+    "course_id": "63bfb0af251c322c26e8aec0",
+    "course_name": "用矽谷策略創造人生職涯新方向",
+    "original_price": 2999,
+    "num_purchased": 231,
+    "average_rating": 5.0,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/6a1e7a0a8589c6250ddfb691",
+    "course_id": "6a1e7a0a8589c6250ddfb691",
+    "course_name": "主管升級 × AI 商用英文溝通術",
+    "original_price": 6750,
+    "num_purchased": 0,
+    "average_rating": 0.0,
+    "total_hours": 11,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/594f29d013cd380700228e7d",
+    "course_id": "594f29d013cd380700228e7d",
+    "course_name": "網路行銷全方位入門實戰（上集）",
+    "original_price": 1480,
+    "num_purchased": 2536,
+    "average_rating": 4.7,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/629c6f59a68c7300079d483d",
+    "course_id": "629c6f59a68c7300079d483d",
+    "course_name": "Streamlit x ChatGPT 快速打造資料分析網頁",
+    "original_price": 2888,
+    "num_purchased": 243,
+    "average_rating": 4.56,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/69bcbb018e02800f33e69495",
+    "course_id": "69bcbb018e02800f33e69495",
+    "course_name": "顧問級問題解決力：7 步驟搞定職場難題",
+    "original_price": 16800,
+    "num_purchased": 323,
+    "average_rating": 0.0,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/595cd372bbc89b07008603a2",
+    "course_id": "595cd372bbc89b07008603a2",
+    "course_name": "ZBrush - 設計師公仔入門課",
+    "original_price": 4190,
+    "num_purchased": 231,
+    "average_rating": 5.0,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/65436640ededea5029e5bcd1",
+    "course_id": "65436640ededea5029e5bcd1",
+    "course_name": "職場人必備的簡報＋圖表設計",
+    "original_price": 6610,
+    "num_purchased": 69,
+    "average_rating": 0.0,
+    "total_hours": 10,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5a211b15a6d4a5001ec31247",
+    "course_id": "5a211b15a6d4a5001ec31247",
+    "course_name": "台科 EMBA 年年爆滿的一門 Word 課（A系列）",
+    "original_price": 950,
+    "num_purchased": 4276,
+    "average_rating": 4.98,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/627aacbf9841c800076b8ea4",
+    "course_id": "627aacbf9841c800076b8ea4",
+    "course_name": "租屋族不踩雷 | 找房看屋、簽約佈置全攻略",
+    "original_price": 2000,
+    "num_purchased": 124,
+    "average_rating": 5.0,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5a4dfd25fa1e3f001e8d6a35",
+    "course_id": "5a4dfd25fa1e3f001e8d6a35",
+    "course_name": "台科 EMBA 年年爆滿的一門 Word 課（B+C 系列）",
+    "original_price": 1050,
+    "num_purchased": 2485,
+    "average_rating": 4.99,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/60dd6d80638ed00aa99b5556",
+    "course_id": "60dd6d80638ed00aa99b5556",
+    "course_name": "Excel 新手入門必修課：從 0 開始",
+    "original_price": 990,
+    "num_purchased": 6159,
+    "average_rating": 4.99,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/61a184185021a600064e8468",
+    "course_id": "61a184185021a600064e8468",
+    "course_name": "提案無難事，第一次寫政府補助案就上手！",
+    "original_price": 3499,
+    "num_purchased": 167,
+    "average_rating": 0.0,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5acb00ded21aee001e55b670",
+    "course_id": "5acb00ded21aee001e55b670",
+    "course_name": "簡報方舟：高效簡報的系統化做法",
+    "original_price": 1800,
+    "num_purchased": 1825,
+    "average_rating": 4.99,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5f2262c46213a15ae077fb76",
+    "course_id": "5f2262c46213a15ae077fb76",
+    "course_name": "黛你做行銷-全方面蹲好行銷馬步",
+    "original_price": 2400,
+    "num_purchased": 273,
+    "average_rating": 4.76,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5e2a980ee3832b00247239d0",
+    "course_id": "5e2a980ee3832b00247239d0",
+    "course_name": "職場必備的 Excel 關鍵技法－進階",
+    "original_price": 1390,
+    "num_purchased": 4691,
+    "average_rating": 4.97,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5d9c405e6f4b130023e9999d",
+    "course_id": "5d9c405e6f4b130023e9999d",
+    "course_name": "Python 資料分析 - 網頁爬蟲與視覺呈現",
+    "original_price": 1880,
+    "num_purchased": 885,
+    "average_rating": 4.78,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/680a57f0e7cfb571b972de14",
+    "course_id": "680a57f0e7cfb571b972de14",
+    "course_name": "跨越焦慮的產品開發之道｜2025 軟體產品年會 - 完整回放",
+    "original_price": 2980,
+    "num_purchased": 40,
+    "average_rating": 0.0,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/58d5c70c27ea7d070060160e",
+    "course_id": "58d5c70c27ea7d070060160e",
+    "course_name": "從入門到業界實戰 - UI / UX 前端網頁設計",
+    "original_price": 2500,
+    "num_purchased": 5117,
+    "average_rating": 4.84,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5a2e3baea6501f001e2eb5eb",
+    "course_id": "5a2e3baea6501f001e2eb5eb",
+    "course_name": "從上手到專業，寫出你想要的文案效果",
+    "original_price": 1980,
+    "num_purchased": 5216,
+    "average_rating": 4.87,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/58d21b6c27ea7d07005fffc1",
+    "course_id": "58d21b6c27ea7d07005fffc1",
+    "course_name": "PS 核心技法 | 調色技法完全講解篇",
+    "original_price": 4500,
+    "num_purchased": 417,
+    "average_rating": 5.0,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5ebca40b454a0417c5880c8e",
+    "course_id": "5ebca40b454a0417c5880c8e",
+    "course_name": "Podcast 新手攻略課程：0 到 1 必學指南",
+    "original_price": 1480,
+    "num_purchased": 2044,
+    "average_rating": 4.84,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/691c3d803a0a67201ccc1c5a",
+    "course_id": "691c3d803a0a67201ccc1c5a",
+    "course_name": "終極升遷指南｜AI 工具實作 X 思維行動策略",
+    "original_price": 7450,
+    "num_purchased": 249,
+    "average_rating": 0.0,
+    "total_hours": 4,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5f4c4a642836612efc89423c",
+    "course_id": "5f4c4a642836612efc89423c",
+    "course_name": "Python 資料分析：AI 機器學習入門到應用",
+    "original_price": 2180,
+    "num_purchased": 1037,
+    "average_rating": 4.44,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5c82809d9d98460020c3078d",
+    "course_id": "5c82809d9d98460020c3078d",
+    "course_name": "開啟你的 AI 技能 —— 無痛入門 NLP",
+    "original_price": 2600,
+    "num_purchased": 331,
+    "average_rating": 4.29,
+    "total_hours": 3,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/courses/5abc5d2b7997a2001e7bde72",
+    "course_id": "5abc5d2b7997a2001e7bde72",
+    "course_name": "營養師萊恩：狗狗鮮食簡單做",
+    "original_price": 1680,
+    "num_purchased": 544,
+    "average_rating": 5.0,
+    "total_hours": 5,
+    "status": "OK"
+  },
+  {
+    "course_url": "https://hahow.in/collections/63a96f67e6cc7ab14fbb6c43",
+    "course_id": "63a96f67e6cc7ab14fbb6c43",
+    "course_name": "美股新手 30 分鐘快速上手",
+    "original_price": 0,
+    "num_purchased": 1031,
+    "average_rating": 0.0,
+    "total_hours": 12,
+    "status": "NOT_FOUND"
+  }
+];
+
+// 這裡之後手動貼上 121 筆完整 JSON 資料
