@@ -1,6 +1,11 @@
 [build]
   command = "node scripts/generate-netlify-config.mjs"
   publish = "geo_"
+
+[[redirects]]
+  from = "/"
+  to = "/AERO.html"
+  status = 302
 [[headers]]
   for = "/*"
   [headers.values]
