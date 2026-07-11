@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: aero-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn backend.app:app -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT
+    healthCheckPath: /health
+    envVars:
+      - key: AERO_ENV
+        value: production
+      - key: AERO_STORAGE
+        value: firestore
+      - key: AERO_SERVE_FRONTEND
+        value: false
+      - key: AERO_MAX_BODY_BYTES
+        value: 1000000
+      - key: AERO_RATE_LIMIT_PER_MINUTE
+        value: 60
+      - key: GOOGLE_CLOUD_PROJECT
+        sync: false
+      - key: GOOGLE_APPLICATION_CREDENTIALS
+        sync: false
+      - key: AERO_ADMIN_TOKEN
+        generateValue: true
+      - key: AERO_ALLOWED_ORIGINS
+        sync: false

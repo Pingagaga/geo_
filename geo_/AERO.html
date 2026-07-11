@@ -2,10 +2,43 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>AERO 商管課程綱要平台</title>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Lora:ital,wght@0,500;0,600;1,400&family=Noto+Serif+TC:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="AERO.css">
+<style>
+  /* Research-flow transition: keeps the survey in the reading flow, never as a lightbox. */
+  .round-transition-page{background:#f7f8fa;min-height:100vh;padding:calc(var(--nav) + 2.5rem) 1.25rem 4rem}
+  .round-transition-shell{max-width:860px;margin:0 auto}
+  .round-transition-card{background:#fff;border:1px solid #e5e9ef;border-radius:20px;padding:2.4rem 2.5rem;box-shadow:0 16px 40px rgba(27,43,65,.08)}
+  .round-transition-kicker{margin:0 0 .7rem;color:var(--blue);font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+  .round-transition-title{margin:0;color:var(--ink);font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.25}
+  .round-transition-desc{max-width:620px;margin:1rem 0 1.6rem;color:var(--ink2);line-height:1.8}
+  .round-progress{display:flex;gap:.55rem;margin:1.4rem 0 1.8rem}
+  .round-progress span{height:5px;flex:1;border-radius:99px;background:#e4e8ee}
+  .round-progress span.done{background:var(--blue)}
+  .round-transition-action{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+  .round-transition-note{margin:0;color:var(--ink3);font-size:.85rem}
+  .round-survey-panel{display:none;margin-top:1.5rem;scroll-margin-top:calc(var(--nav) + 1.5rem)}
+  .round-transition-page.final-stage .round-survey-panel{display:block}
+  .round-survey-card{background:#fff;border:1px solid #e5e9ef;border-radius:20px;padding:2rem 2.5rem;box-shadow:0 16px 40px rgba(27,43,65,.06)}
+  .round-survey-card .join-modal-body{max-width:none;padding:0;background:transparent;box-shadow:none}
+  .round-survey-card .profile-template-item{border-color:#e8ecf1}
+  .round-survey-card .profile-template-actions{position:sticky;bottom:1rem;padding:1rem 0 0;background:linear-gradient(0deg,#fff 75%,rgba(255,255,255,0))}
+  @media (max-width:640px){.round-transition-page{padding:calc(var(--nav) + 1.25rem) 1rem 2.5rem}.round-transition-card,.round-survey-card{padding:1.5rem}.round-transition-action .btn-proceed{width:100%}}
+
+  /* Equal visual weight for reading evidence and selecting a course. */
+  #page-course{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:24px}
+  .course-sec-list{grid-column:1 / -1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px;align-items:stretch}
+  .course-sec-list .course-insights-panel,.course-sec-list .course-blind-reco{margin:0;min-width:0;background:#fff;border:1px solid #EFD9C5;border-radius:20px;box-shadow:0 12px 28px rgba(214,161,115,.09);padding:18px}
+  .course-sec-list .course-insights-head{display:block;padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--line2)}
+  .course-sec-list .course-insights-head .sec-title{margin-bottom:5px}
+  .course-choice-note{margin:5px 0 14px;color:#5e6f7c;font-size:.76rem;line-height:1.65}
+  #course-blind-list{max-height:470px;overflow-y:auto;padding-right:4px;scrollbar-gutter:stable}
+  .course-sec-list .course-blind-reco .hahow-reco-head{padding-bottom:10px;border-bottom:1px solid var(--line2)}
+  .course-sec-list .course-blind-actions{justify-content:flex-start;margin-top:18px}
+  @media (max-width:900px){#page-course{grid-template-columns:1fr}.course-sec-list{grid-template-columns:1fr}.course-sec-list .course-blind-reco{min-height:auto}#course-blind-list{max-height:none;overflow:visible}}
+</style>
 </head>
 <body>
 
@@ -76,26 +109,8 @@
 <div class="page show" id="page-landing">
   <div class="land-hero">
     <div class="land-hero-in fade">
-      <div class="land-icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" role="img" aria-label="研究與學習圖示">
-          <path d="M12 4a8 8 0 1 0 8 8"/>
-          <path d="M12 4v4"/>
-          <path d="M4 12h4"/>
-          <path d="M18.5 18.5L22 22"/>
-          <circle cx="16.5" cy="16.5" r="2.5"/>
-        </svg>
-      </div>
-      
       <h1 class="land-title" id="land-title-main"><span class="land-line">AI 敘事式商管課程體驗</span><span class="land-line">歡迎參與本次<em>研究</em></span></h1>
-      <div class="hero-btns" style="flex-direction:column;align-items:stretch;gap:0.85rem;width:100%;max-width:760px;margin:0 auto;">
-        <button class="btn-proceed" type="button" onclick="startParticipantCourse()">開始設定預算並查看課綱</button>
-        <div id="researcher-hero-card" class="hero-info-card" style="display: none; border-left: 4px solid var(--purple); margin-top: 1.5rem; padding: 1.25rem; background: var(--card); border-radius: var(--r); text-align: left; width: 100%;">
-          <p style="color: var(--purple); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.25rem;">研究者主控台模式</p>
-          <p style="font-size: 0.8rem; color: var(--ink2); margin-bottom: 0.75rem; line-height: 1.4;">目前系統已進入後台數據監控狀態。你可以直接進入後台，檢視受測者在 Modulo-5 分流下的真實 Session Log 軌跡與時間軸數據。</p>
-          <button class="btn-solid" style="background: var(--purple); border-color: var(--purple); font-size: 0.8rem; padding: 0.5rem 1rem;" type="button" onclick="goPage('backend')">進入研究者後台</button>
-        </div>
-      </div>
-     
+      <p class="land-desc">請依照下方流程完成課程瀏覽與回饋。首頁不會預先顯示課程內容，按下開始後才會引導您設定預算並查看課程。</p>
     </div>
   </div>
 
@@ -106,18 +121,22 @@
     <div class="si" id="si3"><div class="si-circle">4</div><div class="si-lbl">填寫課後回饋</div><div class="si-sub">完成學習流程</div></div>
   </div>
 
-  <div class="step-area" id="participant-intro" style="display:none">
+  <div class="step-area landing-intro" id="participant-intro">
     <div class="step-hd">
-      <div class="step-num"><span class="sn">1</span>閱讀說明</div>
-      <h2 class="step-title">歡迎進入本課程綱要導覽</h2>
-      <p class="step-desc">請先閱讀以下說明，再開始瀏覽課程內容。完成瀏覽後，系統將引導您填寫課後回饋。</p>
+      <div class="step-num">體驗流程</div>
+      <h2 class="step-title">準備好後，即可開始課程體驗</h2>
+      <p class="step-desc">開始後將先填寫基本資料與設定預算，再依序瀏覽四回合課程內容並完成評分。</p>
     </div>
     <div class="p-intro-card">
-      <p>本頁面提供一組商管課程綱要與學習資訊，請依一般閱讀習慣進行瀏覽。</p>
-      <p>瀏覽完成後請依指示填寫回饋問卷。您的資料將以匿名方式處理，僅用於課程與學術分析；若未完成流程即離開頁面，系統不會保留未完成紀錄。</p>
+      <p>整體流程：填寫基本資料 → 設定學習預算 → 瀏覽四回合課程 → 完成課後回饋。</p>
+      <p>您的資料將以匿名方式處理，僅用於課程與學術分析。</p>
     </div>
-    <div class="proceed-row">
-      <button class="btn-proceed" onclick="startParticipantCourse()">開始設定預算並查看課綱</button>
+    <label class="consent-check" for="participant-consent">
+      <input type="checkbox" id="participant-consent" onchange="updateConsentState()">
+      <span>我已閱讀並了解上述測驗說明，同意自願參與本研究。</span>
+    </label>
+    <div class="proceed-row landing-start-row">
+      <button class="btn-proceed" id="participant-start-btn" onclick="startParticipantCourse()" disabled>開始查看課程並設定預算</button>
     </div>
   </div>
 
@@ -183,17 +202,11 @@
   </section>
 
   <section class="course-sec course-sec-list">
-    <div class="hahow-reco course-blind-reco" id="course-blind-reco">
-      <div class="hahow-reco-head"><h3>精選 Hahow 課程</h3><span id="course-blind-count">0 堂</span></div>
-      <div class="hahow-reco-list" id="course-blind-list"></div>
-    </div>
-  </section>
-
-  <section class="course-sec course-sec-ai">
     <div class="course-insights-panel">
       <div class="course-insights-head">
-        <p class="sec-tag"></p>
-        <h2 class="sec-title serif"></h2>
+        <p class="sec-tag">本回合課程資訊</p>
+        <h2 class="sec-title serif">瀏覽課綱與內容摘要</h2>
+        <p class="course-insights-sub">請閱讀本回合提供的課程資訊；右側列出相同預算範圍內可選的精選課程。</p>
 
       </div>
 
@@ -215,6 +228,26 @@
         <button class="btn-enroll" onclick="ctaClick()">查看完整資訊</button>
       </div>
     </div>
+    <div class="hahow-reco course-blind-reco" id="course-blind-reco">
+      <div class="hahow-reco-head"><h3>精選課程選擇</h3><span id="course-blind-count">0 堂</span></div>
+      <p class="course-choice-note">各課程以相同欄位呈現；點選任一課程即可查看完整資訊。</p>
+      <div class="hahow-reco-list" id="course-blind-list"></div>
+    </div>
+  </section>
+
+  <section class="course-sec course-sec-ai">
+    <div class="final-cta-wrap">
+      <div class="cta-card">
+        <p class="p-lbl">課程費用</p>
+        <p class="p-num" id="cta-price"></p>
+        <p class="p-sub" id="cta-psub"></p>
+        <div id="cta-urg"></div>
+        <button class="btn-ec btn-ec-final" onclick="ctaClick()">查看完整課程資訊</button>
+        <div class="c-div"></div>
+        <div id="cta-feats"></div>
+        <div id="cta-testis"></div>
+      </div>
+    </div>
   </section>
 
   <section class="course-sec course-sec-final">
@@ -224,25 +257,25 @@
         <h2 class="sec-title serif" id="body-title"></h2>
         <div id="body-ct" class="fade"></div>
       </div>
-      <div class="final-cta-wrap">
-        <div class="cta-card">
-          <p class="p-lbl">課程費用</p>
-          <p class="p-num" id="cta-price"></p>
-          <p class="p-sub" id="cta-psub"></p>
-          <div id="cta-urg"></div>
-          <button class="btn-ec btn-ec-final" onclick="ctaClick()">查看完整課程資訊</button>
-          <div class="c-div"></div>
-          <div id="cta-feats"></div>
-          <div id="cta-testis"></div>
-        </div>
-      </div>
     </div>
   </section>
 </div>
 
-<div id="join-modal" class="join-modal" aria-hidden="true">
-  <div class="join-modal-backdrop"></div>
-  <div class="join-modal-dialog profile-template-dialog survey-template-dialog" role="dialog" aria-modal="true" aria-labelledby="join-modal-title">
+<div class="page round-transition-page" id="page-round-transition">
+  <main class="round-transition-shell">
+    <section class="round-transition-card" aria-labelledby="round-transition-title">
+      <p class="round-transition-kicker" id="round-transition-kicker">研究流程</p>
+      <h1 class="round-transition-title serif" id="round-transition-title">本回合閱讀已完成</h1>
+      <p class="round-transition-desc" id="round-transition-desc">您的瀏覽紀錄已保存。請在準備好後繼續下一段課程內容。</p>
+      <div class="round-progress" id="round-progress" aria-label="回合進度"><span></span><span></span><span></span><span></span></div>
+      <div class="round-transition-action" id="round-transition-action">
+        <button class="btn-proceed" id="round-transition-next" type="button" onclick="continueParticipantRound()">繼續下一回合</button>
+        <p class="round-transition-note" id="round-transition-note">您可依自己的節奏繼續。</p>
+      </div>
+    </section>
+
+    <section id="join-modal" class="round-survey-panel" aria-hidden="true" aria-labelledby="join-modal-title">
+      <div class="round-survey-card">
     <form class="join-modal-body profile-template-body survey-template-body" id="join-modal-form">
       <h2 id="join-modal-title" class="profile-template-title">課程綱要回饋問卷</h2>
 
@@ -306,7 +339,7 @@
       </div>
 
       <div class="join-actions profile-template-actions">
-        <button class="btn-line" type="button" onclick="closeJoinModal()">暫不填寫</button>
+        <button class="btn-line" type="button" onclick="goPage('course')">返回課程內容</button>
         <button class="btn-ec btn-ec-final" type="submit">送出回饋</button>
       </div>
     </form>
@@ -317,10 +350,12 @@
       <div class="join-actions">
         <button class="btn-line" type="button" onclick="exportResultCsv()">一鍵匯出 CSV</button>
         <button class="btn-survey" type="button" onclick="copyResultJson()">複製 JSON</button>
-        <button class="btn-line" type="button" onclick="closeJoinModal()">關閉視窗</button>
+        <button class="btn-line" type="button" onclick="goPage('thankyou')">完成</button>
       </div>
     </div>
-  </div>
+      </div>
+    </section>
+  </main>
 </div>
 
 <div class="page" id="page-thankyou">
@@ -341,7 +376,9 @@
   </div>
 </div>
 
-<div class="page" id="page-backend">
+<!-- Research administration intentionally lives at /research-admin.html and is
+     not embedded or linked from the participant questionnaire. -->
+<template id="removed-legacy-backend">
   <div class="backend-wrap fade">
     <div class="backend-head">
       <div>
@@ -420,10 +457,12 @@
       <div id="backend-session-log-list" class="backend-condition-map"></div>
     </div>
   </div>
-</div>
+</template>
 
 <footer id="footer"><div class="ft-in"><p>AERO 商管課程體驗平台 </p><p id="ft-sc"></p></div></footer>
 
-<script src="AERO.js"></script>
+<script src="config.js"></script>
+<script src="api-client.js"></script>
+<script src="AERO.js?v=20260710-5"></script>
 </body>
 </html>

@@ -1,0 +1,11 @@
+__pycache__/
+node_modules/
+*.py[cod]
+.pytest_cache/
+.firebase/
+firebase-debug.log
+firestore-debug.log
+emulator-data/
+.env
+service-account*.json
+research_data/

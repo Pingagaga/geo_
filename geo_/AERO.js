@@ -985,9 +985,11 @@ function nextHiddenUserId(){
 /* ── ELM 2x2 conditions (only source of assignment) ── */
 const userId = nextHiddenUserId();
 const TOTAL_ROUNDS = 4;
-const DEFAULT_REMAINDER_GROUP = ((userId % 5) + 5) % 5;
+const DEFAULT_REMAINDER_GROUP = ((userId % 4) + 4) % 4;
 const BACKEND_RECORD_KEY = 'aero_backend_record';
 const BACKEND_RECORDS_KEY = 'aero_backend_records';
+const API_BASE_URL = String(window.AERO_CONFIG?.apiBaseUrl || '').replace(/\/$/, '');
+const apiUrl = (path) => `${API_BASE_URL}${path}`;
 
 const SCENARIO_CONDITIONS = Object.freeze({
   a: Object.freeze({
@@ -1033,14 +1035,13 @@ const COUNTERBALANCE_SEQUENCES = Object.freeze({
   1: Object.freeze(['b', 'c', 'd', 'a']),
   2: Object.freeze(['c', 'd', 'a', 'b']),
   3: Object.freeze(['d', 'a', 'b', 'c']),
-  4: Object.freeze(['a', 'c', 'b', 'd']),
 });
 
 function normalizeRemainder(value){
   const n=Number(value);
   if(!Number.isFinite(n)) return DEFAULT_REMAINDER_GROUP;
-  const rem=Math.floor(n) % 5;
-  return (rem + 5) % 5;
+  const rem=Math.floor(n) % 4;
+  return (rem + 4) % 4;
 }
 
 function getConditionByScenarioKey(key){
@@ -1205,7 +1206,13 @@ const eventLog=[];
 const SESSION_LOG_STORAGE_KEY = 'aero_current_session_log';
 
 function generateParticipantId(){
-  return `AERO-${Math.floor(Date.now()/1000)}-${Math.floor(Math.random()*9000)+1000}`;
+  if(globalThis.crypto?.randomUUID){
+    return `AERO-${crypto.randomUUID()}`;
+  }
+  const randomPart=globalThis.crypto?.getRandomValues
+    ? crypto.getRandomValues(new Uint32Array(2)).join('-')
+    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  return `AERO-${randomPart}`;
 }
 
 function createEmptySessionLog(){
@@ -1248,7 +1255,7 @@ function cloneSessionLog(){
 
 function loadCurrentSessionLog(){
   try{
-    const raw=localStorage.getItem(SESSION_LOG_STORAGE_KEY);
+    const raw=sessionStorage.getItem(SESSION_LOG_STORAGE_KEY);
     if(!raw) return createEmptySessionLog();
     const parsed=JSON.parse(raw);
     const fallback=createEmptySessionLog();
@@ -1297,7 +1304,7 @@ let currentSessionLog = loadCurrentSessionLog();
 
 function syncCurrentSessionLogStorage(){
   try{
-    localStorage.setItem(SESSION_LOG_STORAGE_KEY, JSON.stringify(currentSessionLog));
+    sessionStorage.setItem(SESSION_LOG_STORAGE_KEY, JSON.stringify(currentSessionLog));
   }catch(_err){
     // Ignore storage failures in private browsing or restricted contexts.
   }
@@ -1377,9 +1384,8 @@ let roundDwellCheckpoint = { s:0 };
 let experimentModuloUserId = null;
 
 const roleParams = new URLSearchParams(window.location.search);
-const roleParamValue = String(roleParams.get('role') || '').trim().toLowerCase();
 const ROLE = {
-  researcher: roleParamValue === 'researcher' || roleParams.get('researcher') === '1',
+  researcher: false,
 };
 ROLE.participant = !ROLE.researcher;
 
@@ -1564,22 +1570,62 @@ function initBehaviorTracking(){
   syncCurrentSessionLogDwellTimes();
 }
 
-function openJoinModal(){
-  const modal=document.getElementById('join-modal');
+function updateRoundProgress(completedRounds){
+  document.querySelectorAll('#round-progress span').forEach((segment, index)=>{
+    segment.classList.toggle('done', index < completedRounds);
+  });
+}
+
+function showRoundTransition(roundResult=null, isFinal=false){
+  const completedRounds=roundResult ? roundResult.round_index + 1 : TOTAL_ROUNDS;
+  const page=document.getElementById('page-round-transition');
+  const survey=document.getElementById('join-modal');
   const form=document.getElementById('join-modal-form');
   const done=document.getElementById('join-modal-done');
-  if(!modal || !form || !done) return;
+  const kicker=document.getElementById('round-transition-kicker');
+  const title=document.getElementById('round-transition-title');
+  const desc=document.getElementById('round-transition-desc');
+  const action=document.getElementById('round-transition-action');
+  const next=document.getElementById('round-transition-next');
+  const note=document.getElementById('round-transition-note');
+  if(!page || !survey || !form || !done) return;
+
+  page.classList.toggle('final-stage', isFinal);
+  survey.setAttribute('aria-hidden', isFinal ? 'false' : 'true');
   form.style.display='block';
   done.style.display='none';
-  modal.classList.add('open');
-  modal.setAttribute('aria-hidden','false');
+  updateRoundProgress(completedRounds);
+
+  if(isFinal){
+    if(kicker) kicker.textContent='研究流程 · 最後階段';
+    if(title) title.textContent='四回合內容瀏覽完成';
+    if(desc) desc.textContent='感謝您依序完成所有課程內容。以下三題回饋會以本次整體瀏覽經驗為基礎，請依直覺作答。';
+    if(action) action.style.display='none';
+  }else{
+    if(kicker) kicker.textContent=`研究流程 · 第 ${completedRounds} / ${TOTAL_ROUNDS} 回合`;
+    if(title) title.textContent=`第 ${completedRounds} 回合閱讀已完成`;
+    if(desc) desc.textContent='本回合的瀏覽紀錄已保存。請稍作整理後，再主動進入下一回合；下一段內容會以新的課程情境呈現。';
+    if(action) action.style.display='flex';
+    if(next) next.textContent=`繼續第 ${completedRounds + 1} 回合`;
+    if(note) note.textContent='您可依自己的節奏繼續。';
+  }
+  goPage('round-transition');
+}
+
+function continueParticipantRound(){
+  applyCourse();
+  renderHahowRecommendations();
+  goPage('course');
+}
+
+// Kept as a compatible entry point for researcher-mode controls.
+function openJoinModal(){
+  showRoundTransition(null, true);
 }
 
 function closeJoinModal(){
-  const modal=document.getElementById('join-modal');
-  if(!modal) return;
-  modal.classList.remove('open');
-  modal.setAttribute('aria-hidden','true');
+  const survey=document.getElementById('join-modal');
+  if(survey) survey.setAttribute('aria-hidden','true');
 }
 
 function buildResultPayload(q1, q2, q3){
@@ -1699,7 +1745,6 @@ function submitJoinSurvey(){
   latestResultJson=JSON.stringify(latestResultPayload, null, 2);
   saveBackendRecord();
   stopBackgroundTrackers();
-  closeJoinModal();
   goPage('thankyou');
   toast('四回合已完成，感謝填答');
 }
@@ -1723,10 +1768,26 @@ function copyResultJson(){
     .catch(()=>prompt('請手動複製：', latestResultJson));
 }
 
-function assignConditionByUserId(){
-  const assignmentSeed=Date.now();
-  experimentModuloUserId=assignmentSeed;
-  const plan=getExperimentPlanByUserId(experimentModuloUserId);
+async function assignConditionByUserId(){
+  let assignment=null;
+  try{
+    const response=await fetch(apiUrl('/api/assign'), {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ participant_id:currentSessionLog.participant_id }),
+    });
+    if(!response.ok) throw new Error(`HTTP ${response.status}`);
+    assignment=await response.json();
+  }catch(_err){
+    const origin=window.location.origin && window.location.origin!=='null'
+      ? window.location.origin
+      : '直接開啟的本機檔案';
+    toast(`研究資料庫連線失敗（目前頁面：${origin}）`, 6000);
+    console.error('AERO assignment API failed', _err);
+    return false;
+  }
+  experimentModuloUserId=Number(assignment.assignment_number);
+  const plan=getExperimentPlanByUserId(Number(assignment.remainder_group));
   currentConditionRemainder=plan.remainderGroup;
   currentStepIndex=0;
   curSC=getScenarioForStep(currentConditionRemainder, currentStepIndex);
@@ -1747,7 +1808,7 @@ function assignConditionByUserId(){
     remainder_group: plan.remainderGroup,
     sequence: [...plan.sequence],
     modulo_user_id: experimentModuloUserId,
-    assignment_seed: assignmentSeed,
+    assignment_seed: assignment.assignment_number,
     current_step_index: currentStepIndex,
     condition_id: assignedCondition.conditionId,
     condition_label: assignedCondition.summaryLabel,
@@ -1758,6 +1819,7 @@ function assignConditionByUserId(){
   };
   syncCurrentSessionLogStorage();
   logEvent('AUTO_ASSIGN', `REM-${plan.remainderGroup} ${plan.sequence.map((key)=>key.toUpperCase()).join('>')}`);
+  return true;
 }
 
 function configureRoleUI(){
@@ -1853,8 +1915,27 @@ function initResearcherEntry(){
   if(heroCard) heroCard.style.display='block';
 }
 
+function updateConsentState(){
+  const consent=document.getElementById('participant-consent');
+  const startBtn=document.getElementById('participant-start-btn');
+  if(startBtn) startBtn.disabled=!consent?.checked;
+}
+
+// Keep the experiment layout at a stable browser scale on touchpads and mobile devices.
+document.addEventListener('wheel', (event)=>{
+  if(event.ctrlKey || event.metaKey) event.preventDefault();
+}, { passive:false });
+document.addEventListener('gesturestart', (event)=>event.preventDefault(), { passive:false });
+document.addEventListener('gesturechange', (event)=>event.preventDefault(), { passive:false });
+
 function startParticipantCourse(){
   if(!ROLE.participant) return;
+  const consent=document.getElementById('participant-consent');
+  if(!consent?.checked){
+    toast('請先閱讀測驗說明並勾選知情同意');
+    updateConsentState();
+    return;
+  }
   ensureParticipantProfileModal();
   openParticipantProfileModal();
 }
@@ -2003,10 +2084,10 @@ function ensureParticipantProfileModal(){
               <p class="profile-intake-qid">Q4</p>
               <p class="profile-intake-qtitle">若以整個家庭為單位，你/妳家全家年總收入大約落在下列哪個區間？</p>
               <div class="profile-intake-options cols-2" id="participant-profile-household-row">
-                <label class="profile-option-card"><input type="radio" name="participant-profile-household" value="日常受薪家庭"><span class="profile-option-check">✓</span><span class="profile-option-text">（年所得 NT$ 38 萬元以下）</span></label>
-                <label class="profile-option-card"><input type="radio" name="participant-profile-household" value="標準小康家庭"><span class="profile-option-check">✓</span><span class="profile-option-text">年所得 NT$ 38 萬 ~ NT$ 100 萬元）</span></label>
-                <label class="profile-option-card"><input type="radio" name="participant-profile-household" value="穩健中產家庭"><span class="profile-option-check">✓</span><span class="profile-option-text">（年所得 NT$ 100 萬 ~ NT$ 235萬元）</span></label>
-                <label class="profile-option-card"><input type="radio" name="participant-profile-household" value="富裕家庭"><span class="profile-option-check">✓</span><span class="profile-option-text">（年所得 NT$ 235 萬元以上）</span></label>
+                <label class="profile-option-card"><input type="radio" name="participant-profile-household" value="日常受薪家庭"><span class="profile-option-check">✓</span><span class="profile-option-text">年所得 NT$ 38 萬元以下</span></label>
+                <label class="profile-option-card"><input type="radio" name="participant-profile-household" value="標準小康家庭"><span class="profile-option-check">✓</span><span class="profile-option-text">年所得 NT$ 38 萬 ~ NT$ 100 萬元</span></label>
+                <label class="profile-option-card"><input type="radio" name="participant-profile-household" value="穩健中產家庭"><span class="profile-option-check">✓</span><span class="profile-option-text">年所得 NT$ 100 萬 ~ NT$ 235萬元</span></label>
+                <label class="profile-option-card"><input type="radio" name="participant-profile-household" value="富裕家庭"><span class="profile-option-check">✓</span><span class="profile-option-text">年所得 NT$ 235 萬元以上</span></label>
               </div>
             </section>
           </div>
@@ -2059,7 +2140,7 @@ function closeParticipantProfileModal(){
   modal.setAttribute('aria-hidden','true');
 }
 
-function submitParticipantProfile(){
+async function submitParticipantProfile(){
   const modal=document.getElementById('participant-profile-modal');
   if(!modal) return;
 
@@ -2078,7 +2159,8 @@ function submitParticipantProfile(){
     disposableIncomeLevel,
     householdIncomeLevel,
   });
-  assignConditionByUserId();
+  const assigned=await assignConditionByUserId();
+  if(!assigned) return;
   closeParticipantProfileModal();
   enterParticipantCourseFlow();
 }
@@ -2144,7 +2226,7 @@ function goPage(name){
 
   window.scrollTo({top:0,behavior:'instant'});
   // breadcrumb
-  const map = ROLE.participant ? {landing:0,course:1,thankyou:2} : {landing:0,course:2,thankyou:3,backend:0};
+  const map = ROLE.participant ? {landing:0,course:1,'round-transition':2,thankyou:2} : {landing:0,course:2,'round-transition':3,thankyou:3,backend:0};
   const cur=map[name]??0;
   [0,1,2,3].forEach(i=>{
     const el=document.getElementById('nt'+i);
@@ -2725,6 +2807,15 @@ function saveBackendRecord(){
   next.push(record);
   next.sort((a,b)=>Number(a.userId)-Number(b.userId));
   setBackendRecords(next);
+
+  // The server is the authoritative research store. localStorage above is only
+  // a same-device recovery cache and is never used as the research dataset.
+  fetch(apiUrl('/api/records'), {
+    method:'PUT',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(record),
+    keepalive:true,
+  }).catch(()=>{});
 }
 
 /* ── Start course ── */
@@ -2821,7 +2912,7 @@ function applyCourse(){
   }
 
   const insightsHead=document.querySelector('.course-insights-head');
-  if(insightsHead) insightsHead.style.display='none';
+  if(insightsHead) insightsHead.style.display='block';
 
   document.getElementById('body-tag').textContent=d.bodyTag;
   document.getElementById('body-title').textContent=d.bodyTitle;
@@ -2907,17 +2998,16 @@ function advanceParticipantRound(){
     };
     syncCurrentSessionLogStorage();
 
-    applyCourse();
-    renderHahowRecommendations();
     saveBackendRecord();
-    toast(`已完成第 ${roundResult.round_index + 1} 回合，已切換至第 ${currentStepIndex + 1} 回合`);
+    showRoundTransition(roundResult, false);
+    toast(`已完成第 ${roundResult.round_index + 1} 回合`);
     return;
   }
 
   saveBackendRecord();
   resetSurveyInputs();
-  openJoinModal();
-  toast('已完成 4 回合，請填寫最終問卷');
+  showRoundTransition(roundResult, true);
+  toast('已完成 4 回合，請依序填寫最終問卷');
 }
 
 /* ── CTA click ── */
@@ -3013,7 +3103,7 @@ function resetAll(){
   selectedRecoCourseId = null;
   selectedCourse = null;
   try{ localStorage.removeItem(BACKEND_RECORD_KEY); }catch(_err){}
-  try{ localStorage.removeItem(SESSION_LOG_STORAGE_KEY); }catch(_err){}
+  try{ sessionStorage.removeItem(SESSION_LOG_STORAGE_KEY); }catch(_err){}
   pauseAllStayTimers();
   if(dwellSyncTimer){
     clearInterval(dwellSyncTimer);
@@ -3209,11 +3299,11 @@ function renderBackendDashboard(){
   summaryEl.innerHTML=`
     <div class="backend-summary-item"><span>總受測者</span><strong>${records.length}</strong></div>
     <div class="backend-summary-item"><span>已完成問卷</span><strong>${doneCount}</strong></div>
-    <div class="backend-summary-item"><span>實驗架構</span><strong>Modulo-5 四回合輪替（a/b/c/d）</strong></div>
+    <div class="backend-summary-item"><span>實驗架構</span><strong>四序列平衡輪替（A/B/C/D）</strong></div>
   `;
 
   const conditionRows=[];
-  [0,1,2,3,4].forEach((rem)=>{
+  [0,1,2,3].forEach((rem)=>{
     const sequence=getSequenceByRemainder(rem).map((key)=>key.toUpperCase()).join(' → ');
     conditionRows.push(`<div class="cond-row"><span>餘數 ${rem}</span><span>序列 ${sequence}</span><span>${conditionCounter[String(rem)] || 0} 人</span></div>`);
   });
@@ -3505,7 +3595,6 @@ function initAiCardIcons(){
 
 document.addEventListener('DOMContentLoaded', ()=>{
   configureRoleUI();
-  initResearcherEntry();
   syncCurrentSessionLogStorage();
   initAiCardIcons();
   bindBudgetSliderListeners();
@@ -3514,12 +3603,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   initBehaviorTracking();
   renderIcons(document);
 
-  const joinModal=document.getElementById('join-modal');
   const joinForm=document.getElementById('join-modal-form');
-  const joinBackdrop=joinModal?.querySelector('.join-modal-backdrop');
-  if(joinBackdrop){
-    joinBackdrop.addEventListener('click', ()=>closeJoinModal());
-  }
   if(joinForm && !joinForm.dataset.submitBound){
     joinForm.addEventListener('submit', (event)=>{
       event.preventDefault();
@@ -3527,11 +3611,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
     });
     joinForm.dataset.submitBound='1';
   }
-  document.addEventListener('keydown', (event)=>{
-    if(event.key!=='Escape') return;
-    if(!joinModal || !joinModal.classList.contains('open')) return;
-    closeJoinModal();
-  });
 
   const ghostBtn=document.querySelector('.hero-btns .btn-ghost');
   if(ROLE.participant && ghostBtn) ghostBtn.style.display='none';

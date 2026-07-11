@@ -1,0 +1,12 @@
+{
+  "name": "aero-local-tools",
+  "private": true,
+  "scripts": {
+    "emulators": "firebase emulators:start --only firestore --project demo-aero",
+    "emulators:test": "firebase emulators:exec --only firestore --project demo-aero",
+    "test:netlify": "node scripts/test-netlify-config.mjs"
+  },
+  "devDependencies": {
+    "firebase-tools": "14.12.1"
+  }
+}

@@ -34,8 +34,13 @@ AERO 是一個以瀏覽器執行的 AI 課程探索研究原型，用來呈現�
 前端沒有安裝步驟。可直接開啟 `geo_/AERO.html`，或在專案根目錄啟動本機伺服器：
 
 ```powershell
-python -m http.server 8000 --directory geo_
+python server.py --host 127.0.0.1 --port 8000
 ```
+
+- 受測者網址：`http://localhost:8000/AERO.html`
+- 獨立研究後台：`http://localhost:8000/research-admin.html`
+- 正式紀錄集中保存在 `research_data/records.json`；資料夾首次收到受測者資料才建立。
+- 請勿用 `python -m http.server` 啟動正式研究，該模式沒有集中資料庫與平衡分派 API。
 
 接著開啟：
 
@@ -95,4 +100,3 @@ python fill_hours.py --file hahow_courses.xlsx
 - 擷取工具依賴第三方 API 與頁面結構，對方變更後可能需要調整解析邏輯。
 - 請遵守資料來源網站的服務條款、存取頻率限制及適用的隱私規範。
 - 研究資料可能包含受測者輸入；分享或匯出前請先確認資料治理與去識別化要求。
-
