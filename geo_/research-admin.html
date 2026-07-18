@@ -41,6 +41,10 @@
       <div class="metric"><span>Recorded participants</span><strong id="recorded">0</strong></div>
       <div class="metric"><span>Completed 4 rounds</span><strong id="completed">0</strong></div>
       <div class="metric"><span>Questionnaire complete</span><strong id="questionnaire">0</strong></div>
+      <div class="metric"><span>Sequence 1 A-B-C-D</span><strong id="balance-a">0</strong></div>
+      <div class="metric"><span>Sequence 2 B-C-D-A</span><strong id="balance-b">0</strong></div>
+      <div class="metric"><span>Sequence 3 C-D-A-B</span><strong id="balance-c">0</strong></div>
+      <div class="metric"><span>Sequence 4 D-A-B-C</span><strong id="balance-d">0</strong></div>
     </div>
   </section>
 
@@ -121,10 +125,15 @@ async function loadRecords(){
 function renderSummary(summary){
   const completed=currentRecords.filter((record)=>roundsOf(record).length>=4).length;
   const questionnaire=currentRecords.filter(questionnaireComplete).length;
+  const counts=Array.isArray(summary.assignment_counts) ? summary.assignment_counts : [];
   el('assigned').textContent=summary.assigned_participants || 0;
   el('recorded').textContent=summary.recorded_participants || currentRecords.length;
   el('completed').textContent=completed;
   el('questionnaire').textContent=questionnaire;
+  el('balance-a').textContent=counts[0] || 0;
+  el('balance-b').textContent=counts[1] || 0;
+  el('balance-c').textContent=counts[2] || 0;
+  el('balance-d').textContent=counts[3] || 0;
 }
 
 function renderRows(){

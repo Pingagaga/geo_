@@ -129,3 +129,18 @@ test('19 tracking hooks remain wired',()=>{
 test('20 course decision tests remain compatible with deterministic flow',()=>{
   assert.equal(flow.VERSION,'deterministic-v1');
 });
+
+test('21 consent removes the no-content checklist item',()=>{
+  assert.equal(aero.includes('<strong>不記錄內容</strong>'), false);
+});
+
+test('22 participant detail hides legacy adoption button areas',()=>{
+  assert.match(aero,/course-decision-actions/);
+  assert.match(aero,/course-hero-btns/);
+  assert.match(aero,/node\.hidden=true/);
+});
+
+test('23 course content placeholder does not expose condition structure labels',()=>{
+  const body=aero.match(/function buildTheoryNarrativeHtml\([\s\S]*?function applyTheoryNarrative/)?.[0] || '';
+  assert.equal(/Central|Peripheral|High Structure|Low Structure|content-condition-demo/.test(body), false);
+});

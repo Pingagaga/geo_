@@ -127,11 +127,13 @@ test('18 questionnaire cannot appear before final transition',()=>{
   assert.match(aero,/showRoundTransition\(roundResult, true\)/);
 });
 
-test('19 formal mode hides condition while demo mode shows it',()=>{
+test('19 formal course content hides condition while demo/admin still keep condition metadata',()=>{
   assert.match(aero,/if\(ROLE\.participant\)/);
   assert.match(aero,/ADVISOR_DEMO_MODE/);
-  assert.match(aero,/Central/);
-  assert.match(aero,/High Structure/);
+  assert.match(aero,/condition label/);
+  assert.match(aero,/structureStyleLabel/);
+  const contentBody=aero.match(/function buildTheoryNarrativeHtml\([\s\S]*?function applyTheoryNarrative/)?.[0] || '';
+  assert.equal(/Central|Peripheral|High Structure|Low Structure|content-condition-demo/.test(contentBody), false);
 });
 
 test('20 JSON load failure does not use fake courses',()=>{

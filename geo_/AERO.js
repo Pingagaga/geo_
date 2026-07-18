@@ -1632,8 +1632,11 @@ function ensureCourseDetailDecisionStructure(){
 
   const researchTitle=document.querySelector('.course-insights-head .sec-title');
   if(researchTitle) researchTitle.textContent='課程介紹';
-  document.querySelectorAll('#course-detail-state .btn-enroll, #course-detail-state .btn-ec-final').forEach((button)=>{
-    if(button.id!=='participant-profile-next-btn') button.textContent='選擇這堂課';
+  document.querySelectorAll(
+    '#course-detail-state .course-hero-btns, #course-detail-state .course-blind-actions, #course-detail-state .course-decision-actions, #course-detail-state .course-sec-final'
+  ).forEach((node)=>{
+    node.hidden=true;
+    node.style.display='none';
   });
 
   let decision=document.getElementById('course-decision-area');
@@ -1823,7 +1826,7 @@ function confirmBudgetAndStartCourses(){
   updateBudgetSetup(next);
   if(eligible.length<MINIMUM_ELIGIBLE_COURSES) return false;
   if(currentSessionLog.confirmed_budget!==null && Number(currentSessionLog.confirmed_budget)!==Number(next)){
-    const ok=confirm('修改預算會重新開始四回合，並清除已建立的候選課程與選擇紀錄。是否繼續？');
+    const ok=confirm('你正在修改已確認的預算。修改後會重新開始四回合，並清除本次測試已建立的候選課程與選擇紀錄。是否繼續？');
     if(!ok){
       updateBudgetSetup(currentSessionLog.confirmed_budget);
       return false;
@@ -1925,10 +1928,6 @@ function applyAdvisorDemoUxCopy(){
       <div class="step-hd">
         <div class="step-num">研究開始前</div>
         <h2 class="step-title">你將扮演即將畢業、準備進入職場的大學生。</h2>
-        <p class="step-desc">本研究關心你如何在有限補助下瀏覽、比較線上課程，並做出實際採用決策。</p>
-      </div>
-      <div class="p-intro-card">
-        <p>請依照自己的真實想法操作。查看完整資訊只是了解課程，仍可選擇、繼續比較或暫不考慮。</p>
       </div>
       <label class="consent-check hidden-consent" for="participant-consent">
         <input type="checkbox" id="participant-consent" onchange="updateConsentState()">
@@ -1956,7 +1955,6 @@ function applyAdvisorDemoUxCopy(){
       <label class="consent-list-item"><input class="advisor-consent-check" type="checkbox" onchange="syncAdvisorConsentChecklist()"><span class="consent-checkmark"></span><span><strong>匿名資料</strong><em>資料以匿名 participant ID 記錄，不收集姓名、電話或 email。</em></span></label>
       <label class="consent-list-item"><input class="advisor-consent-check" type="checkbox" onchange="syncAdvisorConsentChecklist()"><span class="consent-checkmark"></span><span><strong>行為紀錄內容</strong><em>記錄頁面狀態、查看完整資訊、返回比較、選擇、繼續比較與暫不考慮等研究事件。</em></span></label>
       <label class="consent-list-item"><input class="advisor-consent-check" type="checkbox" onchange="syncAdvisorConsentChecklist()"><span class="consent-checkmark"></span><span><strong>可隨時退出</strong><em>你可以在任何時間停止參與，不需要提供理由。</em></span></label>
-      <label class="consent-list-item"><input class="advisor-consent-check" type="checkbox" onchange="syncAdvisorConsentChecklist()"><span class="consent-checkmark"></span><span><strong>不記錄內容</strong><em>不記錄鍵盤文字與精確滑鼠軌跡。</em></span></label>
     </div>
     <div class="join-actions">
       <button class="btn-line" type="button" onclick="backToAdvisorWelcome()">返回</button>
@@ -2867,15 +2865,9 @@ function getCourseContextForNarrative(courseId){
 }
 
 function buildTheoryNarrativeHtml(condition, courseCtx){
-  const pathLabel=condition?.narrativeStyle==='rational' ? 'Central' : 'Peripheral';
-  const structureLabel=condition?.structureStyle==='high' ? 'High Structure' : 'Low Structure';
   const key=String(condition?.scenarioKey || 'a').toUpperCase();
   const placeholder=conditionContent[key] || conditionContent.A;
-  const demoMeta=ADVISOR_DEMO_MODE
-    ? `<div class="content-condition-demo"><strong>Advisor Demo Only</strong><span>${pathLabel} / ${structureLabel}</span></div>`
-    : '';
   return `<div class="aero-ai-copy course-content-placeholder">
-    ${demoMeta}
     <p>${sanitizeCourseText(placeholder)}</p>
   </div>`;
 }
