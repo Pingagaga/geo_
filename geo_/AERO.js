@@ -1079,6 +1079,30 @@ function getExperimentPlanByUserId(id){
   };
 }
 
+function createAdvisorDemoAssignment(){
+  const source=String(currentSessionLog?.participant_id || 'advisor-demo');
+  let hash=2166136261;
+  for(const ch of source){
+    hash^=ch.charCodeAt(0);
+    hash=Math.imul(hash,16777619);
+  }
+  const assignmentNumber=hash>>>0;
+  return {
+    assignment_number: assignmentNumber,
+    remainder_group: normalizeRemainder(assignmentNumber),
+    demo_local_fallback: true,
+  };
+}
+
+function getApiBaseDescription(){
+  const base=String(window.AERO_CONFIG?.apiBaseUrl || '').trim();
+  if(base) return base.replace(/\/$/, '');
+  const origin=window.location.origin && window.location.origin!=='null'
+    ? window.location.origin
+    : '直接開啟的本機檔案';
+  return `${origin}（未設定 AERO_API_BASE_URL，將使用同網域 /api）`;
+}
+
 const SC_DATA = {
   a:{ color:'#E89A57', label:'版本 1', nav:'版本 1 — 中央 × 高結構', path:'中央路徑（理性）', struct:'高結構化', ptag:'中央路徑', stag:'高結構化學科',
     title:'Python 商務數據分析<em>認證班</em>',
@@ -1201,6 +1225,8 @@ let currentConditionRemainder=null;
 let curDualPath=null;
 let ctrlOpen=false, swCnt=0, ctaCnt=0;
 let budgetValue = 1000;
+// Legacy session/business log. It remains separate from AEROTrackingService
+// research events and must never receive the new tracking event stream.
 const eventLog=[];
 
 const SESSION_LOG_STORAGE_KEY = 'aero_current_session_log';
@@ -1224,6 +1250,10 @@ function createEmptySessionLog(){
       disposable_income_level: '',
       household_income_level: '',
     },
+    pretest: {
+      prior_knowledge: null,
+      ai_use_frequency: null,
+    },
     experiment_assignment: {
       remainder_group: null,
       sequence: [],
@@ -1242,6 +1272,8 @@ function createEmptySessionLog(){
         aero_ai_summary_block: 0,
       },
       round_results: [],
+      adopted_course_ids: [],
+      round_decisions: {},
     },
     market_features: {
       budget_level: '',
@@ -1269,6 +1301,10 @@ function loadCurrentSessionLog(){
         ...fallback.demographics,
         ...(parsed?.demographics || {}),
       },
+      pretest: {
+        ...fallback.pretest,
+        ...(parsed?.pretest || {}),
+      },
       experiment_assignment: {
         ...fallback.experiment_assignment,
         ...(parsed?.experiment_assignment || {}),
@@ -1289,6 +1325,12 @@ function loadCurrentSessionLog(){
         round_results: Array.isArray(parsed?.behavior_metrics?.round_results)
           ? parsed.behavior_metrics.round_results
           : [],
+        adopted_course_ids: Array.isArray(parsed?.behavior_metrics?.adopted_course_ids)
+          ? parsed.behavior_metrics.adopted_course_ids
+          : [],
+        round_decisions: (parsed?.behavior_metrics?.round_decisions && typeof parsed.behavior_metrics.round_decisions==='object')
+          ? parsed.behavior_metrics.round_decisions
+          : {},
       },
       market_features: {
         ...fallback.market_features,
@@ -1301,6 +1343,99 @@ function loadCurrentSessionLog(){
 }
 
 let currentSessionLog = loadCurrentSessionLog();
+
+/* ── Research tracking service integration (Phase 3A lifecycle only) ── */
+const researchTrackingIntegration=window.AEROTrackingIntegration?.create?.({
+  debug:()=>window.AERO_TRACKING_DEBUG===true,
+  warn:(message, error)=>console.warn(message, error),
+}) || null;
+let completedTrackingRoundContext=null;
+
+function safeTrackCall(methodName, ...args){
+  try{
+    if(!researchTrackingIntegration || typeof researchTrackingIntegration[methodName]!=='function') return null;
+    return researchTrackingIntegration[methodName](...args);
+  }catch(error){
+    console.warn(`[AERO tracking] integration ${methodName} failed`, error);
+    return null;
+  }
+}
+
+function getResearchTrackingContext(pageName=null){
+  if((pageName==='round_transition' || pageName==='questionnaire') && completedTrackingRoundContext){
+    return {...completedTrackingRoundContext, ...(pageName ? {page_name:pageName} : {})};
+  }
+  return {
+    participant_id: currentSessionLog?.participant_id || null,
+    condition_id: assignedCondition?.conditionId ?? currentSessionLog?.experiment_assignment?.condition_id ?? null,
+    scenario_key: curSC || currentSessionLog?.experiment_assignment?.scenario_key || null,
+    round_index: Number.isInteger(currentStepIndex) && assignedCondition ? currentStepIndex : null,
+    course_id: selectedCourse?.id || selectedRecoCourseId || null,
+    ...(pageName ? {page_name:pageName} : {}),
+  };
+}
+
+function initializeResearchTracking(){
+  return safeTrackCall('initialize', {participant_id:currentSessionLog?.participant_id || null});
+}
+
+function updateTrackingContext(pageName=null){
+  return safeTrackCall('updateContext', getResearchTrackingContext(pageName));
+}
+
+function enterTrackingPage(pageName, reason='navigation'){
+  if(!pageName) return safeTrackCall('transitionPage', null, reason);
+  updateTrackingContext(pageName);
+  return safeTrackCall('transitionPage', pageName, reason, {entry_method:reason});
+}
+
+function leaveTrackingPage(reason='navigation'){
+  return safeTrackCall('transitionPage', null, reason);
+}
+
+function syncTrackingPageForUi(uiPageName){
+  if(!ROLE?.participant) return false;
+  updateTrackingContext();
+  return safeTrackCall('syncUiPage', uiPageName, 'go_page');
+}
+
+function startTrackingRound(){
+  completedTrackingRoundContext=null;
+  updateTrackingContext();
+  return safeTrackCall('startRound', getResearchTrackingContext('course_list'));
+}
+
+function finishTrackingRound(reason, roundIndex){
+  completedTrackingRoundContext={
+    ...getResearchTrackingContext(),
+    round_index:roundIndex,
+  };
+  return safeTrackCall('finishRound', reason, roundIndex);
+}
+
+function restoreResearchTrackingSession(){
+  if(!ROLE?.participant || !isParticipantProfileComplete()) return false;
+  const assignment=currentSessionLog?.experiment_assignment;
+  if(!assignment || assignment.remainder_group===null) return false;
+  initializeResearchTracking();
+  const snapshot=safeTrackCall('safeTrackCall', 'getSnapshot');
+  const participantId=currentSessionLog.participant_id;
+  if(!safeTrackCall('validStoredSession', snapshot, participantId)){
+    if(snapshot?.experiment_session_id) console.warn('[AERO tracking] stored session could not be safely resumed');
+    return false;
+  }
+  safeTrackCall('setConsent', true);
+  updateTrackingContext();
+  safeTrackCall('startOrResume', {
+    participant_id:participantId,
+    profile_complete:true,
+    context:getResearchTrackingContext(),
+    resume_reason:'refresh_or_restore',
+    completed_round_indices:(currentSessionLog.behavior_metrics?.round_results || []).map((round)=>round.round_index),
+    current_round_started:currentSessionLog.experiment_assignment?.current_step_index != null,
+  });
+  return true;
+}
 
 function syncCurrentSessionLogStorage(){
   try{
@@ -1355,11 +1490,13 @@ function isParticipantProfileComplete(){
   );
 }
 
-function setParticipantProfile({ educationLevel, majorGroup, disposableIncomeLevel, householdIncomeLevel }){
+function setParticipantProfile({ educationLevel, majorGroup, disposableIncomeLevel, householdIncomeLevel, priorKnowledge, aiUseFrequency }){
   currentSessionLog.demographics.education_level = educationLevel || '';
   currentSessionLog.demographics.major_group = majorGroup || '';
   currentSessionLog.demographics.disposable_income_level = disposableIncomeLevel || '';
   currentSessionLog.demographics.household_income_level = householdIncomeLevel || '';
+  currentSessionLog.pretest.prior_knowledge = Number(priorKnowledge) || null;
+  currentSessionLog.pretest.ai_use_frequency = Number(aiUseFrequency) || null;
   syncCurrentSessionLogStorage();
 }
 
@@ -1379,6 +1516,11 @@ let latestResultPayload = null;
 let latestResultJson = '';
 let selectedRecoCourseId = null;
 let selectedCourse = null;
+let currentCourseView = 'list';
+let activeDetailCourseId = null;
+let detailEntryMethod = null;
+let detailOpenedAt = null;
+let currentRoundCandidateIds = [];
 let currentStepIndex = 0;
 let roundDwellCheckpoint = { s:0 };
 let experimentModuloUserId = null;
@@ -1388,6 +1530,8 @@ const ROLE = {
   researcher: false,
 };
 ROLE.participant = !ROLE.researcher;
+const ADVISOR_DEMO_MODE = roleParams.get('demo') === '1';
+let scenarioBriefingAcknowledged = false;
 
 function participantMapStep(pageName){
   const map={landing:0,course:1,thankyou:2};
@@ -1414,7 +1558,7 @@ function getCurrentExperimentPlan(){
 }
 
 function resetSurveyInputs(){
-  document.querySelectorAll('input[name="q1"], input[name="q2"], input[name="q3"]').forEach((el)=>{
+  document.querySelectorAll('input[name^="q"], input[name="adoption_choice"]').forEach((el)=>{
     el.checked=false;
   });
 }
@@ -1425,10 +1569,20 @@ function appendRoundResult(q1=null, q2=null, q3=null){
     s:getStaySec('s'),
   };
   const step=normalizeStepIndex(currentStepIndex);
+  const decision=currentSessionLog.behavior_metrics.round_decisions?.[String(step)] || {};
   const roundResult={
     round_index: step,
     scenario_key: curSC || getScenarioForStep(currentConditionRemainder ?? experimentModuloUserId ?? userId, step),
     selected_course_id: getSelectedCourseIdForLog(),
+    condition_id: assignedCondition?.conditionId ?? null,
+    eligible_course_ids: [...(decision.eligible_course_ids || [])],
+    candidate_course_ids: [...(decision.candidate_course_ids || [])],
+    viewed_course_ids: [...(decision.viewed_course_ids || [])],
+    rejected_course_ids: [...(decision.rejected_course_ids || [])],
+    actual_adoption_action: decision.actual_adoption_action || null,
+    adoption_timestamp: decision.adoption_timestamp || null,
+    candidate_seed: decision.candidate_seed || null,
+    candidate_generation_version: decision.candidate_generation_version || null,
     q1_depthLogic: Number.isFinite(Number(q1)) ? Number(q1) : null,
     q2_visualAttraction: Number.isFinite(Number(q2)) ? Number(q2) : null,
     q3_purchaseIntent: Number.isFinite(Number(q3)) ? Number(q3) : null,
@@ -1591,31 +1745,58 @@ function showRoundTransition(roundResult=null, isFinal=false){
   if(!page || !survey || !form || !done) return;
 
   page.classList.toggle('final-stage', isFinal);
+  page.classList.remove('questionnaire-intro-stage');
   survey.setAttribute('aria-hidden', isFinal ? 'false' : 'true');
   form.style.display='block';
   done.style.display='none';
   updateRoundProgress(completedRounds);
+  ensureJourneyHeader();
+  const memory=renderDecisionMemory();
 
   if(isFinal){
-    if(kicker) kicker.textContent='研究流程 · 最後階段';
-    if(title) title.textContent='四回合內容瀏覽完成';
-    if(desc) desc.textContent='感謝您依序完成所有課程內容。以下三題回饋會以本次整體瀏覽經驗為基礎，請依直覺作答。';
-    if(action) action.style.display='none';
+    page.classList.add('questionnaire-intro-stage');
+    survey.setAttribute('aria-hidden', 'true');
+    if(kicker) kicker.textContent='研究流程 · 最後問卷前';
+    if(title) title.textContent='你已完成所有課程選擇';
+    if(desc) desc.innerHTML=`接下來，我們想了解你剛才閱讀課程資訊與做出決策時的真實感受。<div class="transition-memory">${memory}</div>`;
+    if(action) action.style.display='flex';
+    if(next){
+      next.textContent='開始填寫問卷';
+      next.onclick=()=>showQuestionnaireForm();
+    }
+    if(note) note.textContent='問卷題目本身維持原研究版本。';
   }else{
     if(kicker) kicker.textContent=`研究流程 · 第 ${completedRounds} / ${TOTAL_ROUNDS} 回合`;
-    if(title) title.textContent=`第 ${completedRounds} 回合閱讀已完成`;
-    if(desc) desc.textContent='本回合的瀏覽紀錄已保存。請稍作整理後，再主動進入下一回合；下一段內容會以新的課程情境呈現。';
+    if(title) title.textContent=`你完成了第 ${completedRounds} 回合`;
+    const selectedTitle=roundResult?.selected_course_id ? (getCourseById(roundResult.selected_course_id)?.title || roundResult.selected_course_id) : '未記錄';
+    const selectedPrice=roundResult?.selected_course_id ? getCourseById(roundResult.selected_course_id)?.price : null;
+    if(desc) desc.innerHTML=`本回合選擇課程：<strong>${sanitizeCourseText(selectedTitle)}</strong><br>課程價格：<strong>${selectedPrice ? formatNTD(selectedPrice) : '價格未記錄'}</strong><br>整體進度 ${completedRounds} / ${TOTAL_ROUNDS}<div class="transition-memory">${memory}</div>`;
     if(action) action.style.display='flex';
-    if(next) next.textContent=`繼續第 ${completedRounds + 1} 回合`;
+    if(next){
+      next.textContent=`開始第 ${completedRounds + 1} 回合`;
+      next.onclick=()=>continueParticipantRound();
+    }
     if(note) note.textContent='您可依自己的節奏繼續。';
   }
   goPage('round-transition');
+  ensureJourneyHeader();
+  updateAdvisorDemoPanel();
+}
+
+function showQuestionnaireForm(){
+  const page=document.getElementById('page-round-transition');
+  const survey=document.getElementById('join-modal');
+  const action=document.getElementById('round-transition-action');
+  if(page) page.classList.remove('questionnaire-intro-stage');
+  if(survey) survey.setAttribute('aria-hidden','false');
+  if(action) action.style.display='none';
+  safeTrackCall('startQuestionnaire', {questionnaire_version:'aero-q1-q12-v1'});
+  survey?.scrollIntoView({behavior:'smooth', block:'start'});
+  updateAdvisorDemoPanel();
 }
 
 function continueParticipantRound(){
-  applyCourse();
-  renderHahowRecommendations();
-  goPage('course');
+  enterParticipantCourseList();
 }
 
 // Kept as a compatible entry point for researcher-mode controls.
@@ -1628,7 +1809,7 @@ function closeJoinModal(){
   if(survey) survey.setAttribute('aria-hidden','true');
 }
 
-function buildResultPayload(q1, q2, q3){
+function buildResultPayload(scores, adoptionChoice){
   const plan=getCurrentExperimentPlan();
   const budgetLevel=getBudgetLevelLabel(budgetValue);
   return {
@@ -1657,9 +1838,19 @@ function buildResultPayload(q1, q2, q3){
       ctaClicks: ctaCnt,
     },
     survey: {
-      q1_depthLogic: q1,
-      q2_visualAttraction: q2,
-      q3_purchaseIntent: q3,
+      q1_depthLogic: scores[0],
+      q2_visualAttraction: scores[1],
+      q3_purchaseIntent: scores[2],
+      q4_contentAdoptionIntent: scores[3],
+      q5_relianceIntent: scores[4],
+      q6_continuedUseIntent: scores[5],
+      q7_structureClarity: scores[6],
+      q8_keyPointFindability: scores[7],
+      q9_cognitiveThought: scores[8],
+      q10_reasonEvaluation: scores[9],
+      q11_sourceCueInfluence: scores[10],
+      q12_visualCueInfluence: scores[11],
+      actualAdoptionChoice: adoptionChoice,
     },
     roundResults: [...(currentSessionLog.behavior_metrics.round_results || [])],
     events: [...eventLog],
@@ -1694,6 +1885,18 @@ function payloadToCsv(payload){
     q1_depthLogic: payload.survey.q1_depthLogic,
     q2_visualAttraction: payload.survey.q2_visualAttraction,
     q3_purchaseIntent: payload.survey.q3_purchaseIntent,
+    q4_contentAdoptionIntent: payload.survey.q4_contentAdoptionIntent,
+    q5_relianceIntent: payload.survey.q5_relianceIntent,
+    q6_continuedUseIntent: payload.survey.q6_continuedUseIntent,
+    q7_structureClarity: payload.survey.q7_structureClarity,
+    q8_keyPointFindability: payload.survey.q8_keyPointFindability,
+    q9_cognitiveThought: payload.survey.q9_cognitiveThought,
+    q10_reasonEvaluation: payload.survey.q10_reasonEvaluation,
+    q11_sourceCueInfluence: payload.survey.q11_sourceCueInfluence,
+    q12_visualCueInfluence: payload.survey.q12_visualCueInfluence,
+    pretestPriorKnowledge: currentSessionLog.pretest?.prior_knowledge ?? '',
+    pretestAiUseFrequency: currentSessionLog.pretest?.ai_use_frequency ?? '',
+    actualAdoptionChoice: payload.survey.actualAdoptionChoice,
   };
   const keys=Object.keys(row);
   const header=keys.join(',');
@@ -1721,11 +1924,10 @@ function showJoinComplete(){
 }
 
 function submitJoinSurvey(){
-  const q1=document.querySelector('input[name="q1"]:checked');
-  const q2=document.querySelector('input[name="q2"]:checked');
-  const q3=document.querySelector('input[name="q3"]:checked');
-  if(!q1 || !q2 || !q3){
-    toast('請先完成三題評分再提交');
+  const answers=Array.from({length:12}, (_, index)=>document.querySelector(`input[name="q${index + 1}"]:checked`));
+  const adoptionChoice=document.querySelector('input[name="adoption_choice"]:checked');
+  if(answers.some((answer)=>!answer) || !adoptionChoice){
+    toast('請先完成所有評分與實際選擇再提交');
     return;
   }
 
@@ -1738,12 +1940,14 @@ function submitJoinSurvey(){
   }
 
   pauseAllStayTimers();
-  const score1=Number(q1.value);
-  const score2=Number(q2.value);
-  const score3=Number(q3.value);
-  latestResultPayload=buildResultPayload(score1, score2, score3);
+  const scores=answers.map((answer)=>Number(answer.value));
+  latestResultPayload=buildResultPayload(scores, adoptionChoice.value);
   latestResultJson=JSON.stringify(latestResultPayload, null, 2);
   saveBackendRecord();
+  safeTrackCall('submitQuestionnaireSuccess', {
+    questionnaire_version:'aero-q1-q12-v1',
+    answered_item_count:answers.length + 1,
+  });
   stopBackgroundTrackers();
   goPage('thankyou');
   toast('四回合已完成，感謝填答');
@@ -1779,12 +1983,15 @@ async function assignConditionByUserId(){
     if(!response.ok) throw new Error(`HTTP ${response.status}`);
     assignment=await response.json();
   }catch(_err){
-    const origin=window.location.origin && window.location.origin!=='null'
-      ? window.location.origin
-      : '直接開啟的本機檔案';
-    toast(`研究資料庫連線失敗（目前頁面：${origin}）`, 6000);
+    if(ADVISOR_DEMO_MODE){
+      assignment=createAdvisorDemoAssignment();
+      console.warn('AERO assignment API failed; Advisor Demo Mode is using local deterministic assignment', _err);
+      toast(`Advisor Demo Mode：研究資料庫未連線，已使用本機示範分派（API：${getApiBaseDescription()}）`, 6500);
+    }else{
+    toast(`研究資料庫連線失敗（API：${getApiBaseDescription()}）`, 8000);
     console.error('AERO assignment API failed', _err);
     return false;
+    }
   }
   experimentModuloUserId=Number(assignment.assignment_number);
   const plan=getExperimentPlanByUserId(Number(assignment.remainder_group));
@@ -1919,6 +2126,10 @@ function updateConsentState(){
   const consent=document.getElementById('participant-consent');
   const startBtn=document.getElementById('participant-start-btn');
   if(startBtn) startBtn.disabled=!consent?.checked;
+  if(consent?.checked){
+    initializeResearchTracking();
+    safeTrackCall('setConsent', true);
+  }
 }
 
 // Keep the experiment layout at a stable browser scale on touchpads and mobile devices.
@@ -1936,6 +2147,8 @@ function startParticipantCourse(){
     updateConsentState();
     return;
   }
+  initializeResearchTracking();
+  safeTrackCall('setConsent', true);
   ensureParticipantProfileModal();
   openParticipantProfileModal();
 }
@@ -1947,7 +2160,8 @@ function enterParticipantCourseFlow(){
   if(step2) step2.style.display='block';
 
   if(!assignedCondition) assignConditionByUserId();
-  showStep2();
+  initBudgetUI();
+  showScenarioBriefing();
 }
 
 const PARTICIPANT_PROFILE_STEPS = [
@@ -1955,8 +2169,11 @@ const PARTICIPANT_PROFILE_STEPS = [
   { fieldName:'participant-profile-major', label:'主修科系背景' },
   { fieldName:'participant-profile-disposable', label:'每月可支配所得' },
   { fieldName:'participant-profile-household', label:'家庭年總所得區間' },
+  { fieldName:'participant-pretest-knowledge', label:'課程先備知識' },
+  { fieldName:'participant-pretest-ai-use', label:'AI 使用經驗' },
 ];
 let participantProfileStepIndex = 0;
+let participantProfileSubmitting = false;
 
 function isParticipantProfileStepComplete(modal, stepIndex){
   const step=PARTICIPANT_PROFILE_STEPS[stepIndex];
@@ -2036,13 +2253,15 @@ function ensureParticipantProfileModal(){
       <div class="profile-intake-layout" id="participant-profile-form">
         <aside class="profile-intake-side">
           <p class="profile-intake-brand">AERO 商管課程體驗平台</p>
-          <h2 class="profile-intake-title" id="participant-profile-title">填寫基本資料</h2>
-          <p class="profile-intake-desc">請依照目前狀態填寫，約 1 分鐘即可完成。</p>
+          <h2 class="profile-intake-title" id="participant-profile-title">步驟 1：基本資料與使用經驗</h2>
+          <p class="profile-intake-desc">這些資料只用於研究分析，協助我們理解不同背景受試者的課程資訊判斷。</p>
           <ol class="profile-intake-steps">
             <li data-step="0"><span>01</span>教育程度</li>
             <li data-step="1"><span>02</span>主修科系背景</li>
             <li data-step="2"><span>03</span>每月可支配所得</li>
             <li data-step="3"><span>04</span>家庭年總所得區間</li>
+            <li data-step="4"><span>05</span>課程先備知識</li>
+            <li data-step="5"><span>06</span>AI 使用經驗</li>
           </ol>
         </aside>
 
@@ -2090,6 +2309,26 @@ function ensureParticipantProfileModal(){
                 <label class="profile-option-card"><input type="radio" name="participant-profile-household" value="富裕家庭"><span class="profile-option-check">✓</span><span class="profile-option-text">年所得 NT$ 235 萬元以上</span></label>
               </div>
             </section>
+
+            <section class="profile-intake-question" data-step="4">
+              <p class="profile-intake-qid">前測 1</p>
+              <p class="profile-intake-qtitle">在進入本次體驗前，您認為自己對線上商管課程內容的了解程度如何？</p>
+              <div class="profile-intake-options cols-3">
+                ${[1,2,3,4,5,6,7].map((value)=>`<label class="profile-option-card"><input type="radio" name="participant-pretest-knowledge" value="${value}"><span class="profile-option-check">✓</span><span class="profile-option-text">${value} 分</span></label>`).join('')}
+              </div>
+            </section>
+
+            <section class="profile-intake-question" data-step="5">
+              <p class="profile-intake-qid">前測 2</p>
+              <p class="profile-intake-qtitle">您平常使用 ChatGPT、Gemini 等生成式 AI 工具的頻率為何？</p>
+              <div class="profile-intake-options cols-2">
+                <label class="profile-option-card"><input type="radio" name="participant-pretest-ai-use" value="1"><span class="profile-option-check">✓</span><span class="profile-option-text">從未使用</span></label>
+                <label class="profile-option-card"><input type="radio" name="participant-pretest-ai-use" value="2"><span class="profile-option-check">✓</span><span class="profile-option-text">每月少於一次</span></label>
+                <label class="profile-option-card"><input type="radio" name="participant-pretest-ai-use" value="3"><span class="profile-option-check">✓</span><span class="profile-option-text">每月數次</span></label>
+                <label class="profile-option-card"><input type="radio" name="participant-pretest-ai-use" value="4"><span class="profile-option-check">✓</span><span class="profile-option-text">每週數次</span></label>
+                <label class="profile-option-card"><input type="radio" name="participant-pretest-ai-use" value="5"><span class="profile-option-check">✓</span><span class="profile-option-text">幾乎每天</span></label>
+              </div>
+            </section>
           </div>
 
           <div class="join-actions profile-template-actions profile-intake-actions">
@@ -2117,14 +2356,20 @@ function openParticipantProfileModal(){
   const major=currentSessionLog.demographics.major_group;
   const disposableIncomeLevel=currentSessionLog.demographics.disposable_income_level;
   const householdIncomeLevel=currentSessionLog.demographics.household_income_level;
+  const priorKnowledge=String(currentSessionLog.pretest?.prior_knowledge || '');
+  const aiUseFrequency=String(currentSessionLog.pretest?.ai_use_frequency || '');
   const educationInput=modal.querySelector(`input[name="participant-profile-education"][value="${educationLevel}"]`);
   const majorInput=modal.querySelector(`input[name="participant-profile-major"][value="${major}"]`);
   const disposableInput=modal.querySelector(`input[name="participant-profile-disposable"][value="${disposableIncomeLevel}"]`);
   const householdInput=modal.querySelector(`input[name="participant-profile-household"][value="${householdIncomeLevel}"]`);
+  const knowledgeInput=modal.querySelector(`input[name="participant-pretest-knowledge"][value="${priorKnowledge}"]`);
+  const aiUseInput=modal.querySelector(`input[name="participant-pretest-ai-use"][value="${aiUseFrequency}"]`);
   if(educationInput) educationInput.checked=true;
   if(majorInput) majorInput.checked=true;
   if(disposableInput) disposableInput.checked=true;
   if(householdInput) householdInput.checked=true;
+  if(knowledgeInput) knowledgeInput.checked=true;
+  if(aiUseInput) aiUseInput.checked=true;
 
   syncParticipantProfileOptionState(modal);
   setParticipantProfileStep(0);
@@ -2140,29 +2385,414 @@ function closeParticipantProfileModal(){
   modal.setAttribute('aria-hidden','true');
 }
 
+function advisorBudgetLabel(){
+  return '本回合補助';
+}
+
+function getUiStateName(){
+  const visible=document.querySelector('.page.show')?.id?.replace(/^page-/,'') || 'landing';
+  if(visible==='landing'){
+    if(document.getElementById('advisor-consent-screen')?.hidden===false) return 'consent';
+    if(document.getElementById('scenario-briefing')?.hidden===false) return 'scenario_briefing';
+    if(document.getElementById('participant-profile-modal')?.classList.contains('open')) return 'participant_profile';
+    return 'welcome';
+  }
+  if(visible==='course') return currentCourseView==='detail' ? 'course_detail' : 'course_list';
+  if(visible==='round-transition'){
+    const page=document.getElementById('page-round-transition');
+    if(page?.classList.contains('questionnaire-intro-stage')) return 'questionnaire_intro';
+    return 'round_transition';
+  }
+  return visible;
+}
+
+function getCourseById(courseId){
+  return HAHOW_BIZ_COURSES.find((course)=>String(course.id)===String(courseId)) || null;
+}
+
+function renderDecisionMemory(){
+  const rounds=Array.isArray(currentSessionLog?.behavior_metrics?.round_results)
+    ? currentSessionLog.behavior_metrics.round_results
+    : [];
+  if(!rounds.length) return '<p class="decision-memory-empty">尚未完成課程選擇</p>';
+  return `<ol class="decision-memory-list">${rounds.map((round)=>{
+    const course=getCourseById(round.selected_course_id);
+    const title=sanitizeCourseText(course?.title || round.selected_course_id || '未記錄課程');
+    const price=Number.isFinite(Number(course?.price)) ? formatNTD(Number(course.price)) : '價格未記錄';
+    return `<li><span>第 ${Number(round.round_index)+1} 回合</span><strong>${title}</strong><em>${price}</em></li>`;
+  }).join('')}</ol>`;
+}
+
+function updateJourneyHeader(){
+  const host=document.getElementById('journey-header');
+  if(!host) return;
+  const completed=currentSessionLog?.behavior_metrics?.round_results?.length || 0;
+  const roundNumber=Math.min(TOTAL_ROUNDS, Math.max(1, currentStepIndex + 1));
+  host.innerHTML=`
+    <div class="journey-title">AERO Decision Journey</div>
+    <div class="journey-meta">
+      <span>Round ${roundNumber} / ${TOTAL_ROUNDS}</span>
+      <span>${advisorBudgetLabel()} ${formatNTD(budgetValue)}</span>
+      <span>已完成 ${completed} / ${TOTAL_ROUNDS} 回合</span>
+    </div>
+    <div class="journey-bar" aria-label="Decision journey progress"><span style="width:${Math.round((completed / TOTAL_ROUNDS) * 100)}%"></span></div>`;
+}
+
+function ensureJourneyHeader(){
+  let header=document.getElementById('journey-header');
+  if(!header){
+    header=document.createElement('section');
+    header.id='journey-header';
+    header.className='journey-header';
+    header.setAttribute('aria-label','AERO Decision Journey');
+  }
+  const coursePage=document.getElementById('page-course');
+  const transitionShell=document.querySelector('#page-round-transition .round-transition-shell');
+  const visibleTransition=document.getElementById('page-round-transition')?.classList.contains('show');
+  const target=visibleTransition ? transitionShell : coursePage;
+  if(target && header.parentElement!==target) target.prepend(header);
+  updateJourneyHeader();
+}
+
+function renderAdvisorCourseListSupport(){
+  const head=document.querySelector('#course-list-state .course-list-state-head');
+  if(head){
+    head.innerHTML=`
+      <p class="sec-tag">課程比較</p>
+      <h1 class="sec-title serif">請從以下課程中，挑選你最想深入了解的一門。</h1>
+      <p>查看完整資訊後，你可以選擇、繼續比較或暫不考慮。</p>`;
+  }
+  let memory=document.getElementById('decision-memory');
+  if(!memory){
+    memory=document.createElement('aside');
+    memory.id='decision-memory';
+    memory.className='decision-memory';
+    const list=document.getElementById('round-course-list');
+    list?.parentElement?.insertBefore(memory, list);
+  }
+  memory.innerHTML=`<h2>Decision Memory</h2>${renderDecisionMemory()}`;
+}
+
+function ensureCourseDetailDecisionStructure(){
+  const detail=document.getElementById('course-detail-state');
+  if(!detail || !selectedCourse) return;
+  let nav=document.getElementById('course-detail-nav');
+  if(!nav){
+    nav=document.createElement('section');
+    nav.id='course-detail-nav';
+    nav.className='course-detail-nav';
+    detail.prepend(nav);
+  }
+  nav.innerHTML=`
+    <button class="btn-line" type="button" onclick="returnToCourseListByUi()">返回比較</button>
+    <span>Round ${currentStepIndex + 1} / ${TOTAL_ROUNDS}</span>
+    <strong>${advisorBudgetLabel()} ${formatNTD(budgetValue)}</strong>`;
+
+  let info=document.getElementById('advisor-course-info');
+  if(!info){
+    info=document.createElement('section');
+    info.id='advisor-course-info';
+    info.className='advisor-course-info';
+    detail.insertBefore(info, document.querySelector('.course-sec-hero'));
+  }
+  const rating=formatOptionalNumber(selectedCourse.average_rating, (n)=>Number.isInteger(n) ? n.toFixed(1) : n.toFixed(2)) || '未提供';
+  const purchased=formatOptionalNumber(selectedCourse.num_purchased, (n)=>Math.round(n).toLocaleString('zh-TW')) || '未提供';
+  info.innerHTML=`
+    <h2>Course Information</h2>
+    <div class="advisor-info-grid">
+      <div><span>課程名稱</span><strong>${sanitizeCourseText(selectedCourse.title || '')}</strong></div>
+      <div><span>價格</span><strong>${formatNTD(selectedCourse.price || 0)}</strong></div>
+      <div><span>時數</span><strong>${Math.round(Number(selectedCourse.total_hours) || 0)} 小時</strong></div>
+      <div><span>評價</span><strong>${rating}</strong></div>
+      <div><span>學習人數</span><strong>${purchased}</strong></div>
+    </div>`;
+
+  const researchTitle=document.querySelector('.course-insights-head .sec-title');
+  if(researchTitle) researchTitle.textContent='課程介紹';
+  document.querySelectorAll('#course-detail-state .btn-enroll, #course-detail-state .btn-ec-final').forEach((button)=>{
+    if(button.id!=='participant-profile-next-btn') button.textContent='選擇這堂課';
+  });
+
+  let decision=document.getElementById('course-decision-area');
+  if(!decision){
+    decision=document.createElement('section');
+    decision.id='course-decision-area';
+    decision.className='course-decision-area';
+    detail.appendChild(decision);
+  }
+  decision.innerHTML=`
+    <div>
+      <h2>做出你的決策</h2>
+      <p>這堂課值得你投入本回合的學習補助嗎？</p>
+    </div>
+    <div class="course-decision-buttons">
+      <button class="btn-ec btn-ec-final" type="button" onclick="adoptActiveCourse()">選擇這堂課</button>
+      <button class="btn-line" type="button" onclick="continueComparingCourses()">繼續比較其他課程</button>
+      <button class="btn-line course-reject-btn" type="button" onclick="rejectActiveCourse()">暫不考慮</button>
+    </div>`;
+}
+
+function showAdvisorConsent(){
+  const welcome=document.getElementById('participant-intro');
+  const consent=document.getElementById('advisor-consent-screen');
+  if(welcome){
+    welcome.hidden=true;
+    welcome.style.display='none';
+  }
+  if(consent) consent.hidden=false;
+  setStepState(0);
+  updateAdvisorDemoPanel();
+}
+
+function backToAdvisorWelcome(){
+  const welcome=document.getElementById('participant-intro');
+  const consent=document.getElementById('advisor-consent-screen');
+  if(welcome){
+    welcome.hidden=false;
+    welcome.style.display='block';
+  }
+  if(consent) consent.hidden=true;
+  updateAdvisorDemoPanel();
+}
+
+function acceptAdvisorConsent(){
+  const required=[...document.querySelectorAll('.advisor-consent-check')];
+  if(required.length && required.some((input)=>!input.checked)){
+    toast('請先逐項勾選研究說明');
+    syncAdvisorConsentChecklist();
+    return;
+  }
+  const consent=document.getElementById('participant-consent');
+  if(consent) consent.checked=true;
+  updateConsentState();
+  startParticipantCourse();
+}
+
+function syncAdvisorConsentChecklist(){
+  const required=[...document.querySelectorAll('.advisor-consent-check')];
+  const complete=required.length>0 && required.every((input)=>input.checked);
+  const continueBtn=document.getElementById('advisor-consent-continue');
+  if(continueBtn) continueBtn.disabled=!complete;
+  required.forEach((input)=>{
+    const item=input.closest('.consent-list-item');
+    if(item) item.classList.toggle('checked', input.checked);
+  });
+  updateAdvisorDemoPanel();
+}
+
+function showScenarioBriefing(){
+  const intro=document.getElementById('participant-intro');
+  const step2=document.getElementById('step2-area');
+  const consent=document.getElementById('advisor-consent-screen');
+  const briefing=document.getElementById('scenario-briefing');
+  if(intro){
+    intro.hidden=true;
+    intro.style.display='none';
+  }
+  if(step2) step2.style.display='none';
+  if(consent) consent.hidden=true;
+  if(briefing){
+    briefing.hidden=false;
+    const budget=document.getElementById('scenario-budget-value');
+    if(budget) budget.textContent=formatNTD(budgetValue);
+  }
+  goPage('landing');
+  setStepState(1);
+  updateAdvisorDemoPanel();
+}
+
+function startFirstRoundFromBriefing(){
+  scenarioBriefingAcknowledged=true;
+  const briefing=document.getElementById('scenario-briefing');
+  if(briefing) briefing.hidden=true;
+  enterParticipantCourseList();
+}
+
+function ensureAdvisorDemoPanel(){
+  if(!ADVISOR_DEMO_MODE || document.getElementById('advisor-demo-panel')) return;
+  const panel=document.createElement('aside');
+  panel.id='advisor-demo-panel';
+  panel.className='advisor-demo-panel';
+  panel.setAttribute('aria-label','Advisor Demo Only');
+  document.body.appendChild(panel);
+}
+
+function updateAdvisorDemoPanel(){
+  if(!ADVISOR_DEMO_MODE) return;
+  ensureAdvisorDemoPanel();
+  const panel=document.getElementById('advisor-demo-panel');
+  if(!panel) return;
+  const decision=getCurrentRoundDecision();
+  const tracking=safeTrackCall('getState') || {};
+  panel.innerHTML=`
+    <strong>Advisor Demo Only</strong>
+    <dl>
+      <dt>participant anonymous id</dt><dd>${sanitizeCourseText(currentSessionLog?.participant_id || '')}</dd>
+      <dt>current round</dt><dd>${currentStepIndex + 1} / ${TOTAL_ROUNDS}</dd>
+      <dt>condition label</dt><dd>${sanitizeCourseText(assignedCondition?.summaryLabel || currentSessionLog?.experiment_assignment?.condition_label || '')}</dd>
+      <dt>scenario key</dt><dd>${sanitizeCourseText(curSC || currentSessionLog?.experiment_assignment?.scenario_key || '')}</dd>
+      <dt>current UI state</dt><dd>${sanitizeCourseText(getUiStateName())}</dd>
+      <dt>selected course</dt><dd>${sanitizeCourseText(selectedCourse?.id || selectedRecoCourseId || decision?.selected_course_id || '')}</dd>
+      <dt>adopted course IDs</dt><dd>${sanitizeCourseText((currentSessionLog?.behavior_metrics?.adopted_course_ids || []).join(', '))}</dd>
+      <dt>tracking session status</dt><dd>${tracking.sessionStarted ? 'started' : 'not started'}</dd>
+    </dl>`;
+}
+
+function applyAdvisorDemoUxCopy(){
+  document.title='AERO 課程投資決策模擬';
+  const hero=document.querySelector('#page-landing .land-hero-in');
+  if(hero){
+    hero.innerHTML=`
+      <h1 class="land-title" id="land-title-main"><span class="land-line">AERO 課程投資決策模擬</span></h1>
+      <p class="land-desc">想像你是一位即將畢業的大學生。為了提升未來的就業競爭力，你將利用有限的學習補助，比較不同線上課程，並做出你認為最值得投資的選擇。</p>
+      <ul class="welcome-facts" aria-label="研究流程重點">
+        <li>4 個課程選擇回合</li>
+        <li>沒有標準答案</li>
+        <li>請依真實想法操作</li>
+      </ul>`;
+  }
+  const intro=document.getElementById('participant-intro');
+  if(intro){
+    intro.hidden=false;
+    intro.innerHTML=`
+      <div class="step-hd">
+        <div class="step-num">研究開始前</div>
+        <h2 class="step-title">你將扮演即將畢業、準備進入職場的大學生。</h2>
+        <p class="step-desc">本研究關心你如何在有限補助下瀏覽、比較線上課程，並做出實際採用決策。</p>
+      </div>
+      <div class="p-intro-card">
+        <p>請依照自己的真實想法操作。查看完整資訊只是了解課程，仍可選擇、繼續比較或暫不考慮。</p>
+      </div>
+      <label class="consent-check hidden-consent" for="participant-consent">
+        <input type="checkbox" id="participant-consent" onchange="updateConsentState()">
+        <span>我已閱讀並同意參與研究</span>
+      </label>
+      <div class="proceed-row landing-start-row">
+        <button class="btn-proceed" id="participant-start-btn" type="button" onclick="showAdvisorConsent()">閱讀研究說明</button>
+      </div>`;
+  }
+  let consent=document.getElementById('advisor-consent-screen');
+  if(!consent){
+    consent=document.createElement('section');
+    consent.id='advisor-consent-screen';
+    consent.className='step-area advisor-consent-screen';
+    consent.hidden=true;
+    document.getElementById('page-landing')?.insertBefore(consent, document.getElementById('step1-area'));
+  }
+  consent.innerHTML=`
+    <div class="step-hd">
+      <div class="step-num">研究同意</div>
+      <h2 class="step-title">參與前請先閱讀以下說明</h2>
+    </div>
+    <div class="consent-checklist" aria-label="研究同意項目">
+      <label class="consent-list-item"><input class="advisor-consent-check" type="checkbox" onchange="syncAdvisorConsentChecklist()"><span class="consent-checkmark"></span><span><strong>研究目的</strong><em>了解大學生在不同課程資訊呈現下，如何比較並做出課程投資決策。</em></span></label>
+      <label class="consent-list-item"><input class="advisor-consent-check" type="checkbox" onchange="syncAdvisorConsentChecklist()"><span class="consent-checkmark"></span><span><strong>匿名資料</strong><em>資料以匿名 participant ID 記錄，不收集姓名、電話或 email。</em></span></label>
+      <label class="consent-list-item"><input class="advisor-consent-check" type="checkbox" onchange="syncAdvisorConsentChecklist()"><span class="consent-checkmark"></span><span><strong>行為紀錄內容</strong><em>記錄頁面狀態、查看完整資訊、返回比較、選擇、繼續比較與暫不考慮等研究事件。</em></span></label>
+      <label class="consent-list-item"><input class="advisor-consent-check" type="checkbox" onchange="syncAdvisorConsentChecklist()"><span class="consent-checkmark"></span><span><strong>可隨時退出</strong><em>你可以在任何時間停止參與，不需要提供理由。</em></span></label>
+      <label class="consent-list-item"><input class="advisor-consent-check" type="checkbox" onchange="syncAdvisorConsentChecklist()"><span class="consent-checkmark"></span><span><strong>不記錄內容</strong><em>不記錄鍵盤文字與精確滑鼠軌跡。</em></span></label>
+    </div>
+    <div class="join-actions">
+      <button class="btn-line" type="button" onclick="backToAdvisorWelcome()">返回</button>
+      <button class="btn-ec btn-ec-final" id="advisor-consent-continue" type="button" onclick="acceptAdvisorConsent()" disabled>同意並繼續</button>
+    </div>`;
+  syncAdvisorConsentChecklist();
+
+  let briefing=document.getElementById('scenario-briefing');
+  if(!briefing){
+    briefing=document.createElement('section');
+    briefing.id='scenario-briefing';
+    briefing.className='step-area scenario-briefing';
+    briefing.hidden=true;
+    document.getElementById('page-landing')?.insertBefore(briefing, document.getElementById('step1-area'));
+  }
+  briefing.innerHTML=`
+    <div class="step-hd">
+      <div class="step-num">研究情境</div>
+      <h2 class="step-title">步驟 2：課程投資決策情境</h2>
+      <p class="step-desc">請把接下來的選擇想成你自己的學習投資判斷。</p>
+    </div>
+    <div class="scenario-grid">
+      <div><span>你的角色</span><strong>即將畢業的大學生</strong></div>
+      <div><span>你的目標</span><strong>提升未來就業競爭力</strong></div>
+      <div><span>你的資源</span><strong>${advisorBudgetLabel()} <b id="scenario-budget-value">${formatNTD(budgetValue)}</b></strong></div>
+      <div><span>你的任務</span><strong>比較課程資訊，選出最值得投資的一門</strong></div>
+      <div><span>研究流程</span><strong>總共 4 回合</strong></div>
+    </div>
+    <div class="proceed-row landing-start-row">
+      <button class="btn-proceed" type="button" onclick="startFirstRoundFromBriefing()">我了解了，開始第 1 回合</button>
+    </div>`;
+  const stepNav=document.getElementById('step-nav');
+  if(stepNav){
+    const labels=['研究說明','基本資料','課程決策','最後問卷'];
+    stepNav.querySelectorAll('.si-lbl').forEach((el,index)=>{ el.textContent=labels[index] || el.textContent; });
+  }
+  const thankyou=document.getElementById('page-thankyou');
+  if(thankyou){
+    const title=thankyou.querySelector('.ty-h');
+    const desc=thankyou.querySelector('.ty-p');
+    if(title) title.textContent='感謝參與';
+    if(desc) desc.textContent='你的作答與操作資料已匿名處理。本次 AERO 課程投資決策模擬流程已完成。';
+  }
+  ensureAdvisorDemoPanel();
+  updateAdvisorDemoPanel();
+}
+
 async function submitParticipantProfile(){
   const modal=document.getElementById('participant-profile-modal');
-  if(!modal) return;
+  if(!modal || participantProfileSubmitting) return;
 
   const educationLevel=modal.querySelector('input[name="participant-profile-education"]:checked')?.value || '';
   const major=modal.querySelector('input[name="participant-profile-major"]:checked')?.value || '';
   const disposableIncomeLevel=modal.querySelector('input[name="participant-profile-disposable"]:checked')?.value || '';
   const householdIncomeLevel=modal.querySelector('input[name="participant-profile-household"]:checked')?.value || '';
-  if(!educationLevel || !major || !disposableIncomeLevel || !householdIncomeLevel){
-    toast('請先完成四題基本資料填寫');
+  const priorKnowledge=modal.querySelector('input[name="participant-pretest-knowledge"]:checked')?.value || '';
+  const aiUseFrequency=modal.querySelector('input[name="participant-pretest-ai-use"]:checked')?.value || '';
+  if(!educationLevel || !major || !disposableIncomeLevel || !householdIncomeLevel || !priorKnowledge || !aiUseFrequency){
+    toast('請先完成基本資料與前測');
     return;
   }
+
+  const nextBtn=modal.querySelector('#participant-profile-next-btn');
+  const backBtn=modal.querySelector('#participant-profile-back-btn');
+  participantProfileSubmitting=true;
+  if(nextBtn){
+    nextBtn.disabled=true;
+    nextBtn.textContent='處理中…';
+    nextBtn.setAttribute('aria-busy','true');
+  }
+  if(backBtn) backBtn.disabled=true;
+  toast('正在建立體驗流程，請稍候…', 6000);
 
   setParticipantProfile({
     educationLevel,
     majorGroup: major,
     disposableIncomeLevel,
     householdIncomeLevel,
+    priorKnowledge,
+    aiUseFrequency,
   });
-  const assigned=await assignConditionByUserId();
-  if(!assigned) return;
-  closeParticipantProfileModal();
-  enterParticipantCourseFlow();
+  try{
+    const assigned=await assignConditionByUserId();
+    if(!assigned) return;
+    updateTrackingContext('participant_profile');
+    safeTrackCall('startOrResume', {
+      participant_id:currentSessionLog.participant_id,
+      profile_complete:isParticipantProfileComplete(),
+      context:getResearchTrackingContext('participant_profile'),
+      resume_reason:'page_restore',
+    });
+    enterTrackingPage('participant_profile', 'profile_completed');
+    closeParticipantProfileModal();
+    enterParticipantCourseFlow();
+  }finally{
+    participantProfileSubmitting=false;
+    if(nextBtn){
+      nextBtn.removeAttribute('aria-busy');
+      nextBtn.textContent='Finish';
+    }
+    if(backBtn) backBtn.disabled=false;
+    setParticipantProfileStep(participantProfileStepIndex);
+  }
 }
 
 /* ── Toast ── */
@@ -2208,10 +2838,13 @@ function goPage(name){
     const step1 = document.getElementById('step1-area');
     const step2 = document.getElementById('step2-area');
     const pIntro = document.getElementById('participant-intro');
+    const advisorConsent = document.getElementById('advisor-consent-screen');
+    const scenarioBriefing = document.getElementById('scenario-briefing');
+    const advisorStateVisible = advisorConsent?.hidden===false || scenarioBriefing?.hidden===false;
     if(ROLE.participant){
       if(step1) step1.style.display='none';
       if(step2) step2.style.display='none';
-      if(pIntro) pIntro.style.display='block';
+      if(pIntro) pIntro.style.display=advisorStateVisible ? 'none' : 'block';
     }else{
       if(step1) step1.style.display='none';
       if(step2) step2.style.display='none';
@@ -2234,6 +2867,9 @@ function goPage(name){
     el.classList.toggle('done', i<cur);
     el.classList.toggle('active', i===cur);
   });
+  syncTrackingPageForUi(name);
+  if(name==='course' || name==='round-transition') ensureJourneyHeader();
+  updateAdvisorDemoPanel();
 }
 
 /* ── Step indicators ── */
@@ -2357,8 +2993,7 @@ function selectHahowCourse(courseId){
   }
 
   if(ROLE.participant){
-    curSC=selSC;
-    startCourse();
+    openParticipantCourseDetail(courseId);
     return;
   }
 
@@ -2455,6 +3090,159 @@ function applyBudgetFilter(){
   if(matchTxt) matchTxt.textContent=matchCount+' 個版本符合';
 }
 
+function setParticipantCourseView(view){
+  currentCourseView=view==='detail' ? 'detail' : 'list';
+  const listState=document.getElementById('course-list-state');
+  const detailState=document.getElementById('course-detail-state');
+  if(listState) listState.hidden=currentCourseView!=='list';
+  if(detailState) detailState.hidden=currentCourseView!=='detail';
+}
+
+function enterParticipantCourseList({restore=false}={}){
+  if(!ROLE.participant) return;
+  if(!restore && currentStepIndex===0 && !scenarioBriefingAcknowledged){
+    showScenarioBriefing();
+    return;
+  }
+  const decision=ensureCurrentRoundDecision({freeze:true});
+  if(!decision?.candidate_course_ids?.length){
+    console.warn('[AERO courses] No eligible candidate is available for this round');
+    toast('目前沒有符合條件的候選課程，請返回調整預算');
+    return;
+  }
+  const restoreDetail=restore && decision.current_view==='detail' && decision.active_detail_course_id;
+  decision.current_view='list';
+  decision.active_detail_course_id=null;
+  saveCurrentRoundDecision(decision);
+  selectedCourse=null;
+  selectedRecoCourseId=null;
+  curSC=getCurrentExperimentPlan().scenarioKey;
+  selSC=curSC;
+  renderCourseCards(coursesForDecision(decision), document.getElementById('round-course-list'));
+  setParticipantCourseView('list');
+  leaveTrackingPage(restore ? 'session_restore' : 'budget_completed');
+  startTrackingRound();
+  goPage('course');
+  ensureJourneyHeader();
+  renderAdvisorCourseListSupport();
+  updateAdvisorDemoPanel();
+  if(restoreDetail) openParticipantCourseDetail(restoreDetail,{entryMethod:'session_restore',restore:true});
+}
+
+function openParticipantCourseDetail(courseId,{entryMethod='course_list',restore=false}={}){
+  if(!ROLE.participant) return false;
+  const decision=ensureCurrentRoundDecision({freeze:true});
+  const course=HAHOW_BIZ_COURSES.find(item=>String(item.id)===String(courseId));
+  if(!course || !decision?.candidate_course_ids?.includes(String(courseId))) return false;
+  const result=window.AEROCourseDecisionFlow?.openDetail(decision,String(courseId),{entryMethod,restore});
+  if(!result?.ok) return false;
+  saveCurrentRoundDecision(result.state);
+  selectedRecoCourseId=String(courseId);
+  selectedCourse={...course};
+  curSC=getCurrentExperimentPlan().scenarioKey;
+  selSC=curSC;
+  assignedCondition=getConditionByScenarioKey(curSC);
+  applyCourse();
+  initBehaviorTracking();
+  setParticipantCourseView('detail');
+  ensureJourneyHeader();
+  ensureCourseDetailDecisionStructure();
+  updateAdvisorDemoPanel();
+  safeTrackCall('startCourseDetail',{course_id:String(courseId),entry_method:restore?'session_restore':entryMethod});
+  if(!restore && history?.pushState){
+    history.pushState({aeroCourseDetail:true,round_index:currentStepIndex,course_id:String(courseId)},'',location.href);
+  }
+  return true;
+}
+
+function closeActiveCourseDetail(reason,{action=null,backMethod=null}={}){
+  const decision=getCurrentRoundDecision();
+  const courseId=activeDetailCourseId || decision?.active_detail_course_id;
+  if(!decision || !courseId || currentCourseView!=='detail') return false;
+  if(backMethod) safeTrackCall('recordBack',backMethod,{from_page:'course_detail',to_page:'course_list',course_id:courseId});
+  if(action) safeTrackCall('recordAdoption',action,{course_id:courseId,action_context:'course_detail'});
+  safeTrackCall('endCourseDetail',reason,{returnToList:true});
+  const next=window.AEROCourseDecisionFlow.returnToList(decision,action,courseId);
+  saveCurrentRoundDecision(next);
+  selectedCourse=null;
+  selectedRecoCourseId=null;
+  renderCourseCards(coursesForDecision(next),document.getElementById('round-course-list'));
+  setParticipantCourseView('list');
+  updateJourneyHeader();
+  renderAdvisorCourseListSupport();
+  updateAdvisorDemoPanel();
+  if(history?.replaceState) history.replaceState({aeroCourseDetail:false,round_index:currentStepIndex},'',location.href);
+  return true;
+}
+
+function returnToCourseListByUi(){ return closeActiveCourseDetail('ui_back',{backMethod:'ui_button'}); }
+function continueComparingCourses(){ return closeActiveCourseDetail('continue_compare',{action:'continue_compare'}); }
+function rejectActiveCourse(){ return closeActiveCourseDetail('reject',{action:'reject'}); }
+
+function adoptActiveCourse(){
+  const decision=getCurrentRoundDecision();
+  const courseId=activeDetailCourseId || decision?.active_detail_course_id;
+  if(!decision || !courseId) return false;
+  const adopted=currentSessionLog.behavior_metrics.adopted_course_ids;
+  const result=window.AEROCourseDecisionFlow?.adopt(decision,courseId,adopted);
+  if(!result?.ok){toast(decision.rejected_course_ids?.includes(courseId)?'此課程已標記為暫不考慮':'此課程無法重複選擇');return false;}
+  selectedRecoCourseId=courseId;
+  selectedCourse={...(HAHOW_BIZ_COURSES.find(item=>String(item.id)===String(courseId)) || {})};
+  if(!adopted.includes(courseId)) adopted.push(courseId);
+  saveCurrentRoundDecision(result.state);
+  safeTrackCall('recordAdoption','adopt',{course_id:courseId,action_context:'course_detail'});
+  safeTrackCall('endCourseDetail','adopt',{returnToList:false});
+  advanceParticipantRound();
+  return true;
+}
+
+function getCurrentRoundDecision(){
+  return currentSessionLog.behavior_metrics.round_decisions?.[String(currentStepIndex)] || null;
+}
+
+function syncCourseDecisionView(decision){
+  currentCourseView=decision?.current_view==='detail' ? 'detail' : 'list';
+  activeDetailCourseId=decision?.active_detail_course_id || null;
+  detailEntryMethod=decision?.detail_entry_method || null;
+  detailOpenedAt=decision?.detail_opened_at || null;
+  currentRoundCandidateIds=[...(decision?.candidate_course_ids || [])];
+}
+
+function ensureCurrentRoundDecision({freeze=false}={}){
+  const flow=window.AEROCourseDecisionFlow;
+  if(!flow || (!assignedCondition && currentSessionLog?.experiment_assignment?.remainder_group===null)) return null;
+  const key=String(currentStepIndex);
+  const existing=getCurrentRoundDecision();
+  if(existing?.started || (existing && existing.budget===budgetValue)){
+    if(freeze && !existing.started) existing.started=true;
+    syncCourseDecisionView(existing);
+    syncCurrentSessionLogStorage();
+    return existing;
+  }
+  const sampled=flow.sampleCandidates({participantId:currentSessionLog.participant_id,roundIndex:currentStepIndex,
+    scenarioKey:curSC || getCurrentExperimentPlan().scenarioKey,budget:budgetValue,courses:HAHOW_BIZ_COURSES,
+    adoptedCourseIds:currentSessionLog.behavior_metrics.adopted_course_ids,count:5});
+  const decision=flow.createRoundState({round_index:currentStepIndex,scenario_key:curSC || getCurrentExperimentPlan().scenarioKey,
+    condition_id:assignedCondition?.conditionId ?? null,...sampled});
+  decision.budget=budgetValue;
+  decision.started=freeze;
+  currentSessionLog.behavior_metrics.round_decisions[key]=decision;
+  syncCourseDecisionView(decision);
+  syncCurrentSessionLogStorage();
+  return decision;
+}
+
+function saveCurrentRoundDecision(decision){
+  currentSessionLog.behavior_metrics.round_decisions[String(currentStepIndex)]=decision;
+  syncCourseDecisionView(decision);
+  syncCurrentSessionLogStorage();
+}
+
+function coursesForDecision(decision){
+  const byId=new Map(HAHOW_BIZ_COURSES.map(course=>[String(course.id),course]));
+  return (decision?.candidate_course_ids || []).map(id=>byId.get(String(id))).filter(Boolean);
+}
+
 function renderHahowRecommendations(){
   const list=document.getElementById('hahow-reco-list');
   const count=document.getElementById('hahow-in-budget-count');
@@ -2462,46 +3250,29 @@ function renderHahowRecommendations(){
   const blindCount=document.getElementById('course-blind-count');
   if(!list) return;
 
-  const majorGroup=String(currentSessionLog?.demographics?.major_group || '').trim();
-  const majorProfile=getMajorProfileForTTF(majorGroup);
-
-  const inBudget=[...HAHOW_BIZ_COURSES]
-    .map((c, index)=>({
-      ...c,
-      scenarioKey:getCourseScenarioKey(c, index),
-      diff:Math.abs(c.price-budgetValue),
-      purchasedCount:Math.max(0, Number(c.num_purchased) || 0),
-      majorKeywordMatch:courseMatchesTTFKeywords(c.title, majorProfile),
-    }))
-    .filter(c=>c.price<=budgetValue)
-    .sort((a,b)=>{
-      if(a.majorKeywordMatch!==b.majorKeywordMatch){
-        return Number(b.majorKeywordMatch)-Number(a.majorKeywordMatch);
-      }
-      if(a.purchasedCount!==b.purchasedCount){
-        return b.purchasedCount-a.purchasedCount;
-      }
-      return a.diff-b.diff || a.price-b.price;
-    });
-  const topPicks=inBudget.slice(0, 5);
+  const decision=ensureCurrentRoundDecision();
+  const topPicks=coursesForDecision(decision);
+  const eligibleCount=decision?.eligible_course_ids?.length || 0;
 
   if(count){
-    count.textContent=inBudget.length>5 ? `${inBudget.length} 堂（顯示前 5 堂）` : `${inBudget.length} 堂`;
+    count.textContent=`${eligibleCount} 堂符合（本回合顯示 ${topPicks.length} 堂）`;
   }
   if(blindCount){
-    blindCount.textContent=inBudget.length>5 ? `${inBudget.length} 堂（顯示前 5 堂）` : `${inBudget.length} 堂`;
+    blindCount.textContent=`本回合 ${topPicks.length} 堂`;
   }
 
   const matchTxt=document.getElementById('budget-match-count');
-  if(matchTxt) matchTxt.textContent=inBudget.length+' 堂課程符合';
+  if(matchTxt) matchTxt.textContent=eligibleCount+' 堂課程符合';
 
-  if(!inBudget.length){
+  if(!topPicks.length){
     list.innerHTML='<p class="hr-empty">目前沒有預算內課程，請提高預算後再選擇。</p>';
     if(blindList) blindList.innerHTML='<p class="hr-empty">目前沒有預算內課程，請提高預算後再選擇。</p>';
     return;
   }
   renderCourseCards(topPicks, list);
   if(blindList) renderCourseCards(topPicks, blindList);
+  const roundList=document.getElementById('round-course-list');
+  if(roundList) renderCourseCards(topPicks, roundList);
 }
 
 function getMajorProfileForTTF(majorGroup){
@@ -2573,7 +3344,8 @@ function formatOptionalNumber(value, formatter){
 
 function renderCourseCards(filteredCourses, container){
   if(!container) return;
-  const isBlindList=container.id==='course-blind-list';
+  const isRoundList=container.id==='round-course-list';
+  const decision=getCurrentRoundDecision();
 
   if(!Array.isArray(filteredCourses) || filteredCourses.length===0){
     container.innerHTML='<p class="hr-empty">目前沒有預算內課程，請提高預算後再選擇。</p>';
@@ -2587,8 +3359,9 @@ function renderCourseCards(filteredCourses, container){
     const purchased=formatOptionalNumber(course.num_purchased, (n)=>Math.round(n).toLocaleString('zh-TW'));
     const hours=formatOptionalNumber(course.total_hours, (n)=>`${Math.round(n)} 小時`);
     const isSelected=selectedRecoCourseId===course.id ? ' sel' : '';
+    const isRejected=decision?.rejected_course_ids?.includes(String(course.id));
 
-    return `<article class="hr-item card${isSelected}" aria-label="${title || '課程'}" role="button" tabindex="0" onclick="selectHahowCourse('${course.id}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectHahowCourse('${course.id}');}">
+    return `<article class="hr-item card${isSelected}${isRejected?' rejected':''}" aria-label="${title || '課程'}">
       <div class="hr-head">
         <p class="hr-title">${title}</p>
         ${rating ? `<div class="hr-score"><span class="hr-score-label">評價</span><span class="hr-score-value">${rating}</span></div>` : ''}
@@ -2598,7 +3371,8 @@ function renderCourseCards(filteredCourses, container){
         ${hours ? `<div class="hr-stat"><span class="hr-stat-label">時數</span><strong>${hours}</strong></div>` : ''}
         ${purchased ? `<div class="hr-stat"><span class="hr-stat-label">人數</span><strong>${purchased}</strong></div>` : ''}
       </div>
-      ${isBlindList ? `<div class="hr-foot"><button type="button" class="hr-btn" onclick="event.stopPropagation();selectHahowCourse('${course.id}');ctaClick();">查看完整資訊</button></div>` : ''}
+      ${isRejected ? '<p class="hr-rejected">暫不考慮</p>' : ''}
+      ${isRoundList ? `<div class="hr-foot"><button type="button" class="hr-btn" onclick="openParticipantCourseDetail('${course.id}')">查看完整資訊</button></div>` : ''}
     </article>`;
   }).join('');
 }
@@ -2757,6 +3531,16 @@ function buildBackendRecord(){
     q1: survey?.q1_depthLogic ?? null,
     q2: survey?.q2_visualAttraction ?? null,
     q3: survey?.q3_purchaseIntent ?? null,
+    q4: survey?.q4_contentAdoptionIntent ?? null,
+    q5: survey?.q5_relianceIntent ?? null,
+    q6: survey?.q6_continuedUseIntent ?? null,
+    q7: survey?.q7_structureClarity ?? null,
+    q8: survey?.q8_keyPointFindability ?? null,
+    q9: survey?.q9_cognitiveThought ?? null,
+    q10: survey?.q10_reasonEvaluation ?? null,
+    q11: survey?.q11_sourceCueInfluence ?? null,
+    q12: survey?.q12_visualCueInfluence ?? null,
+    actualAdoptionChoice: survey?.actualAdoptionChoice ?? null,
     roundResults: [...(currentSessionLog.behavior_metrics.round_results || [])],
     dwell_times: {
       aero_ai_summary_block: behavior.ai_summary_staySec,
@@ -2821,6 +3605,10 @@ function saveBackendRecord(){
 /* ── Start course ── */
 function startCourse(){
   if(!selSC) return;
+  if(ROLE.participant){
+    enterParticipantCourseList();
+    return;
+  }
   if(!assignedCondition) assignConditionByUserId();
   curSC=selSC;
   assignedCondition=getConditionByScenarioKey(curSC);
@@ -2829,6 +3617,8 @@ function startCourse(){
     : { key:'peripheral', label:'邊緣路徑（感性）', tag:'邊緣路徑' };
   applyCourse();
   initBehaviorTracking();
+  leaveTrackingPage('budget_completed');
+  startTrackingRound();
   goPage('course');
   setStepState(2);
   [0,1,2,3].forEach(i=>{ const el=document.getElementById('nt'+i); if(el){ el.classList.toggle('done',i<2); el.classList.toggle('active',i===2); } });
@@ -2883,8 +3673,9 @@ function applyCourse(){
     courseDescEl.style.display='none';
   }
   const statsEl=document.getElementById('c-stats');
-  statsEl.innerHTML=`<div class="stat-box"><div class="stat-n">${purchasedText}</div><div class="stat-l">人數</div></div><div class="stat-box"><div class="stat-n">${ratingText}</div><div class="stat-l">評價</div></div>`;
-  statsEl.style.gridTemplateColumns='repeat(2,minmax(0,1fr))';
+  const hoursText=formatOptionalNumber(courseCtx.total_hours, (n)=>`${Math.round(n)} 小時`);
+  statsEl.innerHTML=`<div class="stat-box"><div class="stat-n">${priceText}</div><div class="stat-l">價格</div></div><div class="stat-box"><div class="stat-n">${hoursText}</div><div class="stat-l">課程時數</div></div><div class="stat-box"><div class="stat-n">${ratingText}</div><div class="stat-l">評價</div></div><div class="stat-box"><div class="stat-n">${purchasedText}</div><div class="stat-l">購買人數</div></div>`;
+  statsEl.style.gridTemplateColumns='repeat(4,minmax(0,1fr))';
 
   const budgetSection=document.querySelector('.course-sec-budget');
   if(budgetSection) budgetSection.style.display='none';
@@ -2892,6 +3683,12 @@ function applyCourse(){
   if(insightsSection) insightsSection.style.display='none';
   const heroBtns=document.querySelector('.course-hero-btns');
   if(heroBtns) heroBtns.style.display='none';
+  const legacyBlindActions=document.querySelector('.course-blind-actions');
+  if(legacyBlindActions) legacyBlindActions.style.display='none';
+  const detailAlternatives=document.getElementById('course-blind-reco');
+  if(detailAlternatives) detailAlternatives.style.display='none';
+  const detailInfoLayout=document.querySelector('.course-sec-list');
+  if(detailInfoLayout) detailInfoLayout.classList.add('detail-mode');
   const aiSummaryLabel=document.querySelector('.ai-block-label-perp');
   if(aiSummaryLabel) aiSummaryLabel.style.display='none';
 
@@ -2972,6 +3769,7 @@ function applyCourse(){
 
 function advanceParticipantRound(){
   const roundResult=appendRoundResult(null, null, null);
+  finishTrackingRound('round_submitted', roundResult.round_index);
 
   if(currentStepIndex < TOTAL_ROUNDS - 1){
     currentStepIndex += 1;
@@ -3020,7 +3818,7 @@ function ctaClick(){
   logEvent('CTA_CLICK', `COND-${assignedCondition?.conditionId || '-'} × ${SC_DATA[curSC]?.label || '-'}`);
 
   if(ROLE.participant){
-    advanceParticipantRound();
+    adoptActiveCourse();
     return;
   }
 
@@ -3102,6 +3900,12 @@ function resetAll(){
   latestResultJson = '';
   selectedRecoCourseId = null;
   selectedCourse = null;
+  currentCourseView = 'list';
+  activeDetailCourseId = null;
+  detailEntryMethod = null;
+  detailOpenedAt = null;
+  currentRoundCandidateIds = [];
+  scenarioBriefingAcknowledged = false;
   try{ localStorage.removeItem(BACKEND_RECORD_KEY); }catch(_err){}
   try{ sessionStorage.removeItem(SESSION_LOG_STORAGE_KEY); }catch(_err){}
   pauseAllStayTimers();
@@ -3155,7 +3959,16 @@ function resetAll(){
   document.getElementById('step2-area').style.display='none';
   document.getElementById('step1-area').style.display='none';
   const pIntro=document.getElementById('participant-intro');
-  if(pIntro) pIntro.style.display=ROLE.participant?'block':'none';
+  if(pIntro){
+    pIntro.style.display=ROLE.participant?'block':'none';
+    pIntro.hidden=!ROLE.participant;
+  }
+  const advisorConsent=document.getElementById('advisor-consent-screen');
+  if(advisorConsent) advisorConsent.hidden=true;
+  const scenarioBriefing=document.getElementById('scenario-briefing');
+  if(scenarioBriefing) scenarioBriefing.hidden=true;
+  const participantConsent=document.getElementById('participant-consent');
+  if(participantConsent) participantConsent.checked=false;
   setStepState(0);
 
   [0,1,2,3].forEach(i=>{
@@ -3174,6 +3987,7 @@ function resetAll(){
   }
 
   syncCurrentSessionLogStorage();
+  updateAdvisorDemoPanel();
 
   if(ctrlOpen) toggleCtrl();
   toast('✓ 所有紀錄已重置，可重新開始實驗');
@@ -3594,6 +4408,7 @@ function initAiCardIcons(){
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
+  applyAdvisorDemoUxCopy();
   configureRoleUI();
   syncCurrentSessionLogStorage();
   initAiCardIcons();
@@ -3602,6 +4417,25 @@ document.addEventListener('DOMContentLoaded', ()=>{
   renderHahowRecommendations();
   initBehaviorTracking();
   renderIcons(document);
+  if(restoreResearchTrackingSession()){
+    const restoredDecision=getCurrentRoundDecision();
+    if(restoredDecision?.started && !restoredDecision.completed){
+      budgetValue=Number(restoredDecision.budget) || budgetValue;
+      enterParticipantCourseList({restore:true});
+    }else{
+      const visiblePage=document.querySelector('.page.show')?.id?.replace(/^page-/, '') || 'landing';
+      syncTrackingPageForUi(visiblePage);
+    }
+  }
+
+  if(!window.__aeroCourseHistoryBound){
+    window.addEventListener('popstate', ()=>{
+      if(ROLE.participant && currentCourseView==='detail'){
+        closeActiveCourseDetail('browser_back',{backMethod:'browser_back'});
+      }
+    });
+    window.__aeroCourseHistoryBound=true;
+  }
 
   const joinForm=document.getElementById('join-modal-form');
   if(joinForm && !joinForm.dataset.submitBound){
