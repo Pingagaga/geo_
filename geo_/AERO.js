@@ -885,7 +885,7 @@ function showRoundTransition(roundResult=null, isFinal=false){
       next.textContent='開始填寫問卷';
       next.onclick=()=>showQuestionnaireForm();
     }
-    if(note) note.textContent='問卷題目本身維持原研究版本。';
+    if(note) note.textContent='問卷將詢問你對 AI 生成課程內容的感受。';
   }else{
     if(kicker) kicker.textContent=`研究流程 · 第 ${completedRounds} / ${TOTAL_ROUNDS} 回合`;
     if(title) title.textContent=`你完成了第 ${completedRounds} 回合`;
@@ -911,7 +911,7 @@ function showQuestionnaireForm(){
   if(page) page.classList.remove('questionnaire-intro-stage');
   if(survey) survey.setAttribute('aria-hidden','false');
   if(action) action.style.display='none';
-  safeTrackCall('startQuestionnaire', {questionnaire_version:'aero-q1-q12-v1'});
+  safeTrackCall('startQuestionnaire', {questionnaire_version:'aero-ai-content-q1-q5-v1'});
   survey?.scrollIntoView({behavior:'smooth', block:'start'});
   updateAdvisorDemoPanel();
 }
@@ -959,6 +959,10 @@ function buildResultPayload(scores, adoptionChoice){
       ctaClicks: ctaCnt,
     },
     survey: {
+      aiContentTrust: scores[0],
+      aiDecisionHelpfulness: scores[1],
+      aiKeyPointClarity: scores[2],
+      aiReferenceAcceptance: scores[3],
       q1_depthLogic: scores[0],
       q2_visualAttraction: scores[1],
       q3_purchaseIntent: scores[2],
@@ -1003,6 +1007,10 @@ function payloadToCsv(payload){
     ai_summary_staySec: payload.behavior.ai_summary_staySec,
     switchCount: payload.behavior.switchCount,
     ctaClicks: payload.behavior.ctaClicks,
+    aiContentTrust: payload.survey.aiContentTrust,
+    aiDecisionHelpfulness: payload.survey.aiDecisionHelpfulness,
+    aiKeyPointClarity: payload.survey.aiKeyPointClarity,
+    aiReferenceAcceptance: payload.survey.aiReferenceAcceptance,
     q1_depthLogic: payload.survey.q1_depthLogic,
     q2_visualAttraction: payload.survey.q2_visualAttraction,
     q3_purchaseIntent: payload.survey.q3_purchaseIntent,
@@ -1045,10 +1053,11 @@ function showJoinComplete(){
 }
 
 function submitJoinSurvey(){
-  const answers=Array.from({length:12}, (_, index)=>document.querySelector(`input[name="q${index + 1}"]:checked`));
+  const requiredQuestionNames=['q1','q2','q3','q4'];
+  const answers=requiredQuestionNames.map((name)=>document.querySelector(`input[name="${name}"]:checked`));
   const adoptionChoice=document.querySelector('input[name="adoption_choice"]:checked');
   if(answers.some((answer)=>!answer) || !adoptionChoice){
-    toast('請先完成所有評分與實際選擇再提交');
+    toast('請先完成 4 題評分與最後一題選擇再提交');
     return;
   }
 
@@ -1061,13 +1070,16 @@ function submitJoinSurvey(){
   }
 
   pauseAllStayTimers();
-  const scores=answers.map((answer)=>Number(answer.value));
+  const scores=Array.from({length:12}, (_, index)=>{
+    const answer=document.querySelector(`input[name="q${index + 1}"]:checked`);
+    return answer ? Number(answer.value) : null;
+  });
   latestResultPayload=buildResultPayload(scores, adoptionChoice.value);
   latestResultJson=JSON.stringify(latestResultPayload, null, 2);
   saveBackendRecord();
   safeTrackCall('submitQuestionnaireSuccess', {
-    questionnaire_version:'aero-q1-q12-v1',
-    answered_item_count:answers.length + 1,
+    questionnaire_version:'aero-ai-content-q1-q5-v1',
+    answered_item_count:requiredQuestionNames.length + 1,
   });
   stopBackgroundTrackers();
   goPage('thankyou');

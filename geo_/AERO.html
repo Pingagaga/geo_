@@ -296,14 +296,15 @@
     <section id="join-modal" class="round-survey-panel" aria-hidden="true" aria-labelledby="join-modal-title">
       <div class="round-survey-card">
     <form class="join-modal-body profile-template-body survey-template-body" id="join-modal-form">
-      <h2 id="join-modal-title" class="profile-template-title">課程綱要回饋問卷</h2>
+      <h2 id="join-modal-title" class="profile-template-title">AI 課程內容感受問卷</h2>
+      <p class="join-q-sub">請回想剛才四回合看到的課程介紹，依你的真實感受作答。</p>
 
       <div class="profile-template-list survey-template-list">
         <div class="profile-template-item survey-template-item">
           <div class="profile-template-name survey-template-name">
             Q1
-            <p class="survey-template-question">本頁提供之課程資訊是否具備足夠深度與邏輯性？</p>
-            <p class="survey-template-hint">1 分極不符合，7 分極符合</p>
+            <p class="survey-template-question">這些 AI 生成的課程介紹讓我覺得課程資訊可信。</p>
+            <p class="survey-template-hint">1 分極不同意，7 分極同意</p>
           </div>
           <div class="profile-template-info survey-template-info">
             <div class="survey-checklist" id="likert-q1">
@@ -321,8 +322,8 @@
         <div class="profile-template-item survey-template-item">
           <div class="profile-template-name survey-template-name">
             Q2
-            <p class="survey-template-question">本頁之版面編排、評價呈現與視覺設計是否具吸引力？</p>
-            <p class="survey-template-hint">1 分極不符合，7 分極符合</p>
+            <p class="survey-template-question">這些內容幫助我判斷哪一門課比較值得投入補助。</p>
+            <p class="survey-template-hint">1 分極不同意，7 分極同意</p>
           </div>
           <div class="profile-template-info survey-template-info">
             <div class="survey-checklist" id="likert-q2">
@@ -340,8 +341,8 @@
         <div class="profile-template-item survey-template-item">
           <div class="profile-template-name survey-template-name">
             Q3
-            <p class="survey-template-question">在得知此段課綱摘要完全由 AI 生成的前提下，您是否願意實際付費購買這堂課程？</p>
-            <p class="survey-template-hint">1 分極不願意，7 分極願意</p>
+            <p class="survey-template-question">這些內容清楚指出我做課程選擇時需要考慮的重點。</p>
+            <p class="survey-template-hint">1 分極不同意，7 分極同意</p>
           </div>
           <div class="profile-template-info survey-template-info">
             <div class="survey-checklist" id="likert-q3">
@@ -359,7 +360,7 @@
         <div class="profile-template-item survey-template-item">
           <div class="profile-template-name survey-template-name">
             Q4
-            <p class="survey-template-question">我願意採用這些課程內容，作為理解相關主題的參考依據。</p>
+            <p class="survey-template-question">即使知道課程介紹由 AI 生成，我仍覺得它可以作為決策參考。</p>
             <p class="survey-template-hint">1 分極不同意，7 分極同意</p>
           </div>
           <div class="profile-template-info survey-template-info">
@@ -378,97 +379,22 @@
         <div class="profile-template-item survey-template-item">
           <div class="profile-template-name survey-template-name">
             Q5
-            <p class="survey-template-question">即使沒有教師立即確認，我仍願意依據這些內容進行初步判斷。</p>
-            <p class="survey-template-hint">1 分極不同意，7 分極同意</p>
-          </div>
-          <div class="profile-template-info survey-template-info">
-            <div class="survey-checklist" id="likert-q5">
-              <label><input type="radio" name="q5" value="1"><span>1 分</span></label>
-              <label><input type="radio" name="q5" value="2"><span>2 分</span></label>
-              <label><input type="radio" name="q5" value="3"><span>3 分</span></label>
-              <label><input type="radio" name="q5" value="4"><span>4 分</span></label>
-              <label><input type="radio" name="q5" value="5"><span>5 分</span></label>
-              <label><input type="radio" name="q5" value="6"><span>6 分</span></label>
-              <label><input type="radio" name="q5" value="7"><span>7 分</span></label>
-            </div>
-          </div>
-        </div>
-
-        <div class="profile-template-item survey-template-item">
-          <div class="profile-template-name survey-template-name">
-            Q6
-            <p class="survey-template-question">未來有相似學習需求時，我願意繼續使用此類 AI 課程內容。</p>
-            <p class="survey-template-hint">1 分極不同意，7 分極同意</p>
-          </div>
-          <div class="profile-template-info survey-template-info">
-            <div class="survey-checklist" id="likert-q6">
-              <label><input type="radio" name="q6" value="1"><span>1 分</span></label>
-              <label><input type="radio" name="q6" value="2"><span>2 分</span></label>
-              <label><input type="radio" name="q6" value="3"><span>3 分</span></label>
-              <label><input type="radio" name="q6" value="4"><span>4 分</span></label>
-              <label><input type="radio" name="q6" value="5"><span>5 分</span></label>
-              <label><input type="radio" name="q6" value="6"><span>6 分</span></label>
-              <label><input type="radio" name="q6" value="7"><span>7 分</span></label>
-            </div>
-          </div>
-        </div>
-
-        <div class="profile-template-item survey-template-item">
-          <div class="profile-template-name survey-template-name">
-            實際選擇
-            <p class="survey-template-question">若現在要決定下一步，您會如何處理剛才看到的課程內容？</p>
-            <p class="survey-template-hint">請選擇最接近您實際會採取的行動</p>
+            <p class="survey-template-question">若未來平台使用 AI 生成課程介紹，我最可能採取的方式是：</p>
+            <p class="survey-template-hint">請選擇最接近你真實想法的一項</p>
           </div>
           <div class="profile-template-info survey-template-info">
             <div class="survey-checklist" id="adoption-choice">
-              <label><input type="radio" name="adoption_choice" value="adopt"><span>採用內容並繼續學習</span></label>
-              <label><input type="radio" name="adoption_choice" value="verify"><span>先查證其他來源再決定</span></label>
-              <label><input type="radio" name="adoption_choice" value="reject"><span>不採用這些內容</span></label>
+              <label><input type="radio" name="adoption_choice" value="adopt"><span>可作為主要參考</span></label>
+              <label><input type="radio" name="adoption_choice" value="verify"><span>會搭配其他資訊查證</span></label>
+              <label><input type="radio" name="adoption_choice" value="reject"><span>不會採納這類內容</span></label>
             </div>
           </div>
-        </div>
-
-        <div class="profile-template-item survey-template-item">
-          <div class="profile-template-name survey-template-name">MC1<p class="survey-template-question">這些內容的組織架構清楚。</p><p class="survey-template-hint">知覺結構清晰度 · 1 分極不同意，7 分極同意</p></div>
-          <div class="profile-template-info survey-template-info"><div class="survey-checklist" id="likert-q7">
-            <label><input type="radio" name="q7" value="1"><span>1 分</span></label><label><input type="radio" name="q7" value="2"><span>2 分</span></label><label><input type="radio" name="q7" value="3"><span>3 分</span></label><label><input type="radio" name="q7" value="4"><span>4 分</span></label><label><input type="radio" name="q7" value="5"><span>5 分</span></label><label><input type="radio" name="q7" value="6"><span>6 分</span></label><label><input type="radio" name="q7" value="7"><span>7 分</span></label>
-          </div></div>
-        </div>
-        <div class="profile-template-item survey-template-item">
-          <div class="profile-template-name survey-template-name">MC2<p class="survey-template-question">我能快速找到這些內容的重點。</p><p class="survey-template-hint">知覺結構清晰度 · 1 分極不同意，7 分極同意</p></div>
-          <div class="profile-template-info survey-template-info"><div class="survey-checklist" id="likert-q8">
-            <label><input type="radio" name="q8" value="1"><span>1 分</span></label><label><input type="radio" name="q8" value="2"><span>2 分</span></label><label><input type="radio" name="q8" value="3"><span>3 分</span></label><label><input type="radio" name="q8" value="4"><span>4 分</span></label><label><input type="radio" name="q8" value="5"><span>5 分</span></label><label><input type="radio" name="q8" value="6"><span>6 分</span></label><label><input type="radio" name="q8" value="7"><span>7 分</span></label>
-          </div></div>
-        </div>
-        <div class="profile-template-item survey-template-item">
-          <div class="profile-template-name survey-template-name">MC3<p class="survey-template-question">閱讀時，我仔細思考了內容所提出的觀點。</p><p class="survey-template-hint">認知投入 · 1 分極不同意，7 分極同意</p></div>
-          <div class="profile-template-info survey-template-info"><div class="survey-checklist" id="likert-q9">
-            <label><input type="radio" name="q9" value="1"><span>1 分</span></label><label><input type="radio" name="q9" value="2"><span>2 分</span></label><label><input type="radio" name="q9" value="3"><span>3 分</span></label><label><input type="radio" name="q9" value="4"><span>4 分</span></label><label><input type="radio" name="q9" value="5"><span>5 分</span></label><label><input type="radio" name="q9" value="6"><span>6 分</span></label><label><input type="radio" name="q9" value="7"><span>7 分</span></label>
-          </div></div>
-        </div>
-        <div class="profile-template-item survey-template-item">
-          <div class="profile-template-name survey-template-name">MC4<p class="survey-template-question">我有評估內容中的理由是否合理。</p><p class="survey-template-hint">認知投入 · 1 分極不同意，7 分極同意</p></div>
-          <div class="profile-template-info survey-template-info"><div class="survey-checklist" id="likert-q10">
-            <label><input type="radio" name="q10" value="1"><span>1 分</span></label><label><input type="radio" name="q10" value="2"><span>2 分</span></label><label><input type="radio" name="q10" value="3"><span>3 分</span></label><label><input type="radio" name="q10" value="4"><span>4 分</span></label><label><input type="radio" name="q10" value="5"><span>5 分</span></label><label><input type="radio" name="q10" value="6"><span>6 分</span></label><label><input type="radio" name="q10" value="7"><span>7 分</span></label>
-          </div></div>
-        </div>
-        <div class="profile-template-item survey-template-item">
-          <div class="profile-template-name survey-template-name">MC5<p class="survey-template-question">內容顯示的來源、評價或專業標示影響了我的判斷。</p><p class="survey-template-hint">周邊線索感受 · 1 分極不同意，7 分極同意</p></div>
-          <div class="profile-template-info survey-template-info"><div class="survey-checklist" id="likert-q11">
-            <label><input type="radio" name="q11" value="1"><span>1 分</span></label><label><input type="radio" name="q11" value="2"><span>2 分</span></label><label><input type="radio" name="q11" value="3"><span>3 分</span></label><label><input type="radio" name="q11" value="4"><span>4 分</span></label><label><input type="radio" name="q11" value="5"><span>5 分</span></label><label><input type="radio" name="q11" value="6"><span>6 分</span></label><label><input type="radio" name="q11" value="7"><span>7 分</span></label>
-          </div></div>
-        </div>
-        <div class="profile-template-item survey-template-item">
-          <div class="profile-template-name survey-template-name">MC6<p class="survey-template-question">版面與視覺呈現影響了我對課程內容的整體印象。</p><p class="survey-template-hint">周邊線索感受 · 1 分極不同意，7 分極同意</p></div>
-          <div class="profile-template-info survey-template-info"><div class="survey-checklist" id="likert-q12">
-            <label><input type="radio" name="q12" value="1"><span>1 分</span></label><label><input type="radio" name="q12" value="2"><span>2 分</span></label><label><input type="radio" name="q12" value="3"><span>3 分</span></label><label><input type="radio" name="q12" value="4"><span>4 分</span></label><label><input type="radio" name="q12" value="5"><span>5 分</span></label><label><input type="radio" name="q12" value="6"><span>6 分</span></label><label><input type="radio" name="q12" value="7"><span>7 分</span></label>
-          </div></div>
         </div>
       </div>
 
       <div class="join-actions profile-template-actions">
         <button class="btn-line" type="button" onclick="goPage('course')">返回課程內容</button>
-        <button class="btn-ec btn-ec-final" type="submit">送出回饋</button>
+        <button class="btn-ec btn-ec-final" type="submit">送出問卷</button>
       </div>
     </form>
 
@@ -595,6 +521,6 @@
 <script src="tracking-integration.js?v=20260711-1"></script>
 <script src="course-data-loader.js?v=20260718-1"></script>
 <script src="course-decision-flow.js?v=20260718-1"></script>
-<script src="AERO.js?v=20260718-6"></script>
+<script src="AERO.js?v=20260718-7"></script>
 </body>
 </html>

@@ -94,8 +94,12 @@ test('13 final round enters questionnaire intro before questionnaire',()=>{
   assert.match(aero,/開始填寫問卷/);
 });
 
-test('14 questionnaire fields are still present',()=>{
-  assert.match(html,/name="q12"/);
+test('14 questionnaire uses concise AI content items',()=>{
+  assert.match(html,/AI 課程內容感受問卷/);
+  assert.match(html,/這些 AI 生成的課程介紹讓我覺得課程資訊可信/);
+  assert.match(html,/這些內容幫助我判斷哪一門課比較值得投入補助/);
+  assert.match(html,/即使知道課程介紹由 AI 生成，我仍覺得它可以作為決策參考/);
+  assert.doesNotMatch(html,/name="q12"/);
   assert.match(html,/name="adoption_choice"/);
 });
 
