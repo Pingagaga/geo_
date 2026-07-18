@@ -99,7 +99,8 @@ test('14 adopt completes the round',()=>{
 });
 
 test('15 selected and displayed candidates are excluded later',()=>{
-  assert.match(aero,/usedCourseIds:currentSessionLog\.used_course_ids/);
+  assert.match(aero,/function getUsedCourseIdsBeforeRound/);
+  assert.match(aero,/usedCourseIds:usedBeforeRound/);
   assert.match(aero,/sampled\.candidate_course_ids\.forEach/);
 });
 
@@ -113,6 +114,12 @@ test('16 four conditions appear once in each Latin Square sequence',()=>{
 test('17 Latin Square assignment is stable by participant id',()=>{
   assert.match(aero,/createAdvisorDemoAssignment/);
   assert.match(aero,/normalizeRemainder/);
+});
+
+test('17b course candidate creation recovers condition from stored sequence',()=>{
+  assert.match(aero,/function recoverAssignedConditionForCurrentRound/);
+  assert.match(aero,/sequence\[currentStepIndex\]/);
+  assert.match(aero,/!recoverAssignedConditionForCurrentRound\(\)/);
 });
 
 test('18 questionnaire cannot appear before final transition',()=>{
@@ -130,6 +137,11 @@ test('19 formal mode hides condition while demo mode shows it',()=>{
 test('20 JSON load failure does not use fake courses',()=>{
   assert.match(aero,/renderCourseDataErrorState/);
   assert.match(aero,/HAHOW_BIZ_COURSES=\[\]/);
+});
+
+test('20b missing decision flow script has an explicit error state',()=>{
+  assert.match(aero,/course-decision-flow\.js 未成功載入/);
+  assert.match(aero,/AEROCourseDecisionFlow\?\.sampleCandidates/);
 });
 
 test('21 xlsx source is converted before Netlify config generation',()=>{

@@ -2461,6 +2461,14 @@ function enterParticipantCourseList({restore=false}={}){
     });
     return;
   }
+  if(!window.AEROCourseDecisionFlow?.sampleCandidates){
+    renderCourseFlowError({
+      title:'課程抽樣模組尚未載入',
+      message:'course-decision-flow.js 未成功載入，因此不能建立本回合候選課程。請確認此檔案已加入 git commit 並成功部署。',
+      detail:'請將 geo_/course-decision-flow.js 一起 git add、commit、push，部署後再重新整理頁面。',
+    });
+    return;
+  }
   if(!restore && currentStepIndex===0 && !scenarioBriefingAcknowledged){
     showScenarioBriefing();
     return;
@@ -2468,6 +2476,14 @@ function enterParticipantCourseList({restore=false}={}){
   const decision=ensureCurrentRoundDecision({freeze:true});
   if(!decision?.candidate_course_ids?.length || decision.candidate_course_ids.length<CANDIDATES_PER_ROUND){
     console.warn('[AERO courses] No eligible candidate is available for this round');
+    if(!assignedCondition){
+      renderCourseFlowError({
+        title:'研究條件分派尚未完成',
+        message:'目前尚未取得本回合的研究條件，因此不能建立候選課程。請重新開始研究，或使用 ?demo=1 進入 Advisor Demo。',
+        detail:'課程資料已載入，但 experiment assignment 缺少 sequence 或 scenario key。',
+      });
+      return;
+    }
     renderCourseFlowError({
       title:'無法建立本回合候選課程',
       message:'candidate state 遺失或剩餘課程不足，請返回調整預算或重新開始研究。',
@@ -2565,6 +2581,57 @@ function getCurrentRoundDecision(){
   return currentSessionLog.behavior_metrics.round_decisions?.[String(currentStepIndex)] || null;
 }
 
+function getUsedCourseIdsBeforeRound(roundIndex){
+  const used=new Set();
+  const candidates=currentSessionLog.round_candidates || {};
+  Object.entries(candidates).forEach(([key, ids])=>{
+    const index=Number(key);
+    if(!Number.isFinite(index) || index>=Number(roundIndex)) return;
+    if(Array.isArray(ids)) ids.forEach((id)=>used.add(String(id)));
+  });
+  (currentSessionLog.behavior_metrics.adopted_course_ids || []).forEach((id)=>used.add(String(id)));
+  return [...used];
+}
+
+function recoverAssignedConditionForCurrentRound(){
+  if(assignedCondition) return true;
+  const assignment=currentSessionLog.experiment_assignment || {};
+  const sequence=Array.isArray(assignment.sequence) ? assignment.sequence : [];
+  let scenarioKey=sequence[currentStepIndex] || assignment.scenario_key || curSC;
+
+  if(!scenarioKey && Number.isFinite(Number(assignment.remainder_group))){
+    scenarioKey=getScenarioForStep(assignment.remainder_group, currentStepIndex);
+  }
+
+  if(!scenarioKey && ADVISOR_DEMO_MODE){
+    const local=createAdvisorDemoAssignment();
+    const sequenceFromLocal=[...getSequenceByRemainder(local.remainder_group)];
+    scenarioKey=getScenarioForStep(local.remainder_group, currentStepIndex);
+    currentConditionRemainder=local.remainder_group;
+    currentSessionLog.experiment_assignment={
+      ...assignment,
+      remainder_group:local.remainder_group,
+      sequence:sequenceFromLocal,
+    };
+  }
+
+  if(!scenarioKey || !SCENARIO_CONDITIONS[scenarioKey]) return false;
+  assignedCondition=getConditionByScenarioKey(scenarioKey);
+  curSC=scenarioKey;
+  selSC=scenarioKey;
+  currentSessionLog.experiment_assignment={
+    ...currentSessionLog.experiment_assignment,
+    current_step_index:currentStepIndex,
+    condition_id:assignedCondition.conditionId,
+    condition_label:assignedCondition.summaryLabel,
+    scenario_key:assignedCondition.scenarioKey,
+    narrative_style:assignedCondition.narrativeStyle,
+    structure_style:assignedCondition.structureStyle,
+  };
+  syncCurrentSessionLogStorage();
+  return true;
+}
+
 function syncCourseDecisionView(decision){
   currentCourseView=decision?.current_view==='detail' ? 'detail' : 'list';
   activeDetailCourseId=decision?.active_detail_course_id || null;
@@ -2575,7 +2642,7 @@ function syncCourseDecisionView(decision){
 
 function ensureCurrentRoundDecision({freeze=false}={}){
   const flow=window.AEROCourseDecisionFlow;
-  if(!flow || (!assignedCondition && currentSessionLog?.experiment_assignment?.remainder_group===null)) return null;
+  if(!flow || !recoverAssignedConditionForCurrentRound()) return null;
   const key=String(currentStepIndex);
   const confirmedBudget=Number(currentSessionLog.confirmed_budget);
   if(!Number.isFinite(confirmedBudget)) return null;
@@ -2609,10 +2676,12 @@ function ensureCurrentRoundDecision({freeze=false}={}){
     syncCurrentSessionLogStorage();
     return restored;
   }
+  const usedBeforeRound=getUsedCourseIdsBeforeRound(currentStepIndex);
+  currentSessionLog.used_course_ids=[...usedBeforeRound];
   const sampled=flow.sampleCandidates({participantId:currentSessionLog.participant_id,roundIndex:currentStepIndex,
     scenarioKey:curSC || getCurrentExperimentPlan().scenarioKey,budget:confirmedBudget,courses:HAHOW_BIZ_COURSES,
     adoptedCourseIds:currentSessionLog.behavior_metrics.adopted_course_ids,
-    usedCourseIds:currentSessionLog.used_course_ids,
+    usedCourseIds:usedBeforeRound,
     count:CANDIDATES_PER_ROUND});
   if(!sampled?.candidate_course_ids || sampled.candidate_course_ids.length<CANDIDATES_PER_ROUND) return null;
   const decision=flow.createRoundState({round_index:currentStepIndex,scenario_key:curSC || getCurrentExperimentPlan().scenarioKey,
