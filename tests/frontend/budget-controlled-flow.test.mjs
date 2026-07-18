@@ -24,9 +24,25 @@ test('2 budget is confirmed by the user',()=>{
   assert.match(aero,/currentSessionLog\.confirmed_budget=next/);
 });
 
+test('2b budget adjustment does not reset consent or profile flow',()=>{
+  assert.match(aero,/function showBudgetSetup\(\{from='scenario_briefing'\}=\{\}\)/);
+  assert.match(aero,/budgetSetupReturnState\s*===\s*'round_intro'/);
+  assert.match(aero,/showBudgetSetup\(\{from:'round_intro'\}\)/);
+  assert.match(aero,/function returnFromBudgetSetup\(\)/);
+  assert.match(aero,/showRoundIntro\(currentStepIndex\)/);
+  assert.equal(/participantConsent\.checked=false/.test(aero.match(/function resetBudgetDependentState\(\)[\s\S]*?function getBudgetSetupValue/)?.[0] || ''), false);
+});
+
 test('3 confirmed budget is the round budget source',()=>{
   assert.match(aero,/const confirmedBudget=Number\(currentSessionLog\.confirmed_budget\)/);
   assert.match(aero,/decision\.budget=confirmedBudget/);
+});
+
+test('3b budget reset preserves assignment sequence for first round',()=>{
+  const body=aero.match(/function resetBudgetDependentState\(\)[\s\S]*?function getBudgetSetupValue/)?.[0] || '';
+  assert.match(body,/currentSessionLog\.experiment_assignment/);
+  assert.match(body,/sequence\[0\]/);
+  assert.match(body,/assignedCondition=getConditionByScenarioKey\(scenarioKey\)/);
 });
 
 test('4 price strings normalize to numbers',()=>{

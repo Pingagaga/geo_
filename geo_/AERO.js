@@ -1295,6 +1295,7 @@ const PARTICIPANT_PROFILE_STEPS = [
 ];
 let participantProfileStepIndex = 0;
 let participantProfileSubmitting = false;
+let budgetSetupReturnState = 'scenario_briefing';
 
 function isParticipantProfileStepComplete(modal, stepIndex){
   const step=PARTICIPANT_PROFILE_STEPS[stepIndex];
@@ -1732,8 +1733,15 @@ function startFirstRoundFromBriefing(){
 }
 
 function resetBudgetDependentState(){
+  const assignment=currentSessionLog.experiment_assignment || {};
+  const sequence=Array.isArray(assignment.sequence) ? assignment.sequence : [];
+  const remainder=Number.isFinite(Number(assignment.remainder_group)) ? Number(assignment.remainder_group) : currentConditionRemainder;
+  const scenarioKey=sequence[0] || (Number.isFinite(Number(remainder)) ? getScenarioForStep(remainder, 0) : curSC) || getCurrentExperimentPlan().scenarioKey;
   currentStepIndex=0;
-  curSC=getCurrentExperimentPlan().scenarioKey;
+  curSC=scenarioKey;
+  selSC=scenarioKey;
+  assignedCondition=getConditionByScenarioKey(scenarioKey);
+  currentConditionRemainder=Number.isFinite(Number(remainder)) ? Number(remainder) : currentConditionRemainder;
   selectedCourse=null;
   selectedRecoCourseId=null;
   currentRoundCandidateIds=[];
@@ -1742,6 +1750,15 @@ function resetBudgetDependentState(){
   currentSessionLog.behavior_metrics.round_results=[];
   currentSessionLog.behavior_metrics.round_decisions={};
   currentSessionLog.behavior_metrics.adopted_course_ids=[];
+  currentSessionLog.experiment_assignment={
+    ...currentSessionLog.experiment_assignment,
+    current_step_index:0,
+    condition_id:assignedCondition.conditionId,
+    condition_label:assignedCondition.summaryLabel,
+    scenario_key:assignedCondition.scenarioKey,
+    narrative_style:assignedCondition.narrativeStyle,
+    structure_style:assignedCondition.structureStyle,
+  };
   syncCourseDecisionView(null);
 }
 
@@ -1788,10 +1805,18 @@ function updateBudgetSetup(value=getBudgetSetupValue()){
   updateAdvisorDemoPanel();
 }
 
-function showBudgetSetup(){
+function showBudgetSetup({from='scenario_briefing'}={}){
+  budgetSetupReturnState=from;
+  const intro=document.getElementById('participant-intro');
   const briefing=document.getElementById('scenario-briefing');
   const roundIntro=document.getElementById('round-intro');
+  const consent=document.getElementById('advisor-consent-screen');
   const setup=document.getElementById('budget-setup');
+  if(intro){
+    intro.hidden=true;
+    intro.style.display='none';
+  }
+  if(consent) consent.hidden=true;
   if(briefing) briefing.hidden=true;
   if(roundIntro) roundIntro.hidden=true;
   if(!setup) return;
@@ -1818,6 +1843,16 @@ function showBudgetSetup(){
   goPage('landing');
   setStepState(1);
   updateAdvisorDemoPanel();
+}
+
+function returnFromBudgetSetup(){
+  const setup=document.getElementById('budget-setup');
+  if(setup) setup.hidden=true;
+  if(budgetSetupReturnState==='round_intro' && Number.isFinite(Number(currentSessionLog.confirmed_budget))){
+    showRoundIntro(currentStepIndex);
+    return;
+  }
+  showScenarioBriefing();
 }
 
 function confirmBudgetAndStartCourses(){
@@ -1868,7 +1903,7 @@ function showRoundIntro(roundIndex=currentStepIndex){
     </div>
     <div class="proceed-row landing-start-row">
       <button class="btn-proceed" type="button" onclick="enterParticipantCourseList()">查看第 ${roundNumber} 回合課程</button>
-      <button class="btn-line" type="button" onclick="showBudgetSetup()">返回調整預算</button>
+          <button class="btn-line" type="button" onclick="showBudgetSetup({from:'round_intro'})">返回調整預算</button>
     </div>`;
   goPage('landing');
   setStepState(1);
@@ -2018,7 +2053,7 @@ function applyAdvisorDemoUxCopy(){
       </div>
       <div class="budget-setup-notice" id="budget-setup-notice" role="status"></div>
       <div class="join-actions">
-        <button class="btn-line" type="button" onclick="showScenarioBriefing()">返回情境說明</button>
+      <button class="btn-line" type="button" onclick="returnFromBudgetSetup()">返回</button>
         <button class="btn-ec btn-ec-final" id="budget-confirm-btn" type="button" onclick="confirmBudgetAndStartCourses()">確認預算並查看課程</button>
       </div>
     </div>`;
@@ -2425,7 +2460,7 @@ function renderCourseFlowError({title, message, detail=''}){
         <p>${sanitizeCourseText(detail || message || '')}</p>
         <div class="error-actions">
           <button class="btn-proceed" type="button" onclick="location.reload()">重新載入</button>
-          <button class="btn-line" type="button" onclick="showBudgetSetup()">返回調整預算</button>
+      <button class="btn-line" type="button" onclick="showBudgetSetup({from:'round_intro'})">返回調整預算</button>
           <button class="btn-line" type="button" onclick="resetExperiment()">重新開始研究</button>
         </div>
       </section>`;
