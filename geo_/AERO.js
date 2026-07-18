@@ -1,935 +1,3 @@
-﻿const courseData = [
-  {
-    "course_url": "https://hahow.in/courses/5e7a1ead9c4b140023a8536f",
-    "course_id": "5e7a1ead9c4b140023a8536f",
-    "course_name": "職場人必學的商業分析術 - 專案策略思考",
-    "original_price": 2880,
-    "num_purchased": 1153,
-    "average_rating": 4.88,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/60a1cf0ea479bf08e4f5991b",
-    "course_id": "60a1cf0ea479bf08e4f5991b",
-    "course_name": "職場英文大補帖｜必勝簡報方程式",
-    "original_price": 1590,
-    "num_purchased": 433,
-    "average_rating": 4.96,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/64b6037994d60b20881db1e3",
-    "course_id": "64b6037994d60b20881db1e3",
-    "course_name": "最後一次學好商用英文 ，從關鍵字開始 Talk",
-    "original_price": 6400,
-    "num_purchased": 29,
-    "average_rating": 5.0,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/67ca81a08cbd72d2cdad37d5",
-    "course_id": "67ca81a08cbd72d2cdad37d5",
-    "course_name": "國際外商六大核心工作術｜職場必備 Mindset 建立",
-    "original_price": 27800,
-    "num_purchased": 573,
-    "average_rating": 4.86,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5da7ddea98176600213caf36",
-    "course_id": "5da7ddea98176600213caf36",
-    "course_name": "職場英文大補帖｜從社交心法到溝通金句",
-    "original_price": 1190,
-    "num_purchased": 626,
-    "average_rating": 4.86,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/64111821b85a08d4b027bb71",
-    "course_id": "64111821b85a08d4b027bb71",
-    "course_name": "聰明主管的正向領導學",
-    "original_price": 4200,
-    "num_purchased": 149,
-    "average_rating": 4.88,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/6040818e043b47f89a5c8f41",
-    "course_id": "6040818e043b47f89a5c8f41",
-    "course_name": "職場英文大補帖｜銀行行員必備的英文口說",
-    "original_price": 990,
-    "num_purchased": 375,
-    "average_rating": 4.98,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/64111c7f02231e24af7f8d16",
-    "course_id": "64111c7f02231e24af7f8d16",
-    "course_name": "矽谷專家給新手的第一堂數據管理課",
-    "original_price": 4800,
-    "num_purchased": 64,
-    "average_rating": 4.75,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5c8e0a0a8d1cc80020951f1a",
-    "course_id": "5c8e0a0a8d1cc80020951f1a",
-    "course_name": "產品經理職場學：PM 必修的職涯指南！",
-    "original_price": 2400,
-    "num_purchased": 2059,
-    "average_rating": 4.66,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5fd24f017687e53b086c7fe7",
-    "course_id": "5fd24f017687e53b086c7fe7",
-    "course_name": "SQL的五十道練習：初學者友善的資料庫入門",
-    "original_price": 3980,
-    "num_purchased": 3102,
-    "average_rating": 4.97,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/627e5a1b9841c80007c409ca",
-    "course_id": "627e5a1b9841c80007c409ca",
-    "course_name": "R 語言的 50+ 練習：統計分析的前哨站",
-    "original_price": 4980,
-    "num_purchased": 398,
-    "average_rating": 5.0,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5f61ac35b3fbe95900c45cb0",
-    "course_id": "5f61ac35b3fbe95900c45cb0",
-    "course_name": "職場英文大補帖｜上班族的跨國會議必修課",
-    "original_price": 1490,
-    "num_purchased": 569,
-    "average_rating": 4.8,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5dd935075e4baa002072a10a",
-    "course_id": "5dd935075e4baa002072a10a",
-    "course_name": "一次搞懂專案管理 - 從入門到業界實務",
-    "original_price": 2800,
-    "num_purchased": 2901,
-    "average_rating": 4.9,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/610814069871100007ab7b4f",
-    "course_id": "610814069871100007ab7b4f",
-    "course_name": "Python 的 50+ 練習：資料科學學習手冊",
-    "original_price": 4980,
-    "num_purchased": 1169,
-    "average_rating": 4.94,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/645734e4ce9d5fb4442d91cd",
-    "course_id": "645734e4ce9d5fb4442d91cd",
-    "course_name": "進階 SQL 的五十道練習：資料庫功力再提升",
-    "original_price": 3980,
-    "num_purchased": 732,
-    "average_rating": 5.0,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/667242066282be4de9eabf8f",
-    "course_id": "667242066282be4de9eabf8f",
-    "course_name": "資料分析的七個練習專案：累積個人作品集",
-    "original_price": 4980,
-    "num_purchased": 383,
-    "average_rating": 5.0,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/62d3a17ba1051e0007122a75",
-    "course_id": "62d3a17ba1051e0007122a75",
-    "course_name": "100 個電商數據營運指標全攻略",
-    "original_price": 2800,
-    "num_purchased": 417,
-    "average_rating": 5.0,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/6411219e49490ccf86dd29c1",
-    "course_id": "6411219e49490ccf86dd29c1",
-    "course_name": "CEO 的 24 堂經營智慧課",
-    "original_price": 4800,
-    "num_purchased": 82,
-    "average_rating": 5.0,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5dbb756d763da3002075eb62",
-    "course_id": "5dbb756d763da3002075eb62",
-    "course_name": "如何成為資料分析師：從問題解決到行動方案",
-    "original_price": 1980,
-    "num_purchased": 1608,
-    "average_rating": 4.87,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5ea94dd38c12ad922d9131f6",
-    "course_id": "5ea94dd38c12ad922d9131f6",
-    "course_name": "GA4 新手完全攻略！用數據分析下商業決策｜2024 全面升級版",
-    "original_price": 3980,
-    "num_purchased": 814,
-    "average_rating": 4.3,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5fe78a2be810e1a5ff89b17f",
-    "course_id": "5fe78a2be810e1a5ff89b17f",
-    "course_name": "軟體需求溝通─從外商公司學跨部門協作開發",
-    "original_price": 2890,
-    "num_purchased": 970,
-    "average_rating": 4.88,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/59f97b57a77a2d001eea8504",
-    "course_id": "59f97b57a77a2d001eea8504",
-    "course_name": "【電商正夯】找工作找實習必備 4 大技能",
-    "original_price": 2500,
-    "num_purchased": 1065,
-    "average_rating": 4.53,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/63f444d0095a63fe95688c29",
-    "course_id": "63f444d0095a63fe95688c29",
-    "course_name": "簡報再升級！職場人必學的商業圖表簡報術",
-    "original_price": 3280,
-    "num_purchased": 692,
-    "average_rating": 5.0,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5d428e522fb50200206226e9",
-    "course_id": "5d428e522fb50200206226e9",
-    "course_name": "AI 行銷學：用 Python 機器學習創造商業新價值",
-    "original_price": 3888,
-    "num_purchased": 362,
-    "average_rating": 4.33,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/68f0b5736dc0222aaa220f5a",
-    "course_id": "68f0b5736dc0222aaa220f5a",
-    "course_name": "金融數據學 Python：從選股建立程式邏輯",
-    "original_price": 5980,
-    "num_purchased": 177,
-    "average_rating": 0.0,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5b8e5fb4de22ba001ee7a572",
-    "course_id": "5b8e5fb4de22ba001ee7a572",
-    "course_name": "職場英文大補帖｜上班族的 Email 寫作課",
-    "original_price": 1999,
-    "num_purchased": 1635,
-    "average_rating": 4.88,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/663086ee0d300d8c0ba92c78",
-    "course_id": "663086ee0d300d8c0ba92c78",
-    "course_name": "",
-    "original_price": null,
-    "num_purchased": 0,
-    "average_rating": 0.0,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/64111d505ff2493ca2156c97",
-    "course_id": "64111d505ff2493ca2156c97",
-    "course_name": "解密成功品牌",
-    "original_price": 4200,
-    "num_purchased": 83,
-    "average_rating": 5.0,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/663092c40d300d8c0bada2ff",
-    "course_id": "663092c40d300d8c0bada2ff",
-    "course_name": "",
-    "original_price": null,
-    "num_purchased": 0,
-    "average_rating": 0.0,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/67ca80cf7ce0ad3cd6f7ac29",
-    "course_id": "67ca80cf7ce0ad3cd6f7ac29",
-    "course_name": "頂尖工作面試破解系統｜六步驟拿到夢幻 Offer",
-    "original_price": 16800,
-    "num_purchased": 464,
-    "average_rating": 5.0,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/66308c960d1fdd8ee441ba98",
-    "course_id": "66308c960d1fdd8ee441ba98",
-    "course_name": "商管技能提升組合｜數據管理＋圖解表達力",
-    "original_price": 7140,
-    "num_purchased": 0,
-    "average_rating": 0.0,
-    "total_hours": 9,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/63ad0f9aef17a1470401d9d2",
-    "course_id": "63ad0f9aef17a1470401d9d2",
-    "course_name": "商業分析經驗談：Monica 與你分享商業分析工作實戰",
-    "original_price": 0,
-    "num_purchased": 273,
-    "average_rating": 0.0,
-    "total_hours": 6,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/6238782d573d4b00060cf744",
-    "course_id": "6238782d573d4b00060cf744",
-    "course_name": "Python 購物籃分析：多商品推薦與利潤策略",
-    "original_price": 2388,
-    "num_purchased": 93,
-    "average_rating": 4.5,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/6630911b178be14da4fb50d5",
-    "course_id": "6630911b178be14da4fb50d5",
-    "course_name": "商管技能提升組合｜解密成功品牌＋專案管理",
-    "original_price": 5440,
-    "num_purchased": 0,
-    "average_rating": 0.0,
-    "total_hours": 6,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/66308d90da1b287f42cb6ea3",
-    "course_id": "66308d90da1b287f42cb6ea3",
-    "course_name": "商管技能提升組合｜數據管理＋解密成功品牌",
-    "original_price": 7650,
-    "num_purchased": 0,
-    "average_rating": 0.0,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/64422a1625efb5657481feb5",
-    "course_id": "64422a1625efb5657481feb5",
-    "course_name": "職場英文大補帖｜科技英文寫作快易通",
-    "original_price": 1999,
-    "num_purchased": 174,
-    "average_rating": 5.0,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5f89465d10a9ed6f2ee60e8c",
-    "course_id": "5f89465d10a9ed6f2ee60e8c",
-    "course_name": "不寫程式的數據分析： Excel 商業分析實戰",
-    "original_price": 2888,
-    "num_purchased": 746,
-    "average_rating": 4.85,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/663064500d1fdd8ee434cbe2",
-    "course_id": "663064500d1fdd8ee434cbe2",
-    "course_name": "商管技能提升組合｜領導學＋談判學",
-    "original_price": 7650,
-    "num_purchased": 0,
-    "average_rating": 0.0,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/60fe7a7e006b74000621ce1f",
-    "course_id": "60fe7a7e006b74000621ce1f",
-    "course_name": "雙語教學超前部署！互動式英語授課技巧",
-    "original_price": 2680,
-    "num_purchased": 449,
-    "average_rating": 5.0,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/663084c80d300d8c0ba86f22",
-    "course_id": "663084c80d300d8c0ba86f22",
-    "course_name": "商管技能提升組合｜談判課＋人聲運用",
-    "original_price": 7460,
-    "num_purchased": 16,
-    "average_rating": 0.0,
-    "total_hours": 7,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/66309375178be14da4fc4129",
-    "course_id": "66309375178be14da4fc4129",
-    "course_name": "商管技能提升組合｜經營智慧＋AI 應用",
-    "original_price": 6870,
-    "num_purchased": 10,
-    "average_rating": 0.0,
-    "total_hours": 9,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/66333fb3e249bf651e0c724b",
-    "course_id": "66333fb3e249bf651e0c724b",
-    "course_name": "商管技能提升組合｜經營智慧＋從心溝通",
-    "original_price": 5695,
-    "num_purchased": 0,
-    "average_rating": 0.0,
-    "total_hours": 6,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/66308be7e3b891182a7f88b3",
-    "course_id": "66308be7e3b891182a7f88b3",
-    "course_name": "商管技能提升組合｜談判課＋CEO 經營智慧",
-    "original_price": 8160,
-    "num_purchased": 0,
-    "average_rating": 0.0,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/624e0e7c22f6fc0007bbc5ec",
-    "course_id": "624e0e7c22f6fc0007bbc5ec",
-    "course_name": "創新轉型如何解密？服務設計實戰全攻略",
-    "original_price": 3500,
-    "num_purchased": 297,
-    "average_rating": 5.0,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/672c6c4ddb2b59427bdf4364",
-    "course_id": "672c6c4ddb2b59427bdf4364",
-    "course_name": "王梓沅的超級商英力：職場的萬用 X 棘手 X 關鍵溝通任務",
-    "original_price": 4800,
-    "num_purchased": 1759,
-    "average_rating": 5.0,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/64111b95b85a0820d028a916",
-    "course_id": "64111b95b85a0820d028a916",
-    "course_name": "劉必榮最受歡迎的談判課",
-    "original_price": 4800,
-    "num_purchased": 166,
-    "average_rating": 4.72,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/66308f61e3b891182a80f560",
-    "course_id": "66308f61e3b891182a80f560",
-    "course_name": "商管技能提升組合｜解密成功品牌＋行銷文案",
-    "original_price": 4660,
-    "num_purchased": 0,
-    "average_rating": 0.0,
-    "total_hours": 8,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/6630843f0d1fdd8ee43efb04",
-    "course_id": "6630843f0d1fdd8ee43efb04",
-    "course_name": "商管技能提升組合｜領導學＋GAS 談判",
-    "original_price": 5500,
-    "num_purchased": 0,
-    "average_rating": 0.0,
-    "total_hours": 6,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/66306556e3b891182a72afe7",
-    "course_id": "66306556e3b891182a72afe7",
-    "course_name": "商管技能提升組合｜領導學＋邏輯表達",
-    "original_price": 6700,
-    "num_purchased": 14,
-    "average_rating": 0.0,
-    "total_hours": 9,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/613c4d77323c7f000694dd08",
-    "course_id": "613c4d77323c7f000694dd08",
-    "course_name": "包租公/婆實戰攻略：隔套收租創造被動收入",
-    "original_price": 3480,
-    "num_purchased": 296,
-    "average_rating": 4.8,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/66309221da1b287f42cd17db",
-    "course_id": "66309221da1b287f42cd17db",
-    "course_name": "商管技能提升組合｜經營智慧＋邏輯表達",
-    "original_price": 7200,
-    "num_purchased": 0,
-    "average_rating": 0.0,
-    "total_hours": 9,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/6630830ee249bf651e4f9556",
-    "course_id": "6630830ee249bf651e4f9556",
-    "course_name": "商管技能提升組合｜領導學＋架構性思考",
-    "original_price": 5235,
-    "num_purchased": 0,
-    "average_rating": 0.0,
-    "total_hours": 6,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/66308e210d1fdd8ee44265fc",
-    "course_id": "66308e210d1fdd8ee44265fc",
-    "course_name": "商管技能提升組合｜解密成功品牌＋談判課",
-    "original_price": 7650,
-    "num_purchased": 0,
-    "average_rating": 0.0,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/66308ed1da1b287f42cbdc71",
-    "course_id": "66308ed1da1b287f42cbdc71",
-    "course_name": "商管技能提升組合｜解密成功品牌＋領導學",
-    "original_price": 7140,
-    "num_purchased": 0,
-    "average_rating": 0.0,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/69f988654127db67a5500d5c",
-    "course_id": "69f988654127db67a5500d5c",
-    "course_name": "AI 商用英文寫作實戰溝通術：Prompt 策略 x 履歷撰寫 x 職場信件",
-    "original_price": 4280,
-    "num_purchased": 54,
-    "average_rating": 0.0,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/651555d40d84e88549bfc459",
-    "course_id": "651555d40d84e88549bfc459",
-    "course_name": "職場英文大補帖｜跨文化溝通指南",
-    "original_price": 2180,
-    "num_purchased": 127,
-    "average_rating": 4.96,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/627e11d159b56500068e4ec7",
-    "course_id": "627e11d159b56500068e4ec7",
-    "course_name": "30 堂萬用會議英文情境課｜一次搞懂職場英文",
-    "original_price": 4200,
-    "num_purchased": 169,
-    "average_rating": 4.92,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5cde102291a3ab0020624820",
-    "course_id": "5cde102291a3ab0020624820",
-    "course_name": "成為專業筆譯必備：商務日文翻譯力",
-    "original_price": 3000,
-    "num_purchased": 782,
-    "average_rating": 4.99,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/live-events/6a1e510b54477ebdbd5d51ca",
-    "course_id": "6a1e510b54477ebdbd5d51ca",
-    "course_name": "",
-    "original_price": null,
-    "num_purchased": 0,
-    "average_rating": 0.0,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/69d86b9e1c510282c619afea",
-    "course_id": "69d86b9e1c510282c619afea",
-    "course_name": "選擇權以小搏大：散戶必學的戰略組單與結算布局全攻略",
-    "original_price": 5680,
-    "num_purchased": 65,
-    "average_rating": 0.0,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/6a19360513acfec33cf163fb",
-    "course_id": "6a19360513acfec33cf163fb",
-    "course_name": "",
-    "original_price": null,
-    "num_purchased": 0,
-    "average_rating": 0.0,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/607ceae6fa76bb60e8a556c8",
-    "course_id": "607ceae6fa76bb60e8a556c8",
-    "course_name": "MultiCharts：期貨新手懶人投資術",
-    "original_price": 1500,
-    "num_purchased": 242,
-    "average_rating": 5.0,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5c176b8411b27900205c5709",
-    "course_id": "5c176b8411b27900205c5709",
-    "course_name": "Looker Studio 視覺化數據分析",
-    "original_price": 4200,
-    "num_purchased": 647,
-    "average_rating": 4.62,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5f58478c880fc4310780cd8f",
-    "course_id": "5f58478c880fc4310780cd8f",
-    "course_name": "Python 行銷資料科學 ：基礎語法入門最前線",
-    "original_price": 1480,
-    "num_purchased": 400,
-    "average_rating": 4.8,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/59849fbcacc1370700075d44",
-    "course_id": "59849fbcacc1370700075d44",
-    "course_name": "網路行銷全方位入門實戰（下集）",
-    "original_price": 1480,
-    "num_purchased": 1134,
-    "average_rating": 4.65,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/61e7f78a6d9e6f00067549ab",
-    "course_id": "61e7f78a6d9e6f00067549ab",
-    "course_name": "直播銷貨很容易！第一次導購直播就上手",
-    "original_price": 1590,
-    "num_purchased": 193,
-    "average_rating": 5.0,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/60c2e123dcc8c38df47514c1",
-    "course_id": "60c2e123dcc8c38df47514c1",
-    "course_name": "雙語教育必學的核心素養－用英文學知識",
-    "original_price": 2000,
-    "num_purchased": 181,
-    "average_rating": 0.0,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/63bfb0af251c322c26e8aec0",
-    "course_id": "63bfb0af251c322c26e8aec0",
-    "course_name": "用矽谷策略創造人生職涯新方向",
-    "original_price": 2999,
-    "num_purchased": 231,
-    "average_rating": 5.0,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/6a1e7a0a8589c6250ddfb691",
-    "course_id": "6a1e7a0a8589c6250ddfb691",
-    "course_name": "主管升級 × AI 商用英文溝通術",
-    "original_price": 6750,
-    "num_purchased": 0,
-    "average_rating": 0.0,
-    "total_hours": 11,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/594f29d013cd380700228e7d",
-    "course_id": "594f29d013cd380700228e7d",
-    "course_name": "網路行銷全方位入門實戰（上集）",
-    "original_price": 1480,
-    "num_purchased": 2536,
-    "average_rating": 4.7,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/629c6f59a68c7300079d483d",
-    "course_id": "629c6f59a68c7300079d483d",
-    "course_name": "Streamlit x ChatGPT 快速打造資料分析網頁",
-    "original_price": 2888,
-    "num_purchased": 243,
-    "average_rating": 4.56,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/69bcbb018e02800f33e69495",
-    "course_id": "69bcbb018e02800f33e69495",
-    "course_name": "顧問級問題解決力：7 步驟搞定職場難題",
-    "original_price": 16800,
-    "num_purchased": 323,
-    "average_rating": 0.0,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/595cd372bbc89b07008603a2",
-    "course_id": "595cd372bbc89b07008603a2",
-    "course_name": "ZBrush - 設計師公仔入門課",
-    "original_price": 4190,
-    "num_purchased": 231,
-    "average_rating": 5.0,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/65436640ededea5029e5bcd1",
-    "course_id": "65436640ededea5029e5bcd1",
-    "course_name": "職場人必備的簡報＋圖表設計",
-    "original_price": 6610,
-    "num_purchased": 69,
-    "average_rating": 0.0,
-    "total_hours": 10,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5a211b15a6d4a5001ec31247",
-    "course_id": "5a211b15a6d4a5001ec31247",
-    "course_name": "台科 EMBA 年年爆滿的一門 Word 課（A系列）",
-    "original_price": 950,
-    "num_purchased": 4276,
-    "average_rating": 4.98,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/627aacbf9841c800076b8ea4",
-    "course_id": "627aacbf9841c800076b8ea4",
-    "course_name": "租屋族不踩雷 | 找房看屋、簽約佈置全攻略",
-    "original_price": 2000,
-    "num_purchased": 124,
-    "average_rating": 5.0,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5a4dfd25fa1e3f001e8d6a35",
-    "course_id": "5a4dfd25fa1e3f001e8d6a35",
-    "course_name": "台科 EMBA 年年爆滿的一門 Word 課（B+C 系列）",
-    "original_price": 1050,
-    "num_purchased": 2485,
-    "average_rating": 4.99,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/60dd6d80638ed00aa99b5556",
-    "course_id": "60dd6d80638ed00aa99b5556",
-    "course_name": "Excel 新手入門必修課：從 0 開始",
-    "original_price": 990,
-    "num_purchased": 6159,
-    "average_rating": 4.99,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/61a184185021a600064e8468",
-    "course_id": "61a184185021a600064e8468",
-    "course_name": "提案無難事，第一次寫政府補助案就上手！",
-    "original_price": 3499,
-    "num_purchased": 167,
-    "average_rating": 0.0,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5acb00ded21aee001e55b670",
-    "course_id": "5acb00ded21aee001e55b670",
-    "course_name": "簡報方舟：高效簡報的系統化做法",
-    "original_price": 1800,
-    "num_purchased": 1825,
-    "average_rating": 4.99,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5f2262c46213a15ae077fb76",
-    "course_id": "5f2262c46213a15ae077fb76",
-    "course_name": "黛你做行銷-全方面蹲好行銷馬步",
-    "original_price": 2400,
-    "num_purchased": 273,
-    "average_rating": 4.76,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5e2a980ee3832b00247239d0",
-    "course_id": "5e2a980ee3832b00247239d0",
-    "course_name": "職場必備的 Excel 關鍵技法－進階",
-    "original_price": 1390,
-    "num_purchased": 4691,
-    "average_rating": 4.97,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5d9c405e6f4b130023e9999d",
-    "course_id": "5d9c405e6f4b130023e9999d",
-    "course_name": "Python 資料分析 - 網頁爬蟲與視覺呈現",
-    "original_price": 1880,
-    "num_purchased": 885,
-    "average_rating": 4.78,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/680a57f0e7cfb571b972de14",
-    "course_id": "680a57f0e7cfb571b972de14",
-    "course_name": "跨越焦慮的產品開發之道｜2025 軟體產品年會 - 完整回放",
-    "original_price": 2980,
-    "num_purchased": 40,
-    "average_rating": 0.0,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/58d5c70c27ea7d070060160e",
-    "course_id": "58d5c70c27ea7d070060160e",
-    "course_name": "從入門到業界實戰 - UI / UX 前端網頁設計",
-    "original_price": 2500,
-    "num_purchased": 5117,
-    "average_rating": 4.84,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5a2e3baea6501f001e2eb5eb",
-    "course_id": "5a2e3baea6501f001e2eb5eb",
-    "course_name": "從上手到專業，寫出你想要的文案效果",
-    "original_price": 1980,
-    "num_purchased": 5216,
-    "average_rating": 4.87,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/58d21b6c27ea7d07005fffc1",
-    "course_id": "58d21b6c27ea7d07005fffc1",
-    "course_name": "PS 核心技法 | 調色技法完全講解篇",
-    "original_price": 4500,
-    "num_purchased": 417,
-    "average_rating": 5.0,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5ebca40b454a0417c5880c8e",
-    "course_id": "5ebca40b454a0417c5880c8e",
-    "course_name": "Podcast 新手攻略課程：0 到 1 必學指南",
-    "original_price": 1480,
-    "num_purchased": 2044,
-    "average_rating": 4.84,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/691c3d803a0a67201ccc1c5a",
-    "course_id": "691c3d803a0a67201ccc1c5a",
-    "course_name": "終極升遷指南｜AI 工具實作 X 思維行動策略",
-    "original_price": 7450,
-    "num_purchased": 249,
-    "average_rating": 0.0,
-    "total_hours": 4,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5f4c4a642836612efc89423c",
-    "course_id": "5f4c4a642836612efc89423c",
-    "course_name": "Python 資料分析：AI 機器學習入門到應用",
-    "original_price": 2180,
-    "num_purchased": 1037,
-    "average_rating": 4.44,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5c82809d9d98460020c3078d",
-    "course_id": "5c82809d9d98460020c3078d",
-    "course_name": "開啟你的 AI 技能 —— 無痛入門 NLP",
-    "original_price": 2600,
-    "num_purchased": 331,
-    "average_rating": 4.29,
-    "total_hours": 3,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/courses/5abc5d2b7997a2001e7bde72",
-    "course_id": "5abc5d2b7997a2001e7bde72",
-    "course_name": "營養師萊恩：狗狗鮮食簡單做",
-    "original_price": 1680,
-    "num_purchased": 544,
-    "average_rating": 5.0,
-    "total_hours": 5,
-    "status": "OK"
-  },
-  {
-    "course_url": "https://hahow.in/collections/63a96f67e6cc7ab14fbb6c43",
-    "course_id": "63a96f67e6cc7ab14fbb6c43",
-    "course_name": "美股新手 30 分鐘快速上手",
-    "original_price": 0,
-    "num_purchased": 1031,
-    "average_rating": 0.0,
-    "total_hours": 12,
-    "status": "NOT_FOUND"
-  }
-];
 
 // 這裡之後手動貼上 121 筆完整 JSON 資料
 // Inline SVG icon system — no external CDN required
@@ -1176,30 +244,28 @@ function shouldWarnOriginalPrice(price){
   return price===null || price<0;
 }
 
-const HAHOW_BIZ_COURSES = courseData
-  .map((course, index)=>{
-    const price=parseOriginalPrice(course?.original_price);
-    if(!shouldIncludeSourceCourse(price)) return null;
-
-    const id=String(course?.course_id || '').trim();
-    const url=String(course?.course_url || '').trim();
-    const fallbackId=url.split('/').filter(Boolean).pop() || `course-${index+1}`;
-
-    return {
-      id:id || fallbackId,
-      title:String(course?.course_name || '').trim(),
-      price:Math.round(price),
-      total_hours:Math.max(0, Math.ceil(Number(course?.total_hours) || 0)),
-      num_purchased:Math.max(0, Math.round(Number(course?.num_purchased) || 0)),
-      average_rating:Number.isFinite(Number(course?.average_rating)) ? Number(course.average_rating) : 0,
-      scenarioKey:['a','b','c','d'][index % 4],
-      url:url || '#',
-    };
-  })
-  .filter((course)=>course!==null);
+let HAHOW_BIZ_COURSES = [];
+let courseDataSummary = {
+  source_file:'geo_/hahow_courses.xlsx',
+  columns:[],
+  valid_count:0,
+  invalid_count:0,
+  min_price:null,
+  max_price:null,
+  warnings:[],
+};
+let courseDataLoadError = null;
+let HAHOW_AVG_PRICE = 0;
 
 const PRICE_TOLERANCE = 1500;
-const HAHOW_AVG_PRICE = Math.round(getHahowAvgPrice() / 100) * 100;
+const CANDIDATES_PER_ROUND = 4;
+const MINIMUM_ELIGIBLE_COURSES = TOTAL_ROUNDS * CANDIDATES_PER_ROUND;
+const conditionContent = Object.freeze({
+  A:'本區域將依本回合實驗條件，顯示對應的 AI 生成課程資訊內容。正式研究內容尚未匯入。',
+  B:'本區域將依本回合實驗條件，顯示對應的 AI 生成課程資訊內容。正式研究內容尚未匯入。',
+  C:'本區域將依本回合實驗條件，顯示對應的 AI 生成課程資訊內容。正式研究內容尚未匯入。',
+  D:'本區域將依本回合實驗條件，顯示對應的 AI 生成課程資訊內容。正式研究內容尚未匯入。',
+});
 
 function getScenarioKeys(){
   return Object.keys(SC_DATA);
@@ -1216,6 +282,47 @@ function getBudgetBounds(){
   const min=Math.min(...all);
   const max=Math.max(...all);
   return { min, max, step:100 };
+}
+
+async function initializeCourseCatalog(){
+  try{
+    if(!window.AEROCourseDataLoader?.loadCourseData){
+      throw new Error('course-data-loader.js 未載入，無法讀取課程資料。');
+    }
+    const loaded=await window.AEROCourseDataLoader.loadCourseData({url:'data/hahow_courses.json'});
+    HAHOW_BIZ_COURSES=loaded.aeroCourses;
+    courseDataSummary=loaded.summary;
+    courseDataLoadError=null;
+    HAHOW_AVG_PRICE=Math.round(getHahowAvgPrice() / 100) * 100;
+    return true;
+  }catch(error){
+    HAHOW_BIZ_COURSES=[];
+    courseDataLoadError=error;
+    console.error('[AERO courses] Failed to load Hahow course data', error);
+    return false;
+  }
+}
+
+function renderCourseDataErrorState(target=document.getElementById('participant-intro')){
+  if(!target) return;
+  const message=sanitizeCourseText(courseDataLoadError?.message || '課程資料載入失敗。');
+  target.innerHTML=`
+    <section class="aero-error-state" role="alert">
+      <p class="sec-tag">Course Data Error</p>
+      <h1 class="serif">無法載入課程資料</h1>
+      <p>${message}</p>
+      <p>請重新載入頁面；若仍失敗，請確認 <code>geo_/data/hahow_courses.json</code> 是否已由 <code>geo_/hahow_courses.xlsx</code> 產生並成功部署。</p>
+      <div class="error-actions">
+        <button class="btn-proceed" type="button" onclick="location.reload()">重新載入</button>
+        <button class="btn-line" type="button" onclick="resetExperiment()">重新開始研究</button>
+      </div>
+    </section>`;
+}
+
+function getEligibleCoursesForBudget(value){
+  const budget=Number(value);
+  if(!Number.isFinite(budget)) return [];
+  return HAHOW_BIZ_COURSES.filter((course)=>Number.isFinite(Number(course.price)) && Number(course.price)<=budget);
 }
 
 /* ── State ── */
@@ -1244,6 +351,10 @@ function generateParticipantId(){
 function createEmptySessionLog(){
   return {
     participant_id: generateParticipantId(),
+    confirmed_budget: null,
+    round_candidates: {},
+    used_course_ids: [],
+    course_data_summary: null,
     demographics: {
       education_level: '',
       major_group: '',
@@ -1332,6 +443,16 @@ function loadCurrentSessionLog(){
           ? parsed.behavior_metrics.round_decisions
           : {},
       },
+      confirmed_budget: Number.isFinite(Number(parsed?.confirmed_budget))
+        ? Number(parsed.confirmed_budget)
+        : null,
+      round_candidates: (parsed?.round_candidates && typeof parsed.round_candidates==='object')
+        ? parsed.round_candidates
+        : {},
+      used_course_ids: Array.isArray(parsed?.used_course_ids)
+        ? parsed.used_course_ids.map(String)
+        : [],
+      course_data_summary: parsed?.course_data_summary || null,
       market_features: {
         ...fallback.market_features,
         ...(parsed?.market_features || {}),
@@ -1796,7 +917,7 @@ function showQuestionnaireForm(){
 }
 
 function continueParticipantRound(){
-  enterParticipantCourseList();
+  showRoundIntro(currentStepIndex);
 }
 
 // Kept as a compatible entry point for researcher-mode controls.
@@ -2394,6 +1515,8 @@ function getUiStateName(){
   if(visible==='landing'){
     if(document.getElementById('advisor-consent-screen')?.hidden===false) return 'consent';
     if(document.getElementById('scenario-briefing')?.hidden===false) return 'scenario_briefing';
+    if(document.getElementById('budget-setup')?.hidden===false) return 'budget_setup';
+    if(document.getElementById('round-intro')?.hidden===false) return 'round_intro';
     if(document.getElementById('participant-profile-modal')?.classList.contains('open')) return 'participant_profile';
     return 'welcome';
   }
@@ -2593,8 +1716,6 @@ function showScenarioBriefing(){
   if(consent) consent.hidden=true;
   if(briefing){
     briefing.hidden=false;
-    const budget=document.getElementById('scenario-budget-value');
-    if(budget) budget.textContent=formatNTD(budgetValue);
   }
   goPage('landing');
   setStepState(1);
@@ -2602,10 +1723,153 @@ function showScenarioBriefing(){
 }
 
 function startFirstRoundFromBriefing(){
-  scenarioBriefingAcknowledged=true;
   const briefing=document.getElementById('scenario-briefing');
   if(briefing) briefing.hidden=true;
-  enterParticipantCourseList();
+  showBudgetSetup();
+}
+
+function resetBudgetDependentState(){
+  currentStepIndex=0;
+  curSC=getCurrentExperimentPlan().scenarioKey;
+  selectedCourse=null;
+  selectedRecoCourseId=null;
+  currentRoundCandidateIds=[];
+  currentSessionLog.round_candidates={};
+  currentSessionLog.used_course_ids=[];
+  currentSessionLog.behavior_metrics.round_results=[];
+  currentSessionLog.behavior_metrics.round_decisions={};
+  currentSessionLog.behavior_metrics.adopted_course_ids=[];
+  syncCourseDecisionView(null);
+}
+
+function getBudgetSetupValue(){
+  const input=document.getElementById('budget-number-input');
+  const slider=document.getElementById('budget-setup-slider');
+  return Number(input?.value || slider?.value || budgetValue);
+}
+
+function renderBudgetEligibilityNotice(count){
+  const notice=document.getElementById('budget-setup-notice');
+  if(!notice) return;
+  if(count>=MINIMUM_ELIGIBLE_COURSES){
+    notice.innerHTML=`<strong>可以開始</strong><span>此預算內有 ${count} 門課程，可完成 4 個不重複回合。</span>`;
+    notice.className='budget-setup-notice ok';
+    return;
+  }
+  notice.innerHTML=`<strong>無法開始第 1 回合</strong><span>此預算目前只有 ${count} 門符合條件的課程，完成四個不重複回合至少需要 ${MINIMUM_ELIGIBLE_COURSES} 門，請提高預算。</span>`;
+  notice.className='budget-setup-notice warn';
+}
+
+function updateBudgetSetup(value=getBudgetSetupValue()){
+  const bounds=getBudgetBounds();
+  const next=Number.isFinite(Number(value))
+    ? Math.max(bounds.min, Math.min(bounds.max, Number(value)))
+    : bounds.min;
+  budgetValue=next;
+  const slider=document.getElementById('budget-setup-slider');
+  const input=document.getElementById('budget-number-input');
+  const current=document.getElementById('budget-setup-current');
+  const eligibleCount=document.getElementById('budget-eligible-count');
+  const minPrice=document.getElementById('budget-min-price');
+  const maxPrice=document.getElementById('budget-max-price');
+  const confirmBtn=document.getElementById('budget-confirm-btn');
+  if(slider && String(slider.value)!==String(next)) slider.value=String(next);
+  if(input && String(input.value)!==String(next)) input.value=String(next);
+  if(current) current.textContent=formatNTD(next);
+  const eligible=getEligibleCoursesForBudget(next);
+  if(eligibleCount) eligibleCount.textContent=`${eligible.length} 門`;
+  if(minPrice) minPrice.textContent=courseDataSummary.min_price ? formatNTD(courseDataSummary.min_price) : '未提供';
+  if(maxPrice) maxPrice.textContent=courseDataSummary.max_price ? formatNTD(courseDataSummary.max_price) : '未提供';
+  renderBudgetEligibilityNotice(eligible.length);
+  if(confirmBtn) confirmBtn.disabled=eligible.length<MINIMUM_ELIGIBLE_COURSES;
+  updateAdvisorDemoPanel();
+}
+
+function showBudgetSetup(){
+  const briefing=document.getElementById('scenario-briefing');
+  const roundIntro=document.getElementById('round-intro');
+  const setup=document.getElementById('budget-setup');
+  if(briefing) briefing.hidden=true;
+  if(roundIntro) roundIntro.hidden=true;
+  if(!setup) return;
+  setup.hidden=false;
+  const bounds=getBudgetBounds();
+  if(!currentSessionLog.confirmed_budget){
+    budgetValue=Number.isFinite(Number(budgetValue)) && budgetValue>=bounds.min ? budgetValue : bounds.min;
+  }else{
+    budgetValue=currentSessionLog.confirmed_budget;
+  }
+  const slider=document.getElementById('budget-setup-slider');
+  const input=document.getElementById('budget-number-input');
+  if(slider){
+    slider.min=String(bounds.min);
+    slider.max=String(bounds.max);
+    slider.step=String(bounds.step);
+  }
+  if(input){
+    input.min=String(bounds.min);
+    input.max=String(bounds.max);
+    input.step=String(bounds.step);
+  }
+  updateBudgetSetup(budgetValue);
+  goPage('landing');
+  setStepState(1);
+  updateAdvisorDemoPanel();
+}
+
+function confirmBudgetAndStartCourses(){
+  const next=getBudgetSetupValue();
+  const eligible=getEligibleCoursesForBudget(next);
+  updateBudgetSetup(next);
+  if(eligible.length<MINIMUM_ELIGIBLE_COURSES) return false;
+  if(currentSessionLog.confirmed_budget!==null && Number(currentSessionLog.confirmed_budget)!==Number(next)){
+    const ok=confirm('修改預算會重新開始四回合，並清除已建立的候選課程與選擇紀錄。是否繼續？');
+    if(!ok){
+      updateBudgetSetup(currentSessionLog.confirmed_budget);
+      return false;
+    }
+  }
+  resetBudgetDependentState();
+  budgetValue=next;
+  currentSessionLog.confirmed_budget=next;
+  currentSessionLog.course_data_summary=courseDataSummary;
+  currentSessionLog.market_features.budget_level=getBudgetLevelLabel(next);
+  scenarioBriefingAcknowledged=true;
+  syncCurrentSessionLogStorage();
+  const setup=document.getElementById('budget-setup');
+  if(setup) setup.hidden=true;
+  showRoundIntro(0);
+  return true;
+}
+
+function showRoundIntro(roundIndex=currentStepIndex){
+  const setup=document.getElementById('budget-setup');
+  const intro=document.getElementById('round-intro');
+  const briefing=document.getElementById('scenario-briefing');
+  if(setup) setup.hidden=true;
+  if(briefing) briefing.hidden=true;
+  if(!intro) return enterParticipantCourseList();
+  const roundNumber=Number(roundIndex)+1;
+  intro.hidden=false;
+  intro.innerHTML=`
+    <div class="step-hd">
+      <div class="step-num">Round ${roundNumber} / ${TOTAL_ROUNDS}</div>
+      <h2 class="step-title">第 ${roundNumber} 回合課程比較</h2>
+      <p class="step-desc">本回合會顯示 4 門不重複且價格不超過 ${formatNTD(currentSessionLog.confirmed_budget || budgetValue)} 的課程。</p>
+    </div>
+    <div class="scenario-grid">
+      <div><span>本回合補助</span><strong>${formatNTD(currentSessionLog.confirmed_budget || budgetValue)}</strong></div>
+      <div><span>候選數量</span><strong>4 門課程</strong></div>
+      <div><span>你的任務</span><strong>先查看完整資訊，再做採用、比較或暫不考慮決策</strong></div>
+      <div><span>整體流程</span><strong>已完成 ${currentSessionLog.behavior_metrics.round_results.length} / ${TOTAL_ROUNDS} 回合</strong></div>
+    </div>
+    <div class="proceed-row landing-start-row">
+      <button class="btn-proceed" type="button" onclick="enterParticipantCourseList()">查看第 ${roundNumber} 回合課程</button>
+      <button class="btn-line" type="button" onclick="showBudgetSetup()">返回調整預算</button>
+    </div>`;
+  goPage('landing');
+  setStepState(1);
+  updateAdvisorDemoPanel();
 }
 
 function ensureAdvisorDemoPanel(){
@@ -2630,8 +1894,11 @@ function updateAdvisorDemoPanel(){
       <dt>participant anonymous id</dt><dd>${sanitizeCourseText(currentSessionLog?.participant_id || '')}</dd>
       <dt>current round</dt><dd>${currentStepIndex + 1} / ${TOTAL_ROUNDS}</dd>
       <dt>condition label</dt><dd>${sanitizeCourseText(assignedCondition?.summaryLabel || currentSessionLog?.experiment_assignment?.condition_label || '')}</dd>
+      <dt>current sequence</dt><dd>${sanitizeCourseText((currentSessionLog?.experiment_assignment?.sequence || []).map((key)=>String(key).toUpperCase()).join(' '))}</dd>
       <dt>scenario key</dt><dd>${sanitizeCourseText(curSC || currentSessionLog?.experiment_assignment?.scenario_key || '')}</dd>
       <dt>current UI state</dt><dd>${sanitizeCourseText(getUiStateName())}</dd>
+      <dt>confirmed budget</dt><dd>${Number.isFinite(Number(currentSessionLog?.confirmed_budget)) ? formatNTD(currentSessionLog.confirmed_budget) : 'not confirmed'}</dd>
+      <dt>course data</dt><dd>${courseDataSummary.valid_count || 0} valid / ${courseDataSummary.invalid_count || 0} invalid</dd>
       <dt>selected course</dt><dd>${sanitizeCourseText(selectedCourse?.id || selectedRecoCourseId || decision?.selected_course_id || '')}</dd>
       <dt>adopted course IDs</dt><dd>${sanitizeCourseText((currentSessionLog?.behavior_metrics?.adopted_course_ids || []).join(', '))}</dd>
       <dt>tracking session status</dt><dd>${tracking.sessionStarted ? 'started' : 'not started'}</dd>
@@ -2714,13 +1981,58 @@ function applyAdvisorDemoUxCopy(){
     <div class="scenario-grid">
       <div><span>你的角色</span><strong>即將畢業的大學生</strong></div>
       <div><span>你的目標</span><strong>提升未來就業競爭力</strong></div>
-      <div><span>你的資源</span><strong>${advisorBudgetLabel()} <b id="scenario-budget-value">${formatNTD(budgetValue)}</b></strong></div>
+      <div><span>你的資源</span><strong>下一步由你設定本回合學習補助</strong></div>
       <div><span>你的任務</span><strong>比較課程資訊，選出最值得投資的一門</strong></div>
       <div><span>研究流程</span><strong>總共 4 回合</strong></div>
     </div>
     <div class="proceed-row landing-start-row">
-      <button class="btn-proceed" type="button" onclick="startFirstRoundFromBriefing()">我了解了，開始第 1 回合</button>
+      <button class="btn-proceed" type="button" onclick="startFirstRoundFromBriefing()">我了解了，設定學習補助</button>
     </div>`;
+
+  let budgetSetup=document.getElementById('budget-setup');
+  if(!budgetSetup){
+    budgetSetup=document.createElement('section');
+    budgetSetup.id='budget-setup';
+    budgetSetup.className='step-area budget-setup';
+    budgetSetup.hidden=true;
+    document.getElementById('page-landing')?.insertBefore(budgetSetup, document.getElementById('step1-area'));
+  }
+  budgetSetup.innerHTML=`
+    <div class="step-hd">
+      <div class="step-num">預算設定</div>
+      <h2 class="step-title">請設定你的學習補助預算</h2>
+      <p class="step-desc">四個回合都會使用同一筆預算。系統只會顯示價格不超過此預算的課程。</p>
+    </div>
+    <div class="budget-setup-panel">
+      <div class="budget-setup-control">
+        <label for="budget-setup-slider">預算</label>
+        <strong id="budget-setup-current">NT$ 0</strong>
+        <input type="range" id="budget-setup-slider" oninput="updateBudgetSetup(this.value)">
+      </div>
+      <div class="budget-number-row">
+        <label for="budget-number-input">輸入數值</label>
+        <input type="number" id="budget-number-input" inputmode="numeric" oninput="updateBudgetSetup(this.value)">
+      </div>
+      <div class="budget-facts">
+        <div><span>此預算可使用的課程數</span><strong id="budget-eligible-count">0 門</strong></div>
+        <div><span>最低有效課程價格</span><strong id="budget-min-price">未提供</strong></div>
+        <div><span>最高有效課程價格</span><strong id="budget-max-price">未提供</strong></div>
+      </div>
+      <div class="budget-setup-notice" id="budget-setup-notice" role="status"></div>
+      <div class="join-actions">
+        <button class="btn-line" type="button" onclick="showScenarioBriefing()">返回情境說明</button>
+        <button class="btn-ec btn-ec-final" id="budget-confirm-btn" type="button" onclick="confirmBudgetAndStartCourses()">確認預算並查看課程</button>
+      </div>
+    </div>`;
+
+  let roundIntro=document.getElementById('round-intro');
+  if(!roundIntro){
+    roundIntro=document.createElement('section');
+    roundIntro.id='round-intro';
+    roundIntro.className='step-area round-intro';
+    roundIntro.hidden=true;
+    document.getElementById('page-landing')?.insertBefore(roundIntro, document.getElementById('step1-area'));
+  }
   const stepNav=document.getElementById('step-nav');
   if(stepNav){
     const labels=['研究說明','基本資料','課程決策','最後問卷'];
@@ -3037,7 +2349,9 @@ function initBudgetUI(){
   const slider=document.getElementById('budget-slider');
   if(!slider) return;
   const bounds=getBudgetBounds();
-  budgetValue=bounds.max;
+  budgetValue=Number.isFinite(Number(currentSessionLog.confirmed_budget))
+    ? Number(currentSessionLog.confirmed_budget)
+    : bounds.min;
 
   [slider].forEach((s)=>{
     if(!s) return;
@@ -3098,16 +2412,67 @@ function setParticipantCourseView(view){
   if(detailState) detailState.hidden=currentCourseView!=='detail';
 }
 
+function renderCourseFlowError({title, message, detail=''}){
+  const container=document.getElementById('round-course-list');
+  const head=document.querySelector('#course-list-state .course-list-state-head');
+  if(head){
+    head.innerHTML=`
+      <p class="sec-tag">流程提示</p>
+      <h1 class="sec-title serif">${sanitizeCourseText(title || '無法建立課程候選')}</h1>
+      <p>${sanitizeCourseText(message || '')}</p>`;
+  }
+  if(container){
+    container.innerHTML=`
+      <section class="aero-error-state course-flow-error" role="alert">
+        <p>${sanitizeCourseText(detail || message || '')}</p>
+        <div class="error-actions">
+          <button class="btn-proceed" type="button" onclick="location.reload()">重新載入</button>
+          <button class="btn-line" type="button" onclick="showBudgetSetup()">返回調整預算</button>
+          <button class="btn-line" type="button" onclick="resetExperiment()">重新開始研究</button>
+        </div>
+      </section>`;
+  }
+  setParticipantCourseView('list');
+  goPage('course');
+  ensureJourneyHeader();
+  updateAdvisorDemoPanel();
+}
+
 function enterParticipantCourseList({restore=false}={}){
   if(!ROLE.participant) return;
+  if(courseDataLoadError){
+    renderCourseFlowError({
+      title:'無法載入課程資料',
+      message:'課程 JSON 載入失敗，因此不能建立正式候選課程。',
+      detail:courseDataLoadError.message,
+    });
+    return;
+  }
+  if(!Number.isFinite(Number(currentSessionLog.confirmed_budget))){
+    showBudgetSetup();
+    return;
+  }
+  budgetValue=Number(currentSessionLog.confirmed_budget);
+  const eligible=getEligibleCoursesForBudget(budgetValue);
+  if(eligible.length<MINIMUM_ELIGIBLE_COURSES){
+    renderCourseFlowError({
+      title:'預算內課程不足',
+      message:`此預算目前只有 ${eligible.length} 門符合條件的課程，完成四個不重複回合至少需要 ${MINIMUM_ELIGIBLE_COURSES} 門，請提高預算。`,
+    });
+    return;
+  }
   if(!restore && currentStepIndex===0 && !scenarioBriefingAcknowledged){
     showScenarioBriefing();
     return;
   }
   const decision=ensureCurrentRoundDecision({freeze:true});
-  if(!decision?.candidate_course_ids?.length){
+  if(!decision?.candidate_course_ids?.length || decision.candidate_course_ids.length<CANDIDATES_PER_ROUND){
     console.warn('[AERO courses] No eligible candidate is available for this round');
-    toast('目前沒有符合條件的候選課程，請返回調整預算');
+    renderCourseFlowError({
+      title:'無法建立本回合候選課程',
+      message:'candidate state 遺失或剩餘課程不足，請返回調整預算或重新開始研究。',
+      detail:`本回合需要 ${CANDIDATES_PER_ROUND} 門課程，目前建立 ${decision?.candidate_course_ids?.length || 0} 門。`,
+    });
     return;
   }
   const restoreDetail=restore && decision.current_view==='detail' && decision.active_detail_course_id;
@@ -3212,20 +2577,53 @@ function ensureCurrentRoundDecision({freeze=false}={}){
   const flow=window.AEROCourseDecisionFlow;
   if(!flow || (!assignedCondition && currentSessionLog?.experiment_assignment?.remainder_group===null)) return null;
   const key=String(currentStepIndex);
+  const confirmedBudget=Number(currentSessionLog.confirmed_budget);
+  if(!Number.isFinite(confirmedBudget)) return null;
+  budgetValue=confirmedBudget;
   const existing=getCurrentRoundDecision();
-  if(existing?.started || (existing && existing.budget===budgetValue)){
+  if(existing?.candidate_course_ids?.length===CANDIDATES_PER_ROUND && (existing.started || Number(existing.budget)===confirmedBudget)){
     if(freeze && !existing.started) existing.started=true;
     syncCourseDecisionView(existing);
     syncCurrentSessionLogStorage();
     return existing;
   }
+  const storedCandidates=Array.isArray(currentSessionLog.round_candidates?.[key])
+    ? currentSessionLog.round_candidates[key].map(String)
+    : [];
+  if(storedCandidates.length===CANDIDATES_PER_ROUND){
+    const eligible=getEligibleCoursesForBudget(confirmedBudget).map(course=>String(course.id));
+    const restored=flow.createRoundState({
+      round_index:currentStepIndex,
+      scenario_key:curSC || getCurrentExperimentPlan().scenarioKey,
+      condition_id:assignedCondition?.conditionId ?? null,
+      eligible_course_ids:eligible,
+      candidate_course_ids:storedCandidates,
+      candidate_seed:`${currentSessionLog.participant_id}|${currentStepIndex}`,
+      candidate_generation_version:flow.VERSION,
+    });
+    restored.budget=confirmedBudget;
+    restored.started=freeze;
+    restored.display_positions=storedCandidates.reduce((acc,id,index)=>{ acc[id]=index+1; return acc; },{});
+    currentSessionLog.behavior_metrics.round_decisions[key]=restored;
+    syncCourseDecisionView(restored);
+    syncCurrentSessionLogStorage();
+    return restored;
+  }
   const sampled=flow.sampleCandidates({participantId:currentSessionLog.participant_id,roundIndex:currentStepIndex,
-    scenarioKey:curSC || getCurrentExperimentPlan().scenarioKey,budget:budgetValue,courses:HAHOW_BIZ_COURSES,
-    adoptedCourseIds:currentSessionLog.behavior_metrics.adopted_course_ids,count:5});
+    scenarioKey:curSC || getCurrentExperimentPlan().scenarioKey,budget:confirmedBudget,courses:HAHOW_BIZ_COURSES,
+    adoptedCourseIds:currentSessionLog.behavior_metrics.adopted_course_ids,
+    usedCourseIds:currentSessionLog.used_course_ids,
+    count:CANDIDATES_PER_ROUND});
+  if(!sampled?.candidate_course_ids || sampled.candidate_course_ids.length<CANDIDATES_PER_ROUND) return null;
   const decision=flow.createRoundState({round_index:currentStepIndex,scenario_key:curSC || getCurrentExperimentPlan().scenarioKey,
     condition_id:assignedCondition?.conditionId ?? null,...sampled});
-  decision.budget=budgetValue;
+  decision.budget=confirmedBudget;
   decision.started=freeze;
+  decision.display_positions=sampled.candidate_course_ids.reduce((acc,id,index)=>{ acc[id]=index+1; return acc; },{});
+  currentSessionLog.round_candidates[key]=[...sampled.candidate_course_ids];
+  const used=new Set([...(currentSessionLog.used_course_ids || []).map(String)]);
+  sampled.candidate_course_ids.forEach((id)=>used.add(String(id)));
+  currentSessionLog.used_course_ids=[...used];
   currentSessionLog.behavior_metrics.round_decisions[key]=decision;
   syncCourseDecisionView(decision);
   syncCurrentSessionLogStorage();
@@ -3352,24 +2750,23 @@ function renderCourseCards(filteredCourses, container){
     return;
   }
 
-  container.innerHTML=filteredCourses.map((course)=>{
+  container.innerHTML=filteredCourses.map((course,index)=>{
     const title=formatOptionalText(course.title);
     const price=formatOptionalNumber(course.price, (n)=>formatNTD(n));
     const rating=formatOptionalNumber(course.average_rating, (n)=>Number.isInteger(n) ? n.toFixed(1) : n.toFixed(2));
     const purchased=formatOptionalNumber(course.num_purchased, (n)=>Math.round(n).toLocaleString('zh-TW'));
-    const hours=formatOptionalNumber(course.total_hours, (n)=>`${Math.round(n)} 小時`);
     const isSelected=selectedRecoCourseId===course.id ? ' sel' : '';
     const isRejected=decision?.rejected_course_ids?.includes(String(course.id));
+    const displayPosition=decision?.display_positions?.[String(course.id)] || index + 1;
 
-    return `<article class="hr-item card${isSelected}${isRejected?' rejected':''}" aria-label="${title || '課程'}">
+    return `<article class="hr-item card${isSelected}${isRejected?' rejected':''}" data-display-position="${displayPosition}" aria-label="${title || '課程'}">
       <div class="hr-head">
         <p class="hr-title">${title}</p>
         ${rating ? `<div class="hr-score"><span class="hr-score-label">評價</span><span class="hr-score-value">${rating}</span></div>` : ''}
       </div>
       <div class="hr-stats">
         ${price ? `<div class="hr-stat hr-stat-price"><span class="hr-stat-label">價格</span><strong>${price}</strong></div>` : ''}
-        ${hours ? `<div class="hr-stat"><span class="hr-stat-label">時數</span><strong>${hours}</strong></div>` : ''}
-        ${purchased ? `<div class="hr-stat"><span class="hr-stat-label">人數</span><strong>${purchased}</strong></div>` : ''}
+        <div class="hr-stat"><span class="hr-stat-label">學習人數</span><strong>${purchased || '未提供'}</strong></div>
       </div>
       ${isRejected ? '<p class="hr-rejected">暫不考慮</p>' : ''}
       ${isRoundList ? `<div class="hr-foot"><button type="button" class="hr-btn" onclick="openParticipantCourseDetail('${course.id}')">查看完整資訊</button></div>` : ''}
@@ -3401,51 +2798,17 @@ function getCourseContextForNarrative(courseId){
 }
 
 function buildTheoryNarrativeHtml(condition, courseCtx){
-  const title=formatOptionalText(courseCtx.title);
-  const price=formatOptionalNumber(courseCtx.price, (n)=>formatNTD(n));
-  const purchased=formatOptionalNumber(courseCtx.num_purchased, (n)=>Math.round(n).toLocaleString('zh-TW'));
-  const rating=formatOptionalNumber(courseCtx.average_rating, (n)=>n.toFixed(2));
-
-  const dataBits=[
-    purchased ? `累積選購人次 ${purchased}` : '',
-    rating ? `平均評分 ${rating}` : '',
-    price ? `定價 ${price}` : '',
-  ].filter(Boolean).join('；');
-
-  if(condition.scenarioKey==='a'){
-    const lines=[
-      title ? `• 研究對齊：本回合課程為「${title}」，採用可量化指標作為主要判斷依據。` : '',
-      dataBits ? `• 統計錨點：${dataBits}，可作為課程可信度與效益評估的客觀基準。` : '',
-      '• 引用脈絡：依 ELM 與 GEO 的文獻觀點，高結構條列可降低搜尋成本並強化比較效率。',
-      '• 評估建議：請以資料完整度、可驗證性與成本效益三面向檢視課程。',
-    ].filter(Boolean);
-    return `<div class="aero-ai-copy">${lines.map((line)=>`<p>${line}</p>`).join('')}</div>`;
-  }
-
-  if(condition.scenarioKey==='b'){
-    const para1=[
-      title ? `本回合呈現的課程是「${title}」，` : '',
-      dataBits ? `可觀測資訊包含 ${dataBits}。` : '',
-      '這些客觀資料可用來判斷課程在市場中的接受度與價格定位。',
-    ].join('');
-    const para2='採用 GEO 的客觀數據脈絡策略時，低結構段落能維持連續閱讀流，讓受測者在不中斷語意的情況下完成品質、成本與信任度的整體判讀。';
-    return `<div class="aero-ai-copy"><p>${para1}</p><p>${para2}</p></div>`;
-  }
-
-  if(condition.scenarioKey==='c'){
-    const lines=[
-      title ? `• 痛點對齊：若你正卡在「${title}」所需能力門檻，這回合聚焦可立即採取的行動。` : '',
-      '• 情感共鳴：你不是不努力，而是缺少能被看見、被採納的學習輸出方式。',
-      dataBits ? `• 社會證據：${dataBits}，顯示已有學習者以同類型選擇推進職涯。` : '',
-      '• 行動動機：把本回合評估當成真實決策預演，選出你願意投入的課程。',
-    ].filter(Boolean);
-    return `<div class="aero-ai-copy">${lines.map((line)=>`<p>${line}</p>`).join('')}</div>`;
-  }
-
-  const storyTitle=title ? `你正在看「${title}」。` : '你正在看本回合課程。';
-  const storyData=dataBits ? `畫面上的線索顯示 ${dataBits}，這些都來自真實市場軌跡。` : '';
-  const storyTail='想像你在下一次績效面談前，需要拿出能說服主管的成長證據；當學習投入與職涯回報放在同一條時間線，選課就不只是消費，而是為未來自己站位。';
-  return `<div class="aero-ai-copy"><p>${storyTitle}${storyData}</p><p>${storyTail}</p></div>`;
+  const pathLabel=condition?.narrativeStyle==='rational' ? 'Central' : 'Peripheral';
+  const structureLabel=condition?.structureStyle==='high' ? 'High Structure' : 'Low Structure';
+  const key=String(condition?.scenarioKey || 'a').toUpperCase();
+  const placeholder=conditionContent[key] || conditionContent.A;
+  const demoMeta=ADVISOR_DEMO_MODE
+    ? `<div class="content-condition-demo"><strong>Advisor Demo Only</strong><span>${pathLabel} / ${structureLabel}</span></div>`
+    : '';
+  return `<div class="aero-ai-copy course-content-placeholder">
+    ${demoMeta}
+    <p>${sanitizeCourseText(placeholder)}</p>
+  </div>`;
 }
 
 function applyTheoryNarrative(scenarioKey, courseId, stepIndex=currentStepIndex, remainderGroup=currentConditionRemainder){
@@ -4014,26 +3377,13 @@ function clearBackendRecords(){
 }
 
 function getCourseDataValidationIssues(){
-  const issues=[];
-
-  courseData.forEach((course, index)=>{
-    const priceNum=parseOriginalPrice(course?.original_price);
-    const hoursNum=Number(course?.total_hours);
-    const missingPrice=shouldWarnOriginalPrice(priceNum);
-    const missingHours=!Number.isFinite(hoursNum) || hoursNum<=0;
-
-    if(!missingPrice && !missingHours) return;
-
-    issues.push({
-      row: index + 2,
-      course_id: String(course?.course_id || ''),
-      course_name: String(course?.course_name || '未命名課程'),
-      missingPrice,
-      missingHours,
-    });
-  });
-
-  return issues;
+  return (courseDataSummary.warnings || []).map((warning)=>({
+    row: warning.source_row,
+    course_id: String(warning.course_id || ''),
+    course_name: String(warning.course_name || '未命名課程'),
+    missingPrice: String(warning.reason || '').includes('price'),
+    missingHours: false,
+  }));
 }
 
 function renderCourseDataValidationDashboard(){
@@ -4046,7 +3396,7 @@ function renderCourseDataValidationDashboard(){
   const missingHoursCount=issues.filter((issue)=>issue.missingHours).length;
 
   summaryEl.innerHTML=`
-    <div class="backend-summary-item"><span>課程總筆數</span><strong>${courseData.length}</strong></div>
+    <div class="backend-summary-item"><span>有效課程筆數</span><strong>${courseDataSummary.valid_count || HAHOW_BIZ_COURSES.length}</strong></div>
     <div class="backend-summary-item"><span>缺 original_price</span><strong>${missingPriceCount}</strong></div>
     <div class="backend-summary-item"><span>缺 total_hours</span><strong>${missingHoursCount}</strong></div>
   `;
@@ -4407,8 +3757,18 @@ function initAiCardIcons(){
   });
 }
 
-document.addEventListener('DOMContentLoaded', ()=>{
+document.addEventListener('DOMContentLoaded', async ()=>{
+  await initializeCourseCatalog();
   applyAdvisorDemoUxCopy();
+  if(courseDataLoadError){
+    renderCourseDataErrorState();
+    configureRoleUI();
+    ensureAdvisorDemoPanel();
+    updateAdvisorDemoPanel();
+    renderIcons(document);
+    return;
+  }
+  currentSessionLog.course_data_summary=courseDataSummary;
   configureRoleUI();
   syncCurrentSessionLogStorage();
   initAiCardIcons();
@@ -4421,6 +3781,9 @@ document.addEventListener('DOMContentLoaded', ()=>{
     const restoredDecision=getCurrentRoundDecision();
     if(restoredDecision?.started && !restoredDecision.completed){
       budgetValue=Number(restoredDecision.budget) || budgetValue;
+      if(!Number.isFinite(Number(currentSessionLog.confirmed_budget)) && Number.isFinite(Number(restoredDecision.budget))){
+        currentSessionLog.confirmed_budget=Number(restoredDecision.budget);
+      }
       enterParticipantCourseList({restore:true});
     }else{
       const visiblePage=document.querySelector('.page.show')?.id?.replace(/^page-/, '') || 'landing';

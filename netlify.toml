@@ -1,5 +1,5 @@
 [build]
-  command = "node scripts/generate-netlify-config.mjs"
+  command = "node scripts/generate-course-data.mjs && node scripts/generate-netlify-config.mjs"
   publish = "geo_"
 
 [[redirects]]

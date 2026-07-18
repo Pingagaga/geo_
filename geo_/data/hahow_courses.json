@@ -1,0 +1,838 @@
+{
+  "generated_at": "2026-07-18T06:32:40.099699+00:00",
+  "source_file": "geo_/hahow_courses.xlsx",
+  "sheet_name": "Sheet1",
+  "columns": [
+    "course_url",
+    "course_id",
+    "course_name",
+    "original_price",
+    "num_purchased",
+    "average_rating",
+    "total_hours",
+    "status"
+  ],
+  "valid_count": 89,
+  "invalid_count": 2,
+  "min_price": 950,
+  "max_price": 27800,
+  "courses": [
+    {
+      "course_id": "5e7a1ead9c4b140023a8536f",
+      "course_name": "職場人必學的商業分析術 - 專案策略思考",
+      "price": 2880,
+      "rating": 4.88,
+      "students": 1153,
+      "duration": "4 小時",
+      "source_row": 2
+    },
+    {
+      "course_id": "60a1cf0ea479bf08e4f5991b",
+      "course_name": "職場英文大補帖｜必勝簡報方程式",
+      "price": 1590,
+      "rating": 4.96,
+      "students": 433,
+      "duration": "3 小時",
+      "source_row": 3
+    },
+    {
+      "course_id": "64b6037994d60b20881db1e3",
+      "course_name": "最後一次學好商用英文 ，從關鍵字開始 Talk",
+      "price": 6400,
+      "rating": 5.0,
+      "students": 29,
+      "duration": "4 小時",
+      "source_row": 4
+    },
+    {
+      "course_id": "67ca81a08cbd72d2cdad37d5",
+      "course_name": "國際外商六大核心工作術｜職場必備 Mindset 建立",
+      "price": 27800,
+      "rating": 4.86,
+      "students": 573,
+      "duration": "5 小時",
+      "source_row": 5
+    },
+    {
+      "course_id": "5da7ddea98176600213caf36",
+      "course_name": "職場英文大補帖｜從社交心法到溝通金句",
+      "price": 1190,
+      "rating": 4.86,
+      "students": 626,
+      "duration": "4 小時",
+      "source_row": 6
+    },
+    {
+      "course_id": "64111821b85a08d4b027bb71",
+      "course_name": "聰明主管的正向領導學",
+      "price": 4200,
+      "rating": 4.88,
+      "students": 149,
+      "duration": "5 小時",
+      "source_row": 7
+    },
+    {
+      "course_id": "6040818e043b47f89a5c8f41",
+      "course_name": "職場英文大補帖｜銀行行員必備的英文口說",
+      "price": 990,
+      "rating": 4.98,
+      "students": 375,
+      "duration": "3 小時",
+      "source_row": 8
+    },
+    {
+      "course_id": "64111c7f02231e24af7f8d16",
+      "course_name": "矽谷專家給新手的第一堂數據管理課",
+      "price": 4800,
+      "rating": 4.75,
+      "students": 64,
+      "duration": "5 小時",
+      "source_row": 9
+    },
+    {
+      "course_id": "5c8e0a0a8d1cc80020951f1a",
+      "course_name": "產品經理職場學：PM 必修的職涯指南！",
+      "price": 2400,
+      "rating": 4.66,
+      "students": 2059,
+      "duration": "5 小時",
+      "source_row": 10
+    },
+    {
+      "course_id": "5fd24f017687e53b086c7fe7",
+      "course_name": "SQL的五十道練習：初學者友善的資料庫入門",
+      "price": 3980,
+      "rating": 4.97,
+      "students": 3102,
+      "duration": "3 小時",
+      "source_row": 11
+    },
+    {
+      "course_id": "627e5a1b9841c80007c409ca",
+      "course_name": "R 語言的 50+ 練習：統計分析的前哨站",
+      "price": 4980,
+      "rating": 5.0,
+      "students": 398,
+      "duration": "3 小時",
+      "source_row": 12
+    },
+    {
+      "course_id": "5f61ac35b3fbe95900c45cb0",
+      "course_name": "職場英文大補帖｜上班族的跨國會議必修課",
+      "price": 1490,
+      "rating": 4.8,
+      "students": 569,
+      "duration": "5 小時",
+      "source_row": 13
+    },
+    {
+      "course_id": "5dd935075e4baa002072a10a",
+      "course_name": "一次搞懂專案管理 - 從入門到業界實務",
+      "price": 2800,
+      "rating": 4.9,
+      "students": 2901,
+      "duration": "3 小時",
+      "source_row": 14
+    },
+    {
+      "course_id": "610814069871100007ab7b4f",
+      "course_name": "Python 的 50+ 練習：資料科學學習手冊",
+      "price": 4980,
+      "rating": 4.94,
+      "students": 1169,
+      "duration": "3 小時",
+      "source_row": 15
+    },
+    {
+      "course_id": "645734e4ce9d5fb4442d91cd",
+      "course_name": "進階 SQL 的五十道練習：資料庫功力再提升",
+      "price": 3980,
+      "rating": 5.0,
+      "students": 732,
+      "duration": "3 小時",
+      "source_row": 16
+    },
+    {
+      "course_id": "667242066282be4de9eabf8f",
+      "course_name": "資料分析的七個練習專案：累積個人作品集",
+      "price": 4980,
+      "rating": 5.0,
+      "students": 383,
+      "duration": "5 小時",
+      "source_row": 17
+    },
+    {
+      "course_id": "62d3a17ba1051e0007122a75",
+      "course_name": "100 個電商數據營運指標全攻略",
+      "price": 2800,
+      "rating": 5.0,
+      "students": 417,
+      "duration": "5 小時",
+      "source_row": 18
+    },
+    {
+      "course_id": "6411219e49490ccf86dd29c1",
+      "course_name": "CEO 的 24 堂經營智慧課",
+      "price": 4800,
+      "rating": 5.0,
+      "students": 82,
+      "duration": "5 小時",
+      "source_row": 19
+    },
+    {
+      "course_id": "5dbb756d763da3002075eb62",
+      "course_name": "如何成為資料分析師：從問題解決到行動方案",
+      "price": 1980,
+      "rating": 4.87,
+      "students": 1608,
+      "duration": "5 小時",
+      "source_row": 20
+    },
+    {
+      "course_id": "5ea94dd38c12ad922d9131f6",
+      "course_name": "GA4 新手完全攻略！用數據分析下商業決策｜2024 全面升級版",
+      "price": 3980,
+      "rating": 4.3,
+      "students": 814,
+      "duration": "3 小時",
+      "source_row": 21
+    },
+    {
+      "course_id": "5fe78a2be810e1a5ff89b17f",
+      "course_name": "軟體需求溝通─從外商公司學跨部門協作開發",
+      "price": 2890,
+      "rating": 4.88,
+      "students": 970,
+      "duration": "3 小時",
+      "source_row": 22
+    },
+    {
+      "course_id": "59f97b57a77a2d001eea8504",
+      "course_name": "【電商正夯】找工作找實習必備 4 大技能",
+      "price": 2500,
+      "rating": 4.53,
+      "students": 1065,
+      "duration": "5 小時",
+      "source_row": 23
+    },
+    {
+      "course_id": "63f444d0095a63fe95688c29",
+      "course_name": "簡報再升級！職場人必學的商業圖表簡報術",
+      "price": 3280,
+      "rating": 5.0,
+      "students": 692,
+      "duration": "4 小時",
+      "source_row": 24
+    },
+    {
+      "course_id": "5d428e522fb50200206226e9",
+      "course_name": "AI 行銷學：用 Python 機器學習創造商業新價值",
+      "price": 3888,
+      "rating": 4.33,
+      "students": 362,
+      "duration": "4 小時",
+      "source_row": 25
+    },
+    {
+      "course_id": "68f0b5736dc0222aaa220f5a",
+      "course_name": "金融數據學 Python：從選股建立程式邏輯",
+      "price": 5980,
+      "rating": 0.0,
+      "students": 177,
+      "duration": "3 小時",
+      "source_row": 26
+    },
+    {
+      "course_id": "5b8e5fb4de22ba001ee7a572",
+      "course_name": "職場英文大補帖｜上班族的 Email 寫作課",
+      "price": 1999,
+      "rating": 4.88,
+      "students": 1635,
+      "duration": "4 小時",
+      "source_row": 27
+    },
+    {
+      "course_id": "663086ee0d300d8c0ba92c78",
+      "course_name": "商管技能提升組合｜談判課＋數據管理",
+      "price": 8160,
+      "rating": 0.0,
+      "students": 0,
+      "duration": "4 小時",
+      "source_row": 28
+    },
+    {
+      "course_id": "64111d505ff2493ca2156c97",
+      "course_name": "解密成功品牌",
+      "price": 4200,
+      "rating": 5.0,
+      "students": 83,
+      "duration": "4 小時",
+      "source_row": 29
+    },
+    {
+      "course_id": "663092c40d300d8c0bada2ff",
+      "course_name": "商管技能提升組合｜經營智慧＋數據管理",
+      "price": 8160,
+      "rating": 0.0,
+      "students": 0,
+      "duration": "6 小時",
+      "source_row": 30
+    },
+    {
+      "course_id": "67ca80cf7ce0ad3cd6f7ac29",
+      "course_name": "頂尖工作面試破解系統｜六步驟拿到夢幻 Offer",
+      "price": 16800,
+      "rating": 5.0,
+      "students": 464,
+      "duration": "3 小時",
+      "source_row": 31
+    },
+    {
+      "course_id": "66308c960d1fdd8ee441ba98",
+      "course_name": "商管技能提升組合｜數據管理＋圖解表達力",
+      "price": 7140,
+      "rating": 0.0,
+      "students": 0,
+      "duration": "9 小時",
+      "source_row": 32
+    },
+    {
+      "course_id": "6238782d573d4b00060cf744",
+      "course_name": "Python 購物籃分析：多商品推薦與利潤策略",
+      "price": 2388,
+      "rating": 4.5,
+      "students": 93,
+      "duration": "5 小時",
+      "source_row": 34
+    },
+    {
+      "course_id": "6630911b178be14da4fb50d5",
+      "course_name": "商管技能提升組合｜解密成功品牌＋專案管理",
+      "price": 5440,
+      "rating": 0.0,
+      "students": 0,
+      "duration": "6 小時",
+      "source_row": 35
+    },
+    {
+      "course_id": "66308d90da1b287f42cb6ea3",
+      "course_name": "商管技能提升組合｜數據管理＋解密成功品牌",
+      "price": 7650,
+      "rating": 0.0,
+      "students": 0,
+      "duration": "5 小時",
+      "source_row": 36
+    },
+    {
+      "course_id": "64422a1625efb5657481feb5",
+      "course_name": "職場英文大補帖｜科技英文寫作快易通",
+      "price": 1999,
+      "rating": 5.0,
+      "students": 174,
+      "duration": "3 小時",
+      "source_row": 37
+    },
+    {
+      "course_id": "5f89465d10a9ed6f2ee60e8c",
+      "course_name": "不寫程式的數據分析： Excel 商業分析實戰",
+      "price": 2888,
+      "rating": 4.85,
+      "students": 746,
+      "duration": "3 小時",
+      "source_row": 38
+    },
+    {
+      "course_id": "663064500d1fdd8ee434cbe2",
+      "course_name": "商管技能提升組合｜領導學＋談判學",
+      "price": 7650,
+      "rating": 0.0,
+      "students": 0,
+      "duration": "5 小時",
+      "source_row": 39
+    },
+    {
+      "course_id": "60fe7a7e006b74000621ce1f",
+      "course_name": "雙語教學超前部署！互動式英語授課技巧",
+      "price": 2680,
+      "rating": 5.0,
+      "students": 449,
+      "duration": "3 小時",
+      "source_row": 40
+    },
+    {
+      "course_id": "663084c80d300d8c0ba86f22",
+      "course_name": "商管技能提升組合｜談判課＋人聲運用",
+      "price": 7460,
+      "rating": 0.0,
+      "students": 16,
+      "duration": "7 小時",
+      "source_row": 41
+    },
+    {
+      "course_id": "66309375178be14da4fc4129",
+      "course_name": "商管技能提升組合｜經營智慧＋AI 應用",
+      "price": 6870,
+      "rating": 0.0,
+      "students": 10,
+      "duration": "9 小時",
+      "source_row": 42
+    },
+    {
+      "course_id": "66333fb3e249bf651e0c724b",
+      "course_name": "商管技能提升組合｜經營智慧＋從心溝通",
+      "price": 5695,
+      "rating": 0.0,
+      "students": 0,
+      "duration": "6 小時",
+      "source_row": 43
+    },
+    {
+      "course_id": "66308be7e3b891182a7f88b3",
+      "course_name": "商管技能提升組合｜談判課＋CEO 經營智慧",
+      "price": 8160,
+      "rating": 0.0,
+      "students": 0,
+      "duration": "5 小時",
+      "source_row": 44
+    },
+    {
+      "course_id": "624e0e7c22f6fc0007bbc5ec",
+      "course_name": "創新轉型如何解密？服務設計實戰全攻略",
+      "price": 3500,
+      "rating": 5.0,
+      "students": 297,
+      "duration": "4 小時",
+      "source_row": 45
+    },
+    {
+      "course_id": "672c6c4ddb2b59427bdf4364",
+      "course_name": "王梓沅的超級商英力：職場的萬用 X 棘手 X 關鍵溝通任務",
+      "price": 4800,
+      "rating": 5.0,
+      "students": 1759,
+      "duration": "5 小時",
+      "source_row": 46
+    },
+    {
+      "course_id": "64111b95b85a0820d028a916",
+      "course_name": "劉必榮最受歡迎的談判課",
+      "price": 4800,
+      "rating": 4.72,
+      "students": 166,
+      "duration": "3 小時",
+      "source_row": 47
+    },
+    {
+      "course_id": "66308f61e3b891182a80f560",
+      "course_name": "商管技能提升組合｜解密成功品牌＋行銷文案",
+      "price": 4660,
+      "rating": 0.0,
+      "students": 0,
+      "duration": "8 小時",
+      "source_row": 48
+    },
+    {
+      "course_id": "6630843f0d1fdd8ee43efb04",
+      "course_name": "商管技能提升組合｜領導學＋GAS 談判",
+      "price": 5500,
+      "rating": 0.0,
+      "students": 0,
+      "duration": "6 小時",
+      "source_row": 49
+    },
+    {
+      "course_id": "66306556e3b891182a72afe7",
+      "course_name": "商管技能提升組合｜領導學＋邏輯表達",
+      "price": 6700,
+      "rating": 0.0,
+      "students": 14,
+      "duration": "9 小時",
+      "source_row": 50
+    },
+    {
+      "course_id": "613c4d77323c7f000694dd08",
+      "course_name": "包租公/婆實戰攻略：隔套收租創造被動收入",
+      "price": 3480,
+      "rating": 4.8,
+      "students": 296,
+      "duration": "4 小時",
+      "source_row": 51
+    },
+    {
+      "course_id": "66309221da1b287f42cd17db",
+      "course_name": "商管技能提升組合｜經營智慧＋邏輯表達",
+      "price": 7200,
+      "rating": 0.0,
+      "students": 0,
+      "duration": "9 小時",
+      "source_row": 52
+    },
+    {
+      "course_id": "6630830ee249bf651e4f9556",
+      "course_name": "商管技能提升組合｜領導學＋架構性思考",
+      "price": 5235,
+      "rating": 0.0,
+      "students": 0,
+      "duration": "6 小時",
+      "source_row": 53
+    },
+    {
+      "course_id": "66308e210d1fdd8ee44265fc",
+      "course_name": "商管技能提升組合｜解密成功品牌＋談判課",
+      "price": 7650,
+      "rating": 0.0,
+      "students": 0,
+      "duration": "4 小時",
+      "source_row": 54
+    },
+    {
+      "course_id": "66308ed1da1b287f42cbdc71",
+      "course_name": "商管技能提升組合｜解密成功品牌＋領導學",
+      "price": 7140,
+      "rating": 0.0,
+      "students": 0,
+      "duration": "5 小時",
+      "source_row": 55
+    },
+    {
+      "course_id": "69f988654127db67a5500d5c",
+      "course_name": "AI 商用英文寫作實戰溝通術：Prompt 策略 x 履歷撰寫 x 職場信件",
+      "price": 4280,
+      "rating": 0.0,
+      "students": 54,
+      "duration": "5 小時",
+      "source_row": 56
+    },
+    {
+      "course_id": "651555d40d84e88549bfc459",
+      "course_name": "職場英文大補帖｜跨文化溝通指南",
+      "price": 2180,
+      "rating": 4.96,
+      "students": 127,
+      "duration": "4 小時",
+      "source_row": 57
+    },
+    {
+      "course_id": "627e11d159b56500068e4ec7",
+      "course_name": "30 堂萬用會議英文情境課｜一次搞懂職場英文",
+      "price": 4200,
+      "rating": 4.92,
+      "students": 169,
+      "duration": "3 小時",
+      "source_row": 58
+    },
+    {
+      "course_id": "5cde102291a3ab0020624820",
+      "course_name": "成為專業筆譯必備：商務日文翻譯力",
+      "price": 3000,
+      "rating": 4.99,
+      "students": 782,
+      "duration": "5 小時",
+      "source_row": 59
+    },
+    {
+      "course_id": "69d86b9e1c510282c619afea",
+      "course_name": "選擇權以小搏大：散戶必學的戰略組單與結算布局全攻略",
+      "price": 5680,
+      "rating": 0.0,
+      "students": 65,
+      "duration": "4 小時",
+      "source_row": 60
+    },
+    {
+      "course_id": "607ceae6fa76bb60e8a556c8",
+      "course_name": "MultiCharts：期貨新手懶人投資術",
+      "price": 1500,
+      "rating": 5.0,
+      "students": 242,
+      "duration": "4 小時",
+      "source_row": 61
+    },
+    {
+      "course_id": "5c176b8411b27900205c5709",
+      "course_name": "Looker Studio 視覺化數據分析",
+      "price": 4200,
+      "rating": 4.62,
+      "students": 647,
+      "duration": "4 小時",
+      "source_row": 62
+    },
+    {
+      "course_id": "5f58478c880fc4310780cd8f",
+      "course_name": "Python 行銷資料科學 ：基礎語法入門最前線",
+      "price": 1480,
+      "rating": 4.8,
+      "students": 400,
+      "duration": "3 小時",
+      "source_row": 63
+    },
+    {
+      "course_id": "59849fbcacc1370700075d44",
+      "course_name": "網路行銷全方位入門實戰（下集）",
+      "price": 1480,
+      "rating": 4.65,
+      "students": 1134,
+      "duration": "5 小時",
+      "source_row": 64
+    },
+    {
+      "course_id": "61e7f78a6d9e6f00067549ab",
+      "course_name": "直播銷貨很容易！第一次導購直播就上手",
+      "price": 1590,
+      "rating": 5.0,
+      "students": 193,
+      "duration": "5 小時",
+      "source_row": 65
+    },
+    {
+      "course_id": "60c2e123dcc8c38df47514c1",
+      "course_name": "雙語教育必學的核心素養－用英文學知識",
+      "price": 2000,
+      "rating": 0.0,
+      "students": 181,
+      "duration": "5 小時",
+      "source_row": 66
+    },
+    {
+      "course_id": "63bfb0af251c322c26e8aec0",
+      "course_name": "用矽谷策略創造人生職涯新方向",
+      "price": 2999,
+      "rating": 5.0,
+      "students": 231,
+      "duration": "5 小時",
+      "source_row": 67
+    },
+    {
+      "course_id": "6a1e7a0a8589c6250ddfb691",
+      "course_name": "主管升級 × AI 商用英文溝通術",
+      "price": 6750,
+      "rating": 0.0,
+      "students": 0,
+      "duration": "11 小時",
+      "source_row": 68
+    },
+    {
+      "course_id": "594f29d013cd380700228e7d",
+      "course_name": "網路行銷全方位入門實戰（上集）",
+      "price": 1480,
+      "rating": 4.7,
+      "students": 2536,
+      "duration": "5 小時",
+      "source_row": 69
+    },
+    {
+      "course_id": "629c6f59a68c7300079d483d",
+      "course_name": "Streamlit x ChatGPT 快速打造資料分析網頁",
+      "price": 2888,
+      "rating": 4.56,
+      "students": 243,
+      "duration": "3 小時",
+      "source_row": 70
+    },
+    {
+      "course_id": "69bcbb018e02800f33e69495",
+      "course_name": "顧問級問題解決力：7 步驟搞定職場難題",
+      "price": 16800,
+      "rating": 0.0,
+      "students": 323,
+      "duration": "3 小時",
+      "source_row": 71
+    },
+    {
+      "course_id": "595cd372bbc89b07008603a2",
+      "course_name": "ZBrush - 設計師公仔入門課",
+      "price": 4190,
+      "rating": 5.0,
+      "students": 231,
+      "duration": "5 小時",
+      "source_row": 72
+    },
+    {
+      "course_id": "65436640ededea5029e5bcd1",
+      "course_name": "職場人必備的簡報＋圖表設計",
+      "price": 6610,
+      "rating": 0.0,
+      "students": 69,
+      "duration": "10 小時",
+      "source_row": 73
+    },
+    {
+      "course_id": "5a211b15a6d4a5001ec31247",
+      "course_name": "台科 EMBA 年年爆滿的一門 Word 課（A系列）",
+      "price": 950,
+      "rating": 4.98,
+      "students": 4276,
+      "duration": "4 小時",
+      "source_row": 74
+    },
+    {
+      "course_id": "627aacbf9841c800076b8ea4",
+      "course_name": "租屋族不踩雷 | 找房看屋、簽約佈置全攻略",
+      "price": 2000,
+      "rating": 5.0,
+      "students": 124,
+      "duration": "5 小時",
+      "source_row": 75
+    },
+    {
+      "course_id": "5a4dfd25fa1e3f001e8d6a35",
+      "course_name": "台科 EMBA 年年爆滿的一門 Word 課（B+C 系列）",
+      "price": 1050,
+      "rating": 4.99,
+      "students": 2485,
+      "duration": "5 小時",
+      "source_row": 76
+    },
+    {
+      "course_id": "60dd6d80638ed00aa99b5556",
+      "course_name": "Excel 新手入門必修課：從 0 開始",
+      "price": 990,
+      "rating": 4.99,
+      "students": 6159,
+      "duration": "5 小時",
+      "source_row": 77
+    },
+    {
+      "course_id": "61a184185021a600064e8468",
+      "course_name": "提案無難事，第一次寫政府補助案就上手！",
+      "price": 3499,
+      "rating": 0.0,
+      "students": 167,
+      "duration": "3 小時",
+      "source_row": 78
+    },
+    {
+      "course_id": "5acb00ded21aee001e55b670",
+      "course_name": "簡報方舟：高效簡報的系統化做法",
+      "price": 1800,
+      "rating": 4.99,
+      "students": 1825,
+      "duration": "5 小時",
+      "source_row": 79
+    },
+    {
+      "course_id": "5f2262c46213a15ae077fb76",
+      "course_name": "黛你做行銷-全方面蹲好行銷馬步",
+      "price": 2400,
+      "rating": 4.76,
+      "students": 273,
+      "duration": "5 小時",
+      "source_row": 80
+    },
+    {
+      "course_id": "5e2a980ee3832b00247239d0",
+      "course_name": "職場必備的 Excel 關鍵技法－進階",
+      "price": 1390,
+      "rating": 4.97,
+      "students": 4691,
+      "duration": "4 小時",
+      "source_row": 81
+    },
+    {
+      "course_id": "5d9c405e6f4b130023e9999d",
+      "course_name": "Python 資料分析 - 網頁爬蟲與視覺呈現",
+      "price": 1880,
+      "rating": 4.78,
+      "students": 885,
+      "duration": "3 小時",
+      "source_row": 82
+    },
+    {
+      "course_id": "680a57f0e7cfb571b972de14",
+      "course_name": "跨越焦慮的產品開發之道｜2025 軟體產品年會 - 完整回放",
+      "price": 2980,
+      "rating": 0.0,
+      "students": 40,
+      "duration": "4 小時",
+      "source_row": 83
+    },
+    {
+      "course_id": "58d5c70c27ea7d070060160e",
+      "course_name": "從入門到業界實戰 - UI / UX 前端網頁設計",
+      "price": 2500,
+      "rating": 4.84,
+      "students": 5117,
+      "duration": "5 小時",
+      "source_row": 84
+    },
+    {
+      "course_id": "5a2e3baea6501f001e2eb5eb",
+      "course_name": "從上手到專業，寫出你想要的文案效果",
+      "price": 1980,
+      "rating": 4.87,
+      "students": 5216,
+      "duration": "4 小時",
+      "source_row": 85
+    },
+    {
+      "course_id": "58d21b6c27ea7d07005fffc1",
+      "course_name": "PS 核心技法 | 調色技法完全講解篇",
+      "price": 4500,
+      "rating": 5.0,
+      "students": 417,
+      "duration": "4 小時",
+      "source_row": 86
+    },
+    {
+      "course_id": "5ebca40b454a0417c5880c8e",
+      "course_name": "Podcast 新手攻略課程：0 到 1 必學指南",
+      "price": 1480,
+      "rating": 4.84,
+      "students": 2044,
+      "duration": "5 小時",
+      "source_row": 87
+    },
+    {
+      "course_id": "691c3d803a0a67201ccc1c5a",
+      "course_name": "終極升遷指南｜AI 工具實作 X 思維行動策略",
+      "price": 7450,
+      "rating": 0.0,
+      "students": 249,
+      "duration": "4 小時",
+      "source_row": 88
+    },
+    {
+      "course_id": "5f4c4a642836612efc89423c",
+      "course_name": "Python 資料分析：AI 機器學習入門到應用",
+      "price": 2180,
+      "rating": 4.44,
+      "students": 1037,
+      "duration": "5 小時",
+      "source_row": 89
+    },
+    {
+      "course_id": "5c82809d9d98460020c3078d",
+      "course_name": "開啟你的 AI 技能 —— 無痛入門 NLP",
+      "price": 2600,
+      "rating": 4.29,
+      "students": 331,
+      "duration": "3 小時",
+      "source_row": 90
+    },
+    {
+      "course_id": "5abc5d2b7997a2001e7bde72",
+      "course_name": "營養師萊恩：狗狗鮮食簡單做",
+      "price": 1680,
+      "rating": 5.0,
+      "students": 544,
+      "duration": "5 小時",
+      "source_row": 91
+    }
+  ],
+  "warnings": [
+    {
+      "source_row": 33,
+      "course_id": "63ad0f9aef17a1470401d9d2",
+      "course_name": "商業分析經驗談：Monica 與你分享商業分析工作實戰",
+      "reason": "invalid original_price",
+      "raw_price": "0"
+    },
+    {
+      "source_row": 92,
+      "course_id": "63a96f67e6cc7ab14fbb6c43",
+      "course_name": "美股新手 30 分鐘快速上手",
+      "reason": "invalid original_price",
+      "raw_price": "0"
+    }
+  ]
+}
